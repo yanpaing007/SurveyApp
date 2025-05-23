@@ -1,0 +1,45 @@
+<div th:replace="~{fragments/layout :: layout(~{::section})}">
+    <section>
+        <div class="flex justify-center">
+            <div class="form w-xl h-auto mt-20 py-10 rounded-lg form-main">
+                <p class="register text-black text-center text-xl mt-1 font-light">
+                    Login Form
+                </p>
+
+                <div class="input-group mt-3 w-120 m-auto">
+
+                    <form th:action="@{/login}" method="post">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                        <div class="flex">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
+                              <i class="fa-solid fa-envelope"></i>
+                              </span>
+                            <input type="text" id="email" name="username"
+                                   class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                                   placeholder="elonmusk@gmail.com" required>
+                        </div>
+
+                        <label for="password" class="block mb-2 mt-3 text-sm font-medium text-gray-900">Password</label>
+                        <div class="flex">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
+                               <i class="fa-solid fa-lock"></i>
+                              </span>
+                            <input type="password" id="password" name="password"
+                                   class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                            placeholder="Enter your password..." autocomplete="current-password" required>
+                        </div>
+                        <div class="text_part flex justify-between text-sm mt-5">
+                            <a th:href="@{/login}" class="text-blue-500">Forgot your password?</a>
+                            <a th:href="@{/register}">Don't have an account? <span class="text-blue-500 underline">SignUp</span></a>
+                        </div>
+                        <button type="submit"
+                                class="mt-5 w-full cursor-pointer text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                            Sign In <i class="fa-solid fa-right-to-bracket"></i>
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

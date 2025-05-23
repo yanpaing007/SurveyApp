@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head th:replace="~{fragments/head::head}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar::navbar}">
+</div>
+
+
+<div th:replace="${content}"></div>
+
+<div th:replace="~{fragments/footer::footer}">
+</div>
+
+<script th:inline="javascript" th:if="${message}">
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: [[${messageType}]],
+            title: [[${message}]],
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            customClass: {
+                popup: 'rounded-xl bg-green-600 text-white shadow-xl text-sm',
+                title: 'text-white font-semibold',
+                icon: 'text-white'
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

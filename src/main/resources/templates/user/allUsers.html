@@ -1,0 +1,162 @@
+
+<div th:replace="~{fragments/layout :: layout(~{::section})}">
+  <section class="mx-auto max-w-7xl mt-6 overflow-hidden">
+    <div class="relative rounded-lg">
+      <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
+        <div class="flex flex-row space-x-2">
+          <div class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs">
+            <i class="fa-solid fa-user-plus pr-1"></i><a th:href="@{/admin/create}" th:text="Add+' '+User"></a>
+          </div>
+          <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs">
+            <i class="fa-solid fa-file-export pr-1"></i><a th:href="@{/admin/users/export}" th:text="Export+' '+to+' '+CSV"></a>
+          </div>
+        </div>
+        <form th:action="@{/admin/users}" method="get">
+          <label for="table-search" class="sr-only">Search</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+              </svg>
+            </div>
+            <input type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for users">
+          </div>
+        </form>
+      </div>
+
+      <div class="table_main max-h-120 overflow-y-auto overflow-x-auto">
+        <table id="table-search" class="table-auto w-full min-w-full whitespace-nowrap text-xs text-left rtl:text-right text-gray-500">
+          <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 z-10 text-center">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              UserId
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Phone Number
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Role
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Action
+            </th>
+          </tr>
+          </thead>
+
+          <tbody class="text-center">
+          <tr th:if="${!users.hasContent()}" class="text-center">
+            <td class="text-center py-4" colspan="13">No user found!</td>
+          </tr>
+
+          <tr class="bg-white border-b border-gray-200" th:each="user : ${users}">
+            <td class="px-6 py-4" th:text="${user.id}">
+            </td>
+            <th scope="row" class="flex items-center px-6 py-4 text-gray-900">
+                <div>
+                  <img class="w-10 h-10 rounded-full" src="https://img.freepik.com/premium-vector/social-media-logo_1305298-29989.jpg?semt=ais_hybrid&w=740" alt="Jese image">
+                </div>
+                <div class="ps-1 text-left">
+                  <div class="text-base font-semibold" th:text="${user.fullName}"></div>
+                  <div class="font-normal text-gray-500" th:text="${user.email}"></div>
+                </div>
+            </th>
+            <td class="px-6 py-4">
+              <i class="fa-solid fa-phone"></i>
+              <span th:text="${user.phoneNumber}"></span>
+            </td>
+            <td class="px-6 py-4">
+              <i th:classappend="${user.role.getRoleName() == 'Admin' ? 'fa-user-tie' : (user.role.getRoleName() == 'Sale' ? 'fa-square-poll-vertical' : 'fa-gear')}" class="fa-solid"></i>
+              <span th:text="${user.role.getRoleName()}"></span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center">
+                <div th:classappend="${user.status ? 'bg-green-500' : 'bg-red-500'}" class="h-2.5 w-2.5 rounded-full me-2"></div> <p th:text="${user.status ? 'Active' : 'Inactive'}"></p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <a th:href="@{/admin/edit/{id}(id=${user.id})}" class="font-medium text-blue-600 px-3 py-2 bg-indigo-800 text-white rounded-md">
+                <i class="fa-solid fa-user-pen"></i> Edit</a>
+              <a th:href="@{/admin/delete/{id}(id=${user.id})}" class="font-medium text-blue-600 px-3 py-2 bg-red-800 text-white rounded-md">
+                <i class="fa-solid fa-delete-left"></i> Delete</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-10" aria-label="Table navigation">
+  <span class="text-xs font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto" th:if="${users.content.size() >0}">
+    Showing <span class="font-semibold text-gray-900" th:text="${currentPage + 1}"></span> of
+    <span class="font-semibold text-gray-900" th:text="${totalPages}"></span>
+  </span>
+
+        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-xs h-8" th:if="${users != null && users.content.size() > 0}">
+
+          <!-- Previous -->
+          <li>
+            <a th:href="@{?(page=${currentPage - 1}, size=${size}, query=${query})}"
+               th:classappend="${currentPage > 0} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+               class="flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg">
+              Previous
+            </a>
+          </li>
+
+          <!-- Page 1 -->
+          <li th:if="${totalPages > 0}">
+            <a th:href="@{?(page=0, size=${size}, query=${query})}"
+               th:classappend="${currentPage == 0} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+               class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+              1
+            </a>
+          </li>
+
+          <!-- Leading Dots -->
+          <li th:if="${currentPage > 3 && totalPages > 7}">
+            <span class="px-3 h-8 flex items-center">...</span>
+          </li>
+
+          <!-- Page Numbers (Middle) -->
+          <li th:each="i : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
+              th:if="${i > 0 and i < totalPages - 1}">
+            <a th:href="@{?(page=${i}, size=${size}, query=${query})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+               class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+            </a>
+          </li>
+
+          <!-- Trailing Dots -->
+          <li th:if="${currentPage < totalPages - 4 && totalPages > 7}">
+            <span class="px-3 h-8 flex items-center">...</span>
+          </li>
+
+          <!-- Last Page -->
+          <li th:if="${totalPages > 1}">
+            <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query})}"
+               th:classappend="${currentPage == totalPages - 1} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+               th:text="${totalPages}"
+               class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+            </a>
+          </li>
+
+          <!-- Next -->
+          <li>
+            <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query})}"
+               th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+               class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
+              Next
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+    </div>
+
+  </section>
+</div>

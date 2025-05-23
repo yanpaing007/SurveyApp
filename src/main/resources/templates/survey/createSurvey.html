@@ -1,0 +1,57 @@
+<div th:replace="~{fragments/layout::layout(~{::section})}">
+    <section>
+        <form method="post" action="/sale/survey/add" th:object="${survey}">
+
+            <div class="border-b border-gray-900/10 pb-12 max-w-5xl mx-auto mt-10 shadow-lg p-10 rounded-xl">
+                <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.token}">
+                <input type="hidden" name="salePerson" th:value="*{salePerson.id}"/>
+                <h1>Create New Survey</h1>
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-3">
+                        <label for="customerName" class="block text-sm/6 font-medium text-gray-900">Customer Name</label>
+                        <div class="mt-2">
+                            <input type="text" th:field="*{customerName}" id="customerName" autocomplete="customerName" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="phoneNumber" class="block text-sm/6 font-medium text-gray-900">Phone Number</label>
+                        <div class="mt-2">
+                            <input type="text" th:field="*{phoneNumber}" id="phoneNumber" autocomplete="phoneNumber" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="state" class="block text-sm/6 font-medium text-gray-900">State</label>
+                        <div class="mt-2">
+                            <input id="state" th:field="*{state}" type="text" autocomplete="state" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="TownShip" class="block text-sm/6 font-medium text-gray-900">TownShip</label>
+                        <div class="mt-2">
+                            <input id="TownShip" th:field="*{townShip}" type="text" autocomplete="township" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="longitude" class="block text-sm/6 font-medium text-gray-900">Longitude</label>
+                        <div class="mt-2">
+                            <input id="longitude" th:field="*{longitude}" type="text" autocomplete="longitude" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="latitude" class="block text-sm/6 font-medium text-gray-900">Latitude</label>
+                        <div class="mt-2">
+                            <input id="latitude" th:field="*{latitude}" type="text" autocomplete="latitude" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Create Survey" class="px-2 py-2 bg-indigo-800 cursor-pointer text-white rounded-lg">
+                </div>
+            </div>
+        </form>
+    </section>
+</div>

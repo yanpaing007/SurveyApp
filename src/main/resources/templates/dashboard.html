@@ -1,0 +1,20 @@
+<div th:replace="~{fragments/layout::layout(~{::section})}">
+  <section class="mx-auto max-w-7xl mt-3">
+  <div class="grid grid-cols-3 gap-3">
+      <div th:replace="~{fragments/dashboard/chartCart}">
+      </div>
+      <div th:replace="~{fragments/dashboard/chartCart}">
+      </div>
+      <div th:replace="~{fragments/dashboard/chartCart}">
+      </div>
+
+      <div class="row-span-2" th:replace="~{fragments/dashboard/chartCart}">
+      </div>
+      <div th:replace="~{fragments/dashboard/chartCart}">
+      </div>
+      <div th:replace="~{fragments/dashboard/chartCart}">
+      </div>
+
+  </div>
+  </section>
+</div>

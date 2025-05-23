@@ -1,0 +1,176 @@
+
+<div th:replace="~{fragments/layout :: layout(~{::section})}">
+    <section class="mx-auto max-w-7xl mt-8 overflow-hidden">
+        <div class="relative rounded-lg">
+            <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
+
+                <form th:action="@{/sale/application/allApplications}" method="get">
+                    <label for="table-search" class="sr-only">Search</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-100 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search applications by ID,Name,Phone Number">
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="table_main max-h-120 overflow-y-auto overflow-x-auto">
+                <table id="table-search" class="table-auto min-w-full w-full whitespace-nowrap text-xs text-left rtl:text-right text-gray-500">
+                    <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10 text-center">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            ApplicationId
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            SurveyId
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Customer Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Company Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Phone Number
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Application Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Submitted By
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+<!--                        <th th:if="${#authorization.expression('hasAuthority(''Technical'')')}" class="px-6 py-4">-->
+<!--                            Action-->
+<!--                        </th>-->
+                    </tr>
+                    </thead>
+
+                    <tbody class="text-center">
+                    <tr th:if="${!applications.hasContent()}" class="text-center">
+                        <td class="text-center py-4" colspan="13">No applications found!</td>
+                    </tr>
+
+                    <tr class="bg-white border-b border-gray-200" th:each="app : ${applications}">
+
+                        <td class="px-4 py-4" th:text="${app.getGeneratedApplicationId()}">
+                        </td>
+                        <td scope="row" class="flex items-center px-6 py-4 whitespace-nowrap">
+                            <div class="ps-3">
+                                <div th:text="${app.survey.getGeneratedSurveyId()}"></div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span th:text="${app.customerName}"></span>
+                        </td>
+                        <td class="px-6 py-4">
+
+                            <span th:text="${app.companyName}"></span>
+                        </td>
+<!--                        <td class="px-6 py-4">-->
+<!--                            <span th:text="${app.contactEmail}"></span>-->
+<!--                        </td>-->
+                        <td class="px-6 py-4">
+                            <span th:text="${app.phoneNumber}"></span>
+                        </td>
+<!--                        <td class="px-6 py-4">-->
+<!--                            <span th:text="${app.address}"></span>-->
+<!--                        </td>-->
+                        <td class="px-6 py-4">
+                            <span th:text="${app.applicationDate}"></span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span th:if="${#authorization.expression('hasAnyAuthority(''Sale'')')}" th:text="${app.applicationStatus}"></span>
+                            <div th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}">
+                                <form th:action="@{/technical/application/updateStatus}" method="post">
+                                    <input type="hidden" name="id" th:value="${app.id}" />
+                                    <select name="status" class="form-select" onchange="this.form.submit()">
+                                        <option th:each="status : ${applicationStatus}"
+                                                th:value="${status}"
+                                                th:text="${status.status}"
+                                                th:selected="${status == app.applicationStatus}">
+                                        </option>
+                                    </select>
+                                </form>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span th:text="${app.submittedBy.fullName}"></span>
+                        </td>
+<!--                        <td class="px-6 py-4">-->
+<!--                            <span th:text="${app.comment}"></span>-->
+<!--                        </td>-->
+<!--                        <td class="px-6 py-4">-->
+<!--                            <span th:text="${app.longitude}"></span>-->
+<!--                        </td>-->
+<!--                        <td class="px-6 py-4">-->
+<!--                            <span th:text="${app.latitude}"></span>-->
+<!--                        </td>-->
+                        <td th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'',''Sale'')')}" class="px-6 py-4">
+                            <a th:href="@{/technical/application/edit/{id}(id=${app.id})}" th:classappend="${application}" class="px-3 py-2 bg-indigo-800 rounded-md text-white"><i class="fa-solid fa-border-all pr-2"></i>More Details</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-10" aria-label="Table navigation">
+  <span class="text-sm font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto" th:if="${applications.content.size() >6}">
+    Showing <span class="font-semibold text-gray-900" th:text="${currentPage + 1}"></span> of
+    <span class="font-semibold text-gray-900" th:text="${totalPages}"></span>
+  </span>
+
+                <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8" th:if="${applications != null && applications.content.size() > 6}">
+                    <!-- Previous -->
+                    <li>
+                        <a th:href="@{?(page=${currentPage - 1}, size=${size}, query=${query})}"
+                           th:classappend="${currentPage > 0} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+                           class="flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg">
+                            Previous
+                        </a>
+                    </li>
+
+                    <!-- Pages -->
+                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:if="${totalPages <= 7 or (i == 0) or (i == totalPages - 1) or (i >= currentPage - 1 and i <= currentPage + 1)}">
+                        <a th:href="@{?(page=${i}, size=${size}, query=${query})}"
+                           th:text="${i + 1}"
+                           th:classappend="${i == currentPage} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+                           class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                        </a>
+                    </li>
+
+                    <!-- Leading Dots -->
+                    <li th:if="${currentPage > 2 and totalPages > 7}">
+                        <span class="px-3 h-8 flex items-center">...</span>
+                    </li>
+
+                    <!-- Trailing Dots -->
+                    <li th:if="${currentPage < totalPages - 3 and totalPages > 7}">
+                        <span class="px-3 h-8 flex items-center">...</span>
+                    </li>
+
+                    <!-- Next -->
+                    <li>
+                        <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query})}"
+                           th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+                           class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
+                            Next
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+
+    </section>
+</div>
