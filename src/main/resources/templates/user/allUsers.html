@@ -1,38 +1,102 @@
 
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-  <section class="mx-auto max-w-7xl mt-6 overflow-hidden">
+  <section class="mx-auto max-w-9/10 mt-6 overflow-hidden">
     <div class="relative rounded-lg">
       <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
         <div class="flex flex-row space-x-2">
           <div class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs">
             <i class="fa-solid fa-user-plus pr-1"></i><a th:href="@{/admin/create}" th:text="Add+' '+User"></a>
           </div>
-          <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs">
-            <i class="fa-solid fa-file-export pr-1"></i><a th:href="@{/admin/users/export}" th:text="Export+' '+to+' '+CSV"></a>
+          <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs inline-flex items-center space-x-1">
+            <i class="fa-solid fa-file-export"></i>
+            <button id="dropdownDefaultButton"
+               data-dropdown-toggle="dropdown"
+               class="flex items-center space-x-1 cursor-pointer">
+              <span>Export Users</span>
+              <svg class="w-2.5 h-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l4 4 4-4"/>
+              </svg>
+            </button>
+
+
+            <div id="dropdown" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+              <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+                <li>
+                  <a th:href="@{/admin/users/export(query=${query},role=${selectedRole},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},type='excel')}" class="block px-4 py-2 hover:bg-gray-100"><i class="fa-solid fa-file-excel mr-2"></i>Export to Excel</a>
+                </li>
+                <li>
+                  <a th:href="@{/admin/users/export(query=${query},role=${selectedRole},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},type='csv')}" class="block px-4 py-2 hover:bg-gray-100"><i class="fa-solid fa-file-csv mr-2"></i>Export to CSV</a>
+                </li>
+              </ul>
+            </div>
+
+
           </div>
         </div>
-        <form th:action="@{/admin/users}" method="get">
-          <label for="table-search" class="sr-only">Search</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-              </svg>
-            </div>
-            <input type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for users">
+
+        <form th:action="@{/admin/users}" method="get" id="filterForm">
+        <div class="flex flex-row">
+
+        <div class="pageSize p-3 text-xs">
+          <label for="pageSize">Size</label>
+          <select name="size" id="pageSize" onchange="cleanAndSubmit(this.form)">
+            <option value="6" th:selected="${size == 6}">6</option>
+            <option value="20" th:selected="${size == 20}">20</option>
+            <option value="40" th:selected="${size == 40}">40</option>
+            <option value="60" th:selected="${size == 60}">60</option>
+          </select>
+        </div>
+
+          <div class="checkActive pr-3">
+              <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 px-4" name="role" onchange="cleanAndSubmit(this.form)">
+                <option value="">Filter By Role</option>
+                <option th:selected="${roles.roleName == selectedRole}" th:each="roles:${role}" th:value="${roles.roleName}" th:text="${roles.roleName}"></option>
+              </select>
           </div>
+
+          <div class="checkActive pr-3">
+              <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 px-4" name="status" onchange="cleanAndSubmit(this.form)">
+                <option value="">Filter By Status</option>
+                <option value="true" th:selected="*{selectedStatus==true}">Active</option>
+                <option value="false" th:selected="*{selectedStatus==false}">Inactive</option>
+              </select>
+          </div>
+
+
+          <div>
+              <label for="table-search" class="sr-only">Search</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                  </svg>
+                </div>
+                <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for users">
+              </div>
+          </div>
+
+        </div>
+
+          <input type="hidden" name="sortDir" th:value="${sortDir}">
+          <input type="hidden" name="sortField" th:value="${sortField}">
         </form>
       </div>
 
       <div class="table_main max-h-120 overflow-y-auto overflow-x-auto">
         <table id="table-search" class="table-auto w-full min-w-full whitespace-nowrap text-xs text-left rtl:text-right text-gray-500">
-          <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 z-10 text-center">
+          <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10">
           <tr>
             <th scope="col" class="px-6 py-3">
-              UserId
+              <a th:href="@{/admin/users(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
+                No.
+                <span th:text="${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
+              </a>
             </th>
             <th scope="col" class="px-6 py-3">
-              Name
+              <a th:href="@{/admin/users(sortField='fullName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
+                Name
+                <span th:text="${sortField == 'fullName' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
+              </a>
             </th>
             <th scope="col" class="px-6 py-3">
               Phone Number
@@ -43,19 +107,19 @@
             <th scope="col" class="px-6 py-3">
               Status
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" class="px-6 py-3 text-center">
               Action
             </th>
           </tr>
           </thead>
 
-          <tbody class="text-center">
+          <tbody>
           <tr th:if="${!users.hasContent()}" class="text-center">
             <td class="text-center py-4" colspan="13">No user found!</td>
           </tr>
 
-          <tr class="bg-white border-b border-gray-200" th:each="user : ${users}">
-            <td class="px-6 py-4" th:text="${user.id}">
+          <tr class="bg-white border-b border-gray-200" th:each="user,iterStat : ${users}">
+            <td class="px-6 py-4" th:text="${(currentPage*size)+ iterStat.index+1}">
             </td>
             <th scope="row" class="flex items-center px-6 py-4 text-gray-900">
                 <div>
@@ -79,83 +143,23 @@
                 <div th:classappend="${user.status ? 'bg-green-500' : 'bg-red-500'}" class="h-2.5 w-2.5 rounded-full me-2"></div> <p th:text="${user.status ? 'Active' : 'Inactive'}"></p>
               </div>
             </td>
-            <td class="px-6 py-4">
-              <a th:href="@{/admin/edit/{id}(id=${user.id})}" class="font-medium text-blue-600 px-3 py-2 bg-indigo-800 text-white rounded-md">
+            <td class="px-6 py-4 text-center">
+              <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="font-medium text-blue-600 px-3 py-2 bg-indigo-800 text-white rounded-md">
                 <i class="fa-solid fa-user-pen"></i> Edit</a>
-              <a th:href="@{/admin/delete/{id}(id=${user.id})}" class="font-medium text-blue-600 px-3 py-2 bg-red-800 text-white rounded-md">
-                <i class="fa-solid fa-delete-left"></i> Delete</a>
+              <button th:attr="data-modal-target='popup-modal-'+${user.id}" th:attrappend="data-modal-toggle='popup-modal-'+ ${user.id}" class="cursor-pointer font-medium text-xs text-blue-600 px-3 py-2 bg-red-800 text-white rounded-md">
+                <i class="fa-solid fa-delete-left"></i> Delete</button>
+
+              <div th:replace="~{fragments/alertModal::alertModal(${user.fullName},${user.id})}">
+              </div>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
 
-      <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-10" aria-label="Table navigation">
-  <span class="text-xs font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto" th:if="${users.content.size() >0}">
-    Showing <span class="font-semibold text-gray-900" th:text="${currentPage + 1}"></span> of
-    <span class="font-semibold text-gray-900" th:text="${totalPages}"></span>
-  </span>
+      <div th:replace="~{fragments/pagination::pagination(${users},${currentPage},${totalPages},${size},${query},${selectedRole},${selectedStatus},
+      ${sortDir},${sortField})}"></div>
 
-        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-xs h-8" th:if="${users != null && users.content.size() > 0}">
-
-          <!-- Previous -->
-          <li>
-            <a th:href="@{?(page=${currentPage - 1}, size=${size}, query=${query})}"
-               th:classappend="${currentPage > 0} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
-               class="flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg">
-              Previous
-            </a>
-          </li>
-
-          <!-- Page 1 -->
-          <li th:if="${totalPages > 0}">
-            <a th:href="@{?(page=0, size=${size}, query=${query})}"
-               th:classappend="${currentPage == 0} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
-               class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-              1
-            </a>
-          </li>
-
-          <!-- Leading Dots -->
-          <li th:if="${currentPage > 3 && totalPages > 7}">
-            <span class="px-3 h-8 flex items-center">...</span>
-          </li>
-
-          <!-- Page Numbers (Middle) -->
-          <li th:each="i : ${#numbers.sequence(currentPage - 1, currentPage + 1)}"
-              th:if="${i > 0 and i < totalPages - 1}">
-            <a th:href="@{?(page=${i}, size=${size}, query=${query})}"
-               th:text="${i + 1}"
-               th:classappend="${i == currentPage} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
-               class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-            </a>
-          </li>
-
-          <!-- Trailing Dots -->
-          <li th:if="${currentPage < totalPages - 4 && totalPages > 7}">
-            <span class="px-3 h-8 flex items-center">...</span>
-          </li>
-
-          <!-- Last Page -->
-          <li th:if="${totalPages > 1}">
-            <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query})}"
-               th:classappend="${currentPage == totalPages - 1} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
-               th:text="${totalPages}"
-               class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-            </a>
-          </li>
-
-          <!-- Next -->
-          <li>
-            <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query})}"
-               th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
-               class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
-              Next
-            </a>
-          </li>
-
-        </ul>
-      </nav>
     </div>
 
   </section>

@@ -69,3 +69,13 @@ if (document.getElementById("area-chart") && typeof ApexCharts !== 'undefined') 
     const chart = new ApexCharts(document.getElementById("area-chart"), options);
     chart.render();
 }
+
+function cleanAndSubmit(form) {
+    const inputs = form.querySelectorAll("input, select");
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.removeAttribute("name");
+        }
+    });
+    form.submit();
+}

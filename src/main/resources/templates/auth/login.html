@@ -1,42 +1,63 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
     <section>
-        <div class="flex justify-center">
-            <div class="form w-xl h-auto mt-20 py-10 rounded-lg form-main">
-                <p class="register text-black text-center text-xl mt-1 font-light">
-                    Login Form
-                </p>
+        <div class="mx-auto max-w-7xl flex flex-col justify-center items-center mt-15 gap-y-5">
+                <div>
+                    <img class="h-13 w-auto" src="https://flowbite.com/docs/images/logo.svg" alt="Survey">
+                </div>
+            <div class="text-2xl font-bold">
+                Sign in to your account
+            </div>
+        </div>
+        <div class="flex justify-center mb-10">
+            <div class="form w-xl h-auto mt-10 py-10 rounded-lg form-main">
 
-                <div class="input-group mt-3 w-120 m-auto">
+                <div class="input-group w-120 m-auto">
 
                     <form th:action="@{/login}" method="post">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email Address</label>
                         <div class="flex">
-                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                               <i class="fa-solid fa-envelope"></i>
                               </span>
                             <input type="text" id="email" name="username"
                                    class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
-                                   placeholder="elonmusk@gmail.com" required>
+                                   placeholder="name@company.com" required>
                         </div>
 
                         <label for="password" class="block mb-2 mt-3 text-sm font-medium text-gray-900">Password</label>
                         <div class="flex">
-                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                <i class="fa-solid fa-lock"></i>
                               </span>
                             <input type="password" id="password" name="password"
-                                   class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                                   class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 focus:ring-indigo-700 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
                             placeholder="Enter your password..." autocomplete="current-password" required>
                         </div>
-                        <div class="text_part flex justify-between text-sm mt-5">
-                            <a th:href="@{/login}" class="text-blue-500">Forgot your password?</a>
-                            <a th:href="@{/register}">Don't have an account? <span class="text-blue-500 underline">SignUp</span></a>
+                        <div class="flex flex-row justify-between mt-4.5 text-sm">
+                            <div class="text-gray-500 inline-flex gap-x-1">
+                                <input type="checkbox" id="rememberMe" value="rememberMe">
+                                <label for="rememberMe">Remember Me</label>
+                            </div>
+                            <div>
+                                <a href="#"><span class="text-blue-700 font-semibold">Forgot your password?</span></a>
+                            </div>
                         </div>
                         <button type="submit"
-                                class="mt-5 w-full cursor-pointer text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                class="mt-5 w-full cursor-pointer text-white bg-indigo-700 btn-animated font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                             Sign In <i class="fa-solid fa-right-to-bracket"></i>
                         </button>
                     </form>
+
+                    <hr class="text-gray-300 mt-10">
+                    <div class="-mt-3 text-center">
+                      <span class="inline-block bg-white px-2 text-sm text-gray-500">
+                        Don't have an account?
+                      </span>
+                    </div>
+
+                    <div class="w-full text-indigo-600 border font-bold text-sm border-indigo-600 text-center mt-6 hover:bg-gray-50 rounded-md cursor-pointer py-2">
+                        <a th:href="@{/register}">Register a new account <i class="fa-solid fa-user-plus ml-1.5"></i></a>
+                    </div>
 
                 </div>
             </div>

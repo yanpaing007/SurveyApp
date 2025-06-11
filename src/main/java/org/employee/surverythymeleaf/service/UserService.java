@@ -1,13 +1,21 @@
 package org.employee.surverythymeleaf.service;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,10 +36,10 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public Page<User> getAllUserPagniated(int page, int size) {
-        Pageable pageable =PageRequest.of(page, size);
+    public Page<User> getAllUserPagniated(int page, int size, Sort sort) {
+        Pageable pageable =PageRequest.of(page, size,sort);
         Page<User> userList = userRepo.findAll(pageable);
-        System.out.println("userList Count: " + userList.stream().map(User::getId).count());
+        System.out.println("userList Count: " + userList.stream().count());
         System.out.println("userList Name: " + userList.stream().map(User::getFullName).toList());
         return userList;
     }
@@ -41,11 +49,18 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepo.findById(id).orElse(null);
+        return userRepo.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User not found")
+        );
     }
 
-    public void updateUser(User user) {
-        userRepo.save(user);
+    public boolean updateUser(User user) {
+        if (userRepo.existsById(user.getId())) {
+            userRepo.save(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void deleteUserById(Long id) {
@@ -68,13 +83,34 @@ public class UserService {
         return user;
     }
 
-    public Page<User> searchUser(String query, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userRepo.searchUser(query,pageable);
+    public Page<User> searchUser(String query, int page, int size, String role, Boolean status, Sort sort) {
+        Pageable pageable = PageRequest.of(page, size,sort);
+        return userRepo.searchUser(query,role,status,pageable);
     }
 
+    public List<User> filterUsers(String query, String role, Boolean status, Sort sort) {
+        // This reuses the same logic as paginated, but without pagination
+        return userRepo.findAll((root, queryObj, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-    public List<User> searchAllUser(String query) {
-        return userRepo.searchAllUser(query);
+            if (query != null && !query.isEmpty()) {
+                String likeQuery = "%" + query.toLowerCase() + "%";
+                predicates.add(cb.or(
+                        cb.like(cb.lower(root.get("fullName")), likeQuery),
+                        cb.like(cb.lower(root.get("email")), likeQuery)
+                ));
+            }
+
+            if (role != null && !role.isEmpty()) {
+                predicates.add(cb.equal(root.get("role").get("roleName"), role));
+            }
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }, sort);
     }
+
 }

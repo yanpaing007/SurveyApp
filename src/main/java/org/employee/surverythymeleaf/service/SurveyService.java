@@ -6,9 +6,10 @@ import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -24,8 +25,8 @@ public class SurveyService {
         surveyRepository.save(survey);
     }
 
-    public Page<Survey> searchSurveyWithQuery(String query, int page, int size) {
-        return surveyRepository.searchSurvey(query,PageRequest.of(page,size));
+    public Page<Survey> searchSurveyWithQuery(String query, int page, int size, SurveyStatus status, LocalDate fromDate, LocalDate toDate) {
+        return surveyRepository.searchSurvey(query,PageRequest.of(page,size),status,fromDate,toDate);
     }
 
     public Page<Survey> getAllSuvey(int page, int size) {
@@ -44,6 +45,7 @@ public class SurveyService {
             Survey survey = optionalSurvey.get();
             survey.setStatus(status);
             survey.setTechnicalPerson(techPerson);
+            survey.setUpdatedAt(LocalDateTime.now());
             surveyRepository.save(survey);
             return true;
         }
@@ -54,4 +56,7 @@ public class SurveyService {
         return surveyRepository.findLatestSurvey();
     }
 
+    public Survey findApplicationByGeneratedId(String id) {
+        return surveyRepository.findSurveyByGeneratedSurveyId(id);
+    }
 }

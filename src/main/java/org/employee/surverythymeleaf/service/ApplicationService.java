@@ -42,6 +42,10 @@ public class ApplicationService {
         );
     }
 
+    public Application findApplicationByGeneratedApplicationId(String generatedApplicationId) {
+        return applicationRepository.findApplicationByGeneratedApplicationId(generatedApplicationId);
+    }
+
     public boolean updateStatus(Long id, ApplicationStatus status) {
         Optional<Application> applicationOpt= applicationRepository.findById(id);
         if(applicationOpt.isPresent()) {
@@ -54,6 +58,10 @@ public class ApplicationService {
             throw new UsernameNotFoundException("Application with id " + id + " not found");
         }
     }
+
+//    public void updateApplicationStatus(Long id, ApplicationStatus status) {
+//
+//    }
 
     public Application searchLatestApplication() {
        return applicationRepository.findLatestApplication();

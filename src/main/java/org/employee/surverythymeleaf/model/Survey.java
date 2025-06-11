@@ -35,6 +35,8 @@ public class Survey {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
     @Enumerated(EnumType.STRING)
     private SurveyStatus status = SurveyStatus.PENDING;
 

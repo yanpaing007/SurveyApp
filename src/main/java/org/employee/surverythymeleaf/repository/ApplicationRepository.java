@@ -21,4 +21,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     @Query("SELECT a from Application a ORDER BY a.id DESC LIMIT 1")
     Application findLatestApplication();
+
+
+    Application findApplicationByGeneratedApplicationId(String generatedApplicationId);
 }

@@ -8,12 +8,16 @@ import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
+
+import static org.employee.surverythymeleaf.controller.ApplicationController.getAllApplication;
+import static org.employee.surverythymeleaf.controller.ApplicationController.getString;
 
 @Controller
 @RequestMapping("/sale")
@@ -60,21 +64,18 @@ public class SurveyController {
     @GetMapping("/survey/allSurvey")
     public String getAllSurveys(Model model,@RequestParam(required = false) String query,
                               @RequestParam(required = false,defaultValue = "0") int page,
-                              @RequestParam(required = false,defaultValue = "5") int size){
+                              @RequestParam(required = false,defaultValue = "5") int size,
+                                @RequestParam(required = false) SurveyStatus status,
+                                @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE ) LocalDate fromDate,
+                                @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE ) LocalDate toDate){
         Page<Survey> surveyPage;
-        if(query != null && !query.isEmpty()){
-            surveyPage = surveyService.searchSurveyWithQuery(query,page,size);
+        if((query != null && !query.isEmpty()) || status != null){
+            surveyPage = surveyService.searchSurveyWithQuery(query,page,size, status,fromDate,toDate);
         }else{
             surveyPage = surveyService.getAllSuvey(page,size);
         }
-        model.addAttribute("surveyStatus", SurveyStatus.values());
-        model.addAttribute("surveys",surveyPage);
-        model.addAttribute("query",query);
-        model.addAttribute("totalItems",surveyPage.getTotalElements());
-        model.addAttribute("size",size);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("totalPages",surveyPage.getTotalPages());
-        return "survey/allSurveys";
+        model.addAttribute("surveyStatus", SurveyStatus.getNonPendingSurveyStatus());
+        return getString(model, query, page, size, surveyPage,status,fromDate,toDate);
     }
 
     @GetMapping("/application/allApplications")
@@ -87,17 +88,12 @@ public class SurveyController {
         }else{
             applicationPage = applicationService.getAllApplicationPaginated(page,size);
         }
-        model.addAttribute("applications",applicationPage);
-        model.addAttribute("query",query);
-        model.addAttribute("totalItems",applicationPage.getTotalElements());
-        model.addAttribute("size",size);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("totalPages",applicationPage.getTotalPages());
-        return "application/allApplication";
+
+        return getAllApplication(model, query, page, size, applicationPage);
     }
 
     @GetMapping("/application/create/{id}")
-    public String getApplicationForm(Model model, Principal principal, @PathVariable String id) {
+    public String getApplicationForm(Model model, @PathVariable String id) {
         Application application = new Application();
         model.addAttribute("surveyId", id);
         model.addAttribute("applications", application);
@@ -118,6 +114,7 @@ public class SurveyController {
 
         String newApplicationId = String.format("APP-%05d", newNumber);
         application.setGeneratedApplicationId(newApplicationId);
+        applicationService.addNewApplication(application);
         return "redirect:/sale/survey/allSurvey";
     }
 

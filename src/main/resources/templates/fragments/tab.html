@@ -1,0 +1,57 @@
+<div th:fragment="tabLayout(content)">
+
+
+    <div class="mb-4 border-b border-gray-200">
+        <ul class="flex flex-wrap -mb-px text-xs font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-indigo-600 hover:text-indigo-600 border-indigo-600" data-tabs-inactive-classes="text-gray-500 hover:text-gray-900 border-transparent hover:border-gray-500" role="tablist">
+            <li class="me-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">App Details</button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Assignment Info</button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="map-styled-tab" data-tabs-target="#styled-settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Map</button>
+            </li>
+        </ul>
+    </div>
+    <div id="default-styled-tab-content text-xs">
+        <div class="hidden p-8 rounded-lg bg-gray-100 mt-5" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="grid grid-cols-3 gap-4">
+
+                <div th:replace="fragments/input-field::input-field('generatedApplicationId','Application Id','text',${applications.generatedApplicationId},'generatedApplicationId','GeneratedApplicationId','','fa-clipboard-list')"></div>
+                <div th:replace="fragments/input-field::input-field('generatedSurveyId','Survey Id','text',${applications.survey.generatedSurveyId},'generatedSurveyId','generatedSurveyId','','fa-clipboard-list')"></div>
+                <div th:replace="fragments/input-field::input-field('companyName','Company Name','text',${applications.companyName},'companyName','companyName','','fa-building')"></div>
+
+                <div th:replace="fragments/input-field::input-field('customerName','Customer Name','text',${applications.customerName},'customerName','customerName','','fa-user')"></div>
+                <div th:replace="fragments/input-field::input-field('email','Contact Email','text',${applications.contactEmail},'email','email','','fa-envelope')"></div>
+                <div th:replace="fragments/input-field::input-field('phoneNumber','Phone Number','text',${applications.phoneNumber},'phoneNumber','phoneNumber','','fa-phone')"></div>
+
+                <div th:replace="fragments/input-field::input-field('address','Address','text',${applications.address},'address','address','','fa-location-dot')"></div>
+                <div th:replace="fragments/input-field::input-field('longitude','Longitude','text',${applications.longitude},'longitude','longitude','','fa-location-crosshairs')"></div>
+                <div th:replace="fragments/input-field::input-field('latitude','Latitude','text',${applications.latitude},'latitude','latitude','','fa-location-crosshairs')"></div>
+
+
+                <div th:replace="fragments/input-field::input-field('applicationStatus','Application Status','text',${applications.applicationStatus},'applicationStatus','applicationStatus','','fa-circle-exclamation')"></div>
+                <div th:replace="fragments/input-field::input-field('submittedBy','Submitted By?','text',${applications.submittedBy.fullName},'submittedBy','submittedBy','','fa-user')"></div>
+                <div th:replace="fragments/input-field::input-field('applicationDate','Application Date','text',${applications.applicationDate},'applicationDate','applicationDate','','fa-calendar')"></div>
+
+            </div>
+            <div class="grid grid-cols-1 mt-4">
+                <div class="w-full mx-auto">
+                    <label for="comment" class="block mb-2 text-xs font-medium text-gray-900">Comment</label>
+                    <div class="relative">
+                        <textarea disabled rows="6" id="comment" th:text="${applications.comment}" class="bg-gray-50 focus:outline-hidden border border-gray-300 text-gray-900 text-xs rounded-lg w-full ps-4 p-2.5 max-h-50 min-h-20"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="hidden p-4 rounded-lg bg-gray-100" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+            <p class="text-sm text-gray-600">This is some placeholder content the <strong class="font-medium text-gray-800">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+        </div>
+        <div class="hidden p-4 rounded-lg bg-gray-100" id="styled-settings" role="tabpanel" aria-labelledby="settings-tab">
+            <p class="text-sm text-gray-600">This is some placeholder content the <strong class="font-medium text-gray-800">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+        </div>
+    </div>
+
+</div>

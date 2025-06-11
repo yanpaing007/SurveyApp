@@ -1,0 +1,192 @@
+<nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-5" aria-label="Table navigation"
+     th:fragment="pagination(page,currentPage,totalPages,size,query,selectedRole,selectedStatus,sortDir,sortField)">
+                  <span class="text-sm font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto" th:if="${totalPages >1 }">
+                    Showing <span class="font-semibold text-gray-900" th:text="${currentPage + 1}"></span> of
+                    <span class="font-semibold text-gray-900" th:text="${totalPages}"></span>
+                  </span>
+                  <form th:action="@{admin/users}" method="post">
+
+                  </form>
+
+  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8" th:if="${totalPages > 1}">
+
+
+    <li>
+      <a th:href="@{?(page=${currentPage - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:classappend="${currentPage > 0} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+         class="flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg">
+        Previous
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{?(page=0, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:text="1"
+         th:classappend="${currentPage == 0} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li th:if="${currentPage > 2 and totalPages > 7}">
+      <span class="px-3 h-8 flex items-center">...</span>
+    </li>
+
+    <li th:each="i : ${#numbers.sequence(1, totalPages - 2)}"
+        th:if="${i >= currentPage - 1 and i <= currentPage + 1}">
+      <a th:href="@{?(page=${i}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:text="${i + 1}"
+         th:classappend="${i == currentPage} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li th:if="${currentPage < totalPages - 3 and totalPages > 7}">
+      <span class="px-3 h-8 flex items-center">...</span>
+    </li>
+
+    <li th:if="${totalPages > 1}">
+      <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:text="${totalPages}"
+         th:classappend="${currentPage == totalPages - 1} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+         class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
+        Next
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+
+
+<nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-5" aria-label="Table navigation"
+     th:fragment="AppPagination(page,currentPage,totalPages,size,query)">
+                  <span class="text-sm font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto" th:if="${totalPages >1 }">
+                    Showing <span class="font-semibold text-gray-900" th:text="${currentPage + 1}"></span> of
+                    <span class="font-semibold text-gray-900" th:text="${totalPages}"></span>
+                  </span>
+
+  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8" th:if="${totalPages > 1}">
+
+
+    <li>
+      <a th:href="@{?(page=${currentPage - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:classappend="${currentPage > 0} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+         class="flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg">
+        Previous
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{?(page=0, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:text="1"
+         th:classappend="${currentPage == 0} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li th:if="${currentPage > 2 and totalPages > 7}">
+      <span class="px-3 h-8 flex items-center">...</span>
+    </li>
+
+    <li th:each="i : ${#numbers.sequence(1, totalPages - 2)}"
+        th:if="${i >= currentPage - 1 and i <= currentPage + 1}">
+      <a th:href="@{?(page=${i}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:text="${i + 1}"
+         th:classappend="${i == currentPage} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li th:if="${currentPage < totalPages - 3 and totalPages > 7}">
+      <span class="px-3 h-8 flex items-center">...</span>
+    </li>
+
+    <li th:if="${totalPages > 1}">
+      <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:text="${totalPages}"
+         th:classappend="${currentPage == totalPages - 1} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField})}"
+         th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+         class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
+        Next
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+
+
+<nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-5" aria-label="Table navigation"
+     th:fragment="SurveyPagination(page,currentPage,totalPages,size,query,status,fromDate,toDate)">
+                  <span class="text-sm font-normal text-gray-500 mb-4 md:mb-0 block w-full md:inline md:w-auto" th:if="${totalPages >1 }">
+                    Showing <span class="font-semibold text-gray-900" th:text="${currentPage + 1}"></span> of
+                    <span class="font-semibold text-gray-900" th:text="${totalPages}"></span>
+                  </span>
+
+  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8" th:if="${totalPages > 1}">
+
+
+    <li>
+      <a th:href="@{?(page=${currentPage - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${status},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+         th:classappend="${currentPage > 0} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+         class="flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg">
+        Previous
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{?(page=0, size=${size}, query=${query} , role=${selectedRole} , status=${status},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+         th:text="1"
+         th:classappend="${currentPage == 0} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li th:if="${currentPage > 2 and totalPages > 7}">
+      <span class="px-3 h-8 flex items-center">...</span>
+    </li>
+
+    <li th:each="i : ${#numbers.sequence(1, totalPages - 2)}"
+        th:if="${i >= currentPage - 1 and i <= currentPage + 1}">
+      <a th:href="@{?(page=${i}, size=${size}, query=${query} , role=${selectedRole} , status=${status},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+         th:text="${i + 1}"
+         th:classappend="${i == currentPage} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li th:if="${currentPage < totalPages - 3 and totalPages > 7}">
+      <span class="px-3 h-8 flex items-center">...</span>
+    </li>
+
+    <li th:if="${totalPages > 1}">
+      <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+         th:text="${totalPages}"
+         th:classappend="${currentPage == totalPages - 1} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+         class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+      </a>
+    </li>
+
+    <li>
+      <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+         th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
+         class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
+        Next
+      </a>
+    </li>
+
+  </ul>
+</nav>

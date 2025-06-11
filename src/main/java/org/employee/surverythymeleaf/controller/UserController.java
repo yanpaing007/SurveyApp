@@ -1,18 +1,28 @@
 package org.employee.surverythymeleaf.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.RoleService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 
 @Controller
@@ -37,29 +47,46 @@ public class UserController {
     public String createuser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes){
         userService.createuser(user);
         redirectAttributes.addFlashAttribute("message", "User created successfully");
-        return "redirect:/";
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/users")
     public String getAllUsers(Model model,@RequestParam(required = false) String query,
                               @RequestParam(required = false,defaultValue = "0") int page,
-                              @RequestParam(required = false,defaultValue = "6") int size){
-        Page<User> userPage;
-        if(query != null && !query.isEmpty()){
-            userPage = userService.searchUser(query,page,size);
-        }else{
-            userPage = userService.getAllUserPagniated(page,size);
+                              @RequestParam(required = false,defaultValue = "6") int size,
+                              @RequestParam(required = false) String role,
+                              @RequestParam(required = false, defaultValue = "id") String sortField,
+                              @RequestParam(required = false, defaultValue = "desc") String sortDir,
+                              @RequestParam(required = false) Boolean status
+                              ){
+        List<String> allowedList= List.of("id","fullName","email","phoneNumber");
+        if(!allowedList.contains(sortField) || sortDir.isEmpty()){
+            sortField="id";
         }
+        Sort sort = Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+        Page<User> userPage;
+        if((query != null && !query.isEmpty()) || (role != null && !role.isEmpty()) || (status != null)){
+            userPage = userService.searchUser(query,page,size,role,status,sort);
+        }else{
+            userPage = userService.getAllUserPagniated(page,size,sort);
+        }
+
         model.addAttribute("users",userPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",userPage.getTotalElements());
         model.addAttribute("size",size);
         model.addAttribute("currentPage",page);
         model.addAttribute("totalPages",userPage.getTotalPages());
+        model.addAttribute("role", roleService.findAll());
+        model.addAttribute("selectedRole",role);
+        model.addAttribute("selectedStatus",status);
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc") ? "desc" : "asc");
         return "user/allUsers";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/user/edit/{id}")
     public String getEditUserForm(@PathVariable("id") Long id , Model model){
         User user = userService.getUserById(id);
         model.addAttribute("user",user);
@@ -67,43 +94,147 @@ public class UserController {
         return "user/editUser";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/user/edit/{id}")
     public String updateUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes){
-        userService.updateUser(user);
-        redirectAttributes.addFlashAttribute("message", "User updated successfully");
-        return "redirect:/";
+
+        String rawPassword = user.getPassword();
+        if(rawPassword != null && !rawPassword.isEmpty()){
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String encodedPassword = encoder.encode(rawPassword);
+            user.setPassword(encodedPassword);
+        }else {
+            User exitingUser = userService.getUserById(user.getId());
+            user.setPassword(exitingUser.getPassword());
+        }
+        boolean check = userService.updateUser(user);
+        if(check){
+            redirectAttributes.addFlashAttribute("message", "User updated successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        }
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes){
+        User exitingUser = userService.getUserById(id);
+        String fullName = exitingUser.getFullName();
         userService.deleteUserById(id);
-        redirectAttributes.addFlashAttribute("message", "User with id ->"+ id +" was deleted successfully");
+        redirectAttributes.addFlashAttribute("message", "User["+ fullName +"] was deleted successfully");
         redirectAttributes.addFlashAttribute("messageType", "success");
         return "redirect:/admin/users";
     }
 
     @GetMapping("/users/export")
-    public void exportUsers(HttpServletResponse response,@RequestParam(required = false) String query) throws IOException {
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=users.csv");
+    public void exportUsers(HttpServletResponse response,
+                            @RequestParam(required = false) String query,
+                            @RequestParam(required = false) String role,
+                            @RequestParam(required = false, defaultValue = "id") String sortField,
+                            @RequestParam(required = false, defaultValue = "desc") String sortDir,
+                            @RequestParam(required = false) Boolean status,
+                            @RequestParam(required = true) String type
+    ) throws IOException {
+       if(Objects.equals(type, "csv")){
+           response.setContentType("text/csv");
+           String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+           response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".csv");
 
-        List<User> users = userService.searchAllUser(query);
+           List<String> allowedList= List.of("id","fullName","email","phoneNumber");
+           if(!allowedList.contains(sortField) || sortDir.isEmpty()){
+               sortField="id";
+           }
 
-        PrintWriter writer = response.getWriter();
-        writer.println("ID,Full Name,Email Address,Phone Number,Role,Status");
+           Sort sort=Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC,sortField);
 
-        for(User user : users){
-            assert user.getRole() != null;
-            writer.printf("%d,%s,%s,%s,%s,%s%n",
-            user.getId(),
-            user.getFullName(),
-            user.getEmail(),
-            user.getPhoneNumber(),
-            user.getRole().getRoleName(),
-                    user.isEnabled() ? "Active" : "NotActive" );
-        }
-        writer.flush();
-        writer.close();
+           List<User> users = userService.filterUsers(query,role,status,sort);
+
+           PrintWriter writer = response.getWriter();
+           writer.println("Exported on:," + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+           writer.println();
+           writer.println("ID,Full Name,Email Address,Phone Number,Role,Status");
+
+           for(User user : users){
+               assert user.getRole() != null;
+               writer.printf("%d,%s,%s,%s,%s,%s%n",
+                       user.getId(),
+                       user.getFullName(),
+                       user.getEmail(),
+                       user.getPhoneNumber(),
+                       user.getRole().getRoleName(),
+                       user.isEnabled() ? "Active" : "Not Active" );
+           }
+           writer.flush();
+           writer.close();
+       }
+       else if(Objects.equals(type, "excel")){
+           // Set content type and filename
+           response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+           String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+           response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".xlsx");
+
+           // Validate sorting
+           List<String> allowedList = List.of("id", "fullName", "email", "phoneNumber");
+           if (!allowedList.contains(sortField) || sortDir == null || sortDir.isEmpty()) {
+               sortField = "id";
+           }
+
+           Sort sort = Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+           List<User> users = userService.filterUsers(query, role, status, sort);
+
+           // Excel workbook
+           XSSFWorkbook workbook = new XSSFWorkbook();
+           XSSFSheet sheet = workbook.createSheet("Users");
+
+           // Style for header
+           CellStyle headerStyle = workbook.createCellStyle();
+           XSSFFont headerFont = workbook.createFont();
+           headerFont.setBold(true);
+           headerStyle.setFont(headerFont);
+
+           int rowNum = 0;
+
+           // Optional: Export date and filters
+           Row metaRow = sheet.createRow(rowNum++);
+           metaRow.createCell(0).setCellValue("Exported on:");
+           metaRow.createCell(1).setCellValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+//           Row filterRow = sheet.createRow(rowNum++);
+//           filterRow.createCell(0).setCellValue("Filters:");
+//           filterRow.createCell(1).setCellValue("Query=" + (query != null ? query : ""));
+//           filterRow.createCell(2).setCellValue("Role=" + (role != null ? role : ""));
+//           filterRow.createCell(3).setCellValue("Status=" + (status != null ? status : "All"));
+
+//           rowNum++; // Blank line
+
+           // Header Row
+           Row header = sheet.createRow(rowNum++);
+           String[] columns = {"ID", "Full Name", "Email Address", "Phone Number", "Role", "Status"};
+           for (int i = 0; i < columns.length; i++) {
+               Cell cell = header.createCell(i);
+               cell.setCellValue(columns[i]);
+               cell.setCellStyle(headerStyle);
+           }
+
+           // Data Rows
+           for (User user : users) {
+               Row row = sheet.createRow(rowNum++);
+               row.createCell(0).setCellValue(user.getId());
+               row.createCell(1).setCellValue(user.getFullName());
+               row.createCell(2).setCellValue(user.getEmail());
+               row.createCell(3).setCellValue(user.getPhoneNumber());
+               row.createCell(4).setCellValue(user.getRole().getRoleName());
+               row.createCell(5).setCellValue(user.isEnabled() ? "Active" : "Not Active");
+           }
+
+           // Auto-size columns
+           for (int i = 0; i < columns.length; i++) {
+               sheet.autoSizeColumn(i);
+           }
+
+           // Write to output
+           workbook.write(response.getOutputStream());
+           workbook.close();
+       }
+
         }
 
 }

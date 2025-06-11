@@ -1,7 +1,9 @@
 package org.employee.surverythymeleaf.controller;
 
 
+import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.User;
+import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -19,11 +22,11 @@ import java.security.Principal;
 public class AuthController {
 
     private final UserService userService;
-    private final DaoAuthenticationProvider authProvider;
+    private final ApplicationService applicationService;
 
-    public AuthController(UserService userService, DaoAuthenticationProvider authProvider) {
+    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService) {
         this.userService = userService;
-        this.authProvider = authProvider;
+        this.applicationService = applicationService;
     }
 
     public boolean check_authentication() {
@@ -68,5 +71,12 @@ public class AuthController {
 //        User userDetails = userService.findByEmail(email);
 //        model.addAttribute("user", userDetails);
         return "dashboard";
+    }
+
+    @GetMapping("application/details/{id}")
+    public String getApplicationDetails(Model model, @PathVariable String id) {
+        Application application = applicationService.findApplicationByGeneratedApplicationId(id);
+        model.addAttribute("applications", application);
+        return "application/applicationDetails";
     }
 }

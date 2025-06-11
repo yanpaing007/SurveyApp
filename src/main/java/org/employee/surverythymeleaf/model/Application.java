@@ -2,6 +2,7 @@ package org.employee.surverythymeleaf.model;
 
 
 import jakarta.persistence.*;
+import jakarta.websocket.Encoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,5 +46,7 @@ public class Application {
     private String contactEmail;
     private Double latitude;
     private Double longitude;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String comment;
 }

@@ -1,30 +1,94 @@
+
+
 <div th:replace="~{fragments/layout::layout(~{::section})}">
-  <section class="max-w-7xl mx-auto">
-    <form method="POST" th:object="${user}" th:action="@{/admin/edit/{id}(id=*{id})}">
-      <label for="Full Name">Full Name</label>
-      <input type="text" th:field="*{fullName}" id="Full Name" name="fullName" placeholder="Full Name" class="px-6 py-4" th:value="*{fullName}"/>
 
-      <label for="email">Email</label>
-      <input type="text" th:field="*{email}" id="email" name="email" placeholder="email" class="px-6 py-4" th:value="*{email}"/>
+  <section>
+    <div class="flex justify-center">
+      <div class="form w-xl h-auto mt-4 py-10 rounded-lg form-main">
+        <p class="register text-black text-center text-xl mt-1 font-light">
+          Edit User
+        </p>
 
-      <label for="Phone Number">Phone Number</label>
-      <input type="text" th:field="*{phoneNumber}" id="Phone Number" name="phoneNumber" placeholder="Phone Number" class="px-6 py-4" th:value="*{phoneNumber}"/>
+        <div class="input-group w-120 m-auto">
 
-      <label for="password">Password</label>
-      <input type="password" th:field="*{password}" id="password" name="password" placeholder="Password" class="px-6 py-4" th:value="*{password}"/>
+          <form th:action="@{/admin/user/edit/{id}(id=${id})}" method="post" th:object="${user}">
 
-      <label for="role">Role</label>
-      <select name="role" id="role">
-        <option th:each="rol : ${role}" th:value="${rol.id}" th:text="${rol.roleName}"></option>
-      </select>
+            <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
+            <div class="flex mb-3">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-gray-400">
+                             <i class="fa-solid fa-user"></i>
+                              </span>
+              <input type="text" id="fullName" th:field="*{fullName}"
+                     class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                     placeholder="John Doe" required>
+            </div>
 
-      <label for="Status">Status</label>
-      <select name="status" id="status" th:field="*{status}">
-        <option th:value="0">Inactive</option>
-        <option th:value="1">Active</option>
-      </select>
+            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+            <div class="flex mb-3">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-gray-400">
+                              <i class="fa-solid fa-phone"></i>
+                              </span>
+              <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
+                     class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                     placeholder="+959963...." required>
+            </div>
 
-      <input type="submit" value="Submit">
-    </form>
+
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+            <div class="flex mb-3">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-gray-400">
+                              <i class="fa-solid fa-envelope"></i>
+                              </span>
+              <input type="text" id="email" th:field="*{email}"
+                     class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                     placeholder="elonmusk@gmail.com" required>
+            </div>
+
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+            <div class="flex mb-3">
+                              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-gray-400">
+                               <i class="fa-solid fa-lock"></i>
+                              </span>
+              <input type="password" id="password" th:field="*{password}"
+                     class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
+                     placeholder="Update user password...">
+            </div>
+
+            <div class="flex flex-row">
+              <div class="w-1/2 pr-3">
+                <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Update Role</label>
+                <select id="role" name="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                  <option th:each="rol : ${role}" th:value="${rol.id}" th:text="${rol.roleName}" th:selected="${rol.id == user.role.id}"></option>
+                </select>
+              </div>
+
+              <div class="w-1/2 pl-3">
+                <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Update Status</label>
+                <select id="status" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                  <option th:selected="${user.status == true }" th:value="true" >Active</option>
+                  <option th:selected="${user.status == false}" th:value="false">Inactive</option>
+
+                </select>
+              </div>
+
+            </div>
+            <div class="flex flex-col">
+              <button type="submit"
+                      class="mt-5 w-full cursor-pointer text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                <i class="fa-solid fa-pen-to-square pr-1"></i> Update
+              </button>
+              <a th:href="@{/admin/users}">
+                <button type="button"
+                        class="mt-1 w-full cursor-pointer text-white bg-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                  <i class="fa-solid fa-arrow-left pr-1"></i> Go Back
+                </button>
+              </a>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
   </section>
+
 </div>

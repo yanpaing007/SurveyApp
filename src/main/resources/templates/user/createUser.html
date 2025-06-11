@@ -1,6 +1,6 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
   <section class="mx-auto max-w-4xl mt-8 overflow-hidden shadow-md py-10 px-8 rounded-lg">
-    <form th:action="@{/create}" th:object="${user}" method="post">
+    <form th:action="@{/admin/create}" th:object="${user}" method="post">
   <div class="space-y-12">
     <div class="border-b border-gray-900/10 pb-12">
       <h2 class="text-base/7 font-semibold text-gray-900">Create New User</h2>

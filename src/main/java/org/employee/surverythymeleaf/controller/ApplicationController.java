@@ -3,12 +3,13 @@ import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import java.time.LocalDate;
 
 
 @Controller
@@ -26,7 +27,7 @@ public class ApplicationController {
     @GetMapping("/application/allApplications")
     public String getAllApplications(Model model, @RequestParam(required = false) String query,
                                      @RequestParam(required = false,defaultValue = "0") int page,
-                                     @RequestParam(required = false,defaultValue = "5") int size){
+                                     @RequestParam(required = false,defaultValue = "9") int size){
         Page<Application> applicationPage;
         if(query != null && !query.isEmpty()){
             applicationPage = applicationService.searchApplicationWithQuery(query,page,size);
@@ -34,7 +35,12 @@ public class ApplicationController {
             applicationPage = applicationService.getAllApplicationPaginated(page,size);
         }
 
-        model.addAttribute("applicationStatus", ApplicationStatus.values());
+        model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
+        model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
+        return getAllApplication(model, query, page, size, applicationPage);
+    }
+
+    static String getAllApplication(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Application> applicationPage) {
         model.addAttribute("applications",applicationPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",applicationPage.getTotalElements());
@@ -45,23 +51,43 @@ public class ApplicationController {
     }
 
     @GetMapping("/survey/allSurvey")
-    public String getAllSurveys(Model model,@RequestParam(required = false) String query,
+    public String getAllSurveys(Model model,
+                                @RequestParam(required = false) String query,
                                 @RequestParam(required = false,defaultValue = "0") int page,
-                                @RequestParam(required = false,defaultValue = "5") int size){
+                                @RequestParam(required = false,defaultValue = "9") int size,
+                                @RequestParam(required = false) String status,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
+    {
         Page<Survey> surveyPage;
-        if(query != null && !query.isEmpty()){
-            surveyPage = surveyService.searchSurveyWithQuery(query,page,size);
+        SurveyStatus surveyStatus = null;
+
+        if( status != null && !status.trim().isEmpty() ){
+            surveyStatus = SurveyStatus.valueOf(status);
+        }
+
+        if((query != null && !query.isEmpty()) || status != null || (fromDate != null && toDate != null)){
+
+            surveyPage = surveyService.searchSurveyWithQuery(query,page,size, surveyStatus,fromDate,toDate);
         }else{
             surveyPage = surveyService.getAllSuvey(page,size);
         }
 
-        model.addAttribute("surveyStatus", SurveyStatus.values());
+        model.addAttribute("surveyWithNonePendingStatus", SurveyStatus.getNonPendingSurveyStatus());
+        model.addAttribute("surveyWithPendingStatus", SurveyStatus.values());
+        return getString(model, query, page, size, surveyPage,surveyStatus,fromDate,toDate);
+    }
+
+    static String getString(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Survey> surveyPage,SurveyStatus status, LocalDate fromDate, LocalDate toDate) {
         model.addAttribute("surveys",surveyPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",surveyPage.getTotalElements());
         model.addAttribute("size",size);
         model.addAttribute("currentPage",page);
+        model.addAttribute("currentStatus",status);
         model.addAttribute("totalPages",surveyPage.getTotalPages());
+        model.addAttribute("fromDate",fromDate);
+        model.addAttribute("toDate",toDate);
         return "survey/allSurveys";
     }
 
@@ -70,6 +96,13 @@ public class ApplicationController {
         Survey survey=surveyService.findSurveyById(id);
         model.addAttribute("survey", survey);
         return "survey/editSurveyForm";
+    }
+
+    @GetMapping("/survey/details/{id}")
+    public String getDetailSurveyForm(Model model, @PathVariable String id) {
+        Survey survey=surveyService.findApplicationByGeneratedId(id);
+        model.addAttribute("survey", survey);
+        return "survey/surveyDetails";
     }
 
     @PostMapping("application/updateStatus")
@@ -99,4 +132,11 @@ public class ApplicationController {
         }
         return "redirect:/technical/survey/allSurvey";
     }
+
+//    @GetMapping("application/details/{id}")
+//    public String getApplicationDetails(Model model, @PathVariable String id) {
+//        Application application = applicationService.findApplicationByGeneratedApplicationId(id);
+//        model.addAttribute("applications", application);
+//        return "application/applicationDetails";
+//    }
 }
