@@ -2,17 +2,17 @@
   <section>
     <div class="grid grid-cols-3 gap-4 max-w-7xl mx-auto mt-7">
 
-      <div th:replace="fragments/input-field::input-field('generatedApplicationId','Survey Id','text',${survey.generatedSurveyId},'generatedApplicationId','GeneratedApplicationId','','fa-clipboard-list')"></div>
-      <div th:replace="fragments/input-field::input-field('generatedSurveyId','Customer Name','text',${survey.customerName},'generatedSurveyId','generatedSurveyId','','fa-clipboard-list')"></div>
-      <div th:replace="fragments/input-field::input-field('companyName','Phone Number','text',${survey.phoneNumber},'companyName','companyName','','fa-building')"></div>
+      <div th:replace="fragments/input-field::input-field('generatedApplicationId','Survey Id','text',${survey.generatedSurveyId},'generatedApplicationId','GeneratedApplicationId','bg-gray-300 text-gray-600','fa-clipboard-list',true,true)"></div>
+      <div th:replace="fragments/input-field::input-field('customerName','Customer Name','text',${survey.customerName},'customerName','customerName','','fa-clipboard-list',false,false)"></div>
+      <div th:replace="fragments/input-field::input-field('phoneNumber','Phone Number','text',${survey.phoneNumber},'phoneNumber','phoneNumber','','fa-building',false,false)"></div>
 
-      <div th:replace="fragments/input-field::input-field('customerName','Sale Person','text',${survey.salePerson.fullName},'customerName','customerName','','fa-user')"></div>
-      <div th:replace="fragments/input-field::input-field('email','Status','text',${survey.status.getStatus()},'email','email','','fa-envelope')"></div>
-      <div th:replace="fragments/input-field::input-field('phoneNumber','Township','text',${survey.townShip},'phoneNumber','phoneNumber','','fa-phone')"></div>
+      <div th:replace="fragments/input-field::input-field('salePerson','Sale Person','text',${survey.salePerson.fullName},'salePerson','salePerson','','fa-user',false,false)"></div>
+      <div th:replace="fragments/input-field::input-field('status','Status','text',${survey.status.getStatus()},'status','status','','fa-envelope',false,false)"></div>
+      <div th:replace="fragments/input-field::input-field('townShip','Township','text',${survey.townShip},'townShip','townShip','','fa-phone',false,false)"></div>
 
-      <div th:replace="fragments/input-field::input-field('address','Request Date','text',${survey.requestDate},'address','address','','fa-location-dot')"></div>
-      <div th:replace="fragments/input-field::input-field('longitude','CreatedAt','text',${survey.createdAt},'longitude','longitude','','fa-location-crosshairs')"></div>
-      <div th:replace="fragments/input-field::input-field('latitude','TechPerson','text',${survey.technicalPerson.fullName},'latitude','latitude','','fa-location-crosshairs')"></div>
+      <div th:replace="fragments/input-field::input-field('requestDate','Request Date','text',${survey.requestDate},'requestDate','requestDate','','fa-location-dot',false,false)"></div>
+      <div th:replace="fragments/input-field::input-field('createdAt','CreatedAt','text',${survey.createdAt},'createdAt','createdAt','','fa-location-crosshairs',false,false)"></div>
+      <div th:replace="fragments/input-field::input-field('technicalPerson','TechPerson','text',${survey.technicalPerson.fullName},'technicalPerson','technicalPerson','','fa-location-crosshairs',false,false)"></div>
 
     </div>
   </section>

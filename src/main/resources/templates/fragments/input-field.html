@@ -1,21 +1,17 @@
-<div class="w-full mx-auto" th:fragment="input-field(for,name,type,value,id,placeholder,moreClass,icon)">
+<div class="w-full mx-auto" th:fragment="input-field(for,name,type,value,id,placeholder,moreClass,icon,isReadOnly,isDisabled)">
   <label th:for="${for}" th:text="${name}" class="block mb-2 text-xs font-medium text-gray-900"></label>
   <div class="relative">
-    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5" th:classappend="${#strings.equalsIgnoreCase(value,'COMPLETED') ? 'text-white' :''}">
       <i th:class="'fa-solid ' + ${icon}"></i>
     </div>
 
     <input
             th:type="${type}"
             th:id="${id}"
+            th:name="${for}"
             th:value="${value}"
             th:placeholder="${placeholder}"
-            class="bg-gray-50 border-gray-300 focus:outline-hidden border text-gray-900 text-xs rounded-lg w-full ps-10 p-2.5"
-            th:classappend="${id == 'applicationStatus'} ?
-        (value == 'Pending' ? ' bg-yellow-100 border-yellow-700 text-yellow-900' :
-        (value == 'Processing' ? ' bg-blue-300 text-white' :
-        (value == 'Successed' ? ' bg-green-300 text-white' :
-        (value == 'Cancelled' ? ' bg-red-300 text-white' : ''))))
-        : moreClass" />
+            th:attr="readonly=${isReadOnly} ? 'readonly' : null, disabled=${isDisabled} ? 'disabled' : null"
+            class="border-gray-300 focus:outline-hidden border text-xs rounded-lg ps-10 p-2 w-full" />
   </div>
 </div>

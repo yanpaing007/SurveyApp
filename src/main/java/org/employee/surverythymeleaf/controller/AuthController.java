@@ -1,7 +1,8 @@
 package org.employee.surverythymeleaf.controller;
 
-
 import org.employee.surverythymeleaf.model.Application;
+import org.employee.surverythymeleaf.model.ApplicationStatus;
+import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.UserService;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.security.Principal;
 
 @Controller
@@ -77,6 +77,23 @@ public class AuthController {
     public String getApplicationDetails(Model model, @PathVariable String id) {
         Application application = applicationService.findApplicationByGeneratedApplicationId(id);
         model.addAttribute("applications", application);
+        model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
+        model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
         return "application/applicationDetails";
     }
+
+    @PostMapping("/application/details/{id}")
+    public String updateApplication(@PathVariable String id, @ModelAttribute Application application, RedirectAttributes redirectAttributes) {
+        boolean app= applicationService.updateApplication(id,application);
+        if(app){
+            redirectAttributes.addFlashAttribute("message", "Application updated successfully!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        }
+        else{
+            redirectAttributes.addFlashAttribute("message", "Application wasn't updated!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
+        return "redirect:/application/details/{id}";
+    }
+
 }

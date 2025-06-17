@@ -1,7 +1,251 @@
 <div th:replace="~{fragments/layout::layout(~{::section})}">
 
-  <section class="max-w-7xl mx-auto mt-3 text-xs">
-    <div th:replace="~{fragments/tab::tabLayout(applications)}">
+  <section class="max-w-9/10 mx-auto mt-3 mb-10 text-xs">
+    <div class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 h-2 rounded-t-md">
+    </div>
+    <div class="px-7 py-1 shadow-md">
+
+
+      <div class="header-section flex flex-row justify-between py-5">
+
+        <div class="inline-flex items-center gap-x-3">
+          <p class="header-text text-xl font-semibold text-indigo-700">Application Details</p>
+          <span th:text="${applications.generatedApplicationId}" class="text-indigo-800 bg-indigo-100 px-3 py-1 rounded-xl"></span>
+        </div>
+
+        <div class="items-center flex gap-x-2 rounded-xl px-3 py-1">
+          <div class="circle w-2 h-2 rounded-xl"></div>
+          <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
+              applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
+              applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
+              applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
+              'fa-solid fa-question-circle'}">
+          </i>
+          <p class="text-indigo-700" th:text="${applications.applicationStatus.status}"
+             th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
+ applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
+ applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
+ applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}"></p>
+        </div>
+
+      </div>
+
+      <div class="mb-4 border-b border-gray-200">
+        <ul class="flex flex-wrap -mb-px text-xs font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-indigo-600 hover:text-indigo-600 border-indigo-600 bg-gradient-to-t from-blue-100 to-slate-50" data-tabs-inactive-classes="text-gray-500 hover:text-indigo-900 border-transparent hover:border-indigo-500 hover:bg-gradient-to-t hover:from-blue-100 hover:to-slate-50" role="tablist">
+          <li class="me-2" role="presentation">
+            <button class="inline-block py-4 px-4 text-center border-b-2 rounded-t-lg" id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fa-solid fa-square-poll-vertical"></i> App Details</button>
+          </li>
+          <li class="me-2" role="presentation">
+            <button class="inline-block py-4 px-4 text-center border-b-2 rounded-t-lg" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fa-solid fa-list-check"></i> Assignment Info</button>
+          </li>
+          <li class="me-2" role="presentation">
+            <button class="inline-block py-4 px-4 text-center border-b-2 rounded-t-lg" id="map-styled-tab" data-tabs-target="#styled-settings" type="button" role="tab" aria-controls="settings" aria-selected="false"><i class="fa-solid fa-map"></i> Map</button>
+          </li>
+        </ul>
+      </div>
+
+      <div id="default-styled-tab-content text-xs">
+        <div class="hidden px-8 py-7 rounded-lg shadow-lg mb-15" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+          <form th:action="@{{id}(id=${applications.generatedApplicationId})}" method="post" th:object="${applications}">
+
+            <input type="hidden" name="id" th:value="${applications.id}">
+
+            <div class="pb-2">
+              <div class="small-head flex flex-row gap-x-1 items-center text-[14px] font-semibold border-b border-gray-200 pb-2">
+                <i class="fa-solid fa-circle-info text-indigo-800"></i> Basic Information
+              </div>
+
+            </div>
+
+
+
+            <div class="grid grid-cols-3 gap-4">
+
+              <div class="w-full mx-auto">
+                <label for="generatedApplicationId" class="block mb-2 text-xs font-medium text-gray-900">Generated Application ID</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+                    <i class="fa-solid fa-clipboard-list text-xs"></i>
+                  </div>
+                  <input
+                          type="text"
+                          id="generatedApplicationId"
+                          name="generatedApplicationId"
+                          th:value="${applications.generatedApplicationId}"
+                          placeholder="generatedApplicationId"
+                          readonly disabled
+                          class="border-gray-300 w-full focus:outline-hidden border text-xs rounded-lg ps-10 p-2 bg-gray-300 text-gray-700" />
+                </div>
+              </div>
+
+
+
+              <div class="w-full mx-auto">
+                <label for="generatedSurveyId" class="block mb-2 text-xs font-medium text-gray-900">Generated Survey ID</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                  </div>
+
+                  <input
+                          type="text"
+                          id="generatedSurveyId"
+                          name="generatedSurveyId"
+                          th:value="${applications.survey.generatedSurveyId}"
+                          placeholder="generatedSurveyId"
+                          readonly disabled
+                          class="border-gray-300 w-full focus:outline-hidden border text-xs rounded-lg ps-10 p-2 bg-gray-300 text-gray-700" />
+                </div>
+              </div>
+
+
+              <div th:replace="fragments/input-field::input-field('companyName','Company Name','text',${applications.companyName},'companyName','companyName','','fa-building text-indigo-800',false,false)"></div>
+
+              </div>
+
+
+
+              <div class="pb-2 pt-6">
+                <div class="small-head flex flex-row gap-x-1 items-center text-[14px] font-semibold border-b border-gray-200 pb-2">
+                  <i class="fa-solid fa-address-card text-indigo-800"></i> Contact Information
+                </div>
+              </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div th:replace="fragments/input-field::input-field('customerName','Customer Name','text',${applications.customerName},'customerName','customerName','','fa-user text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field('contactEmail','Contact Email','text',${applications.contactEmail},'contactEmail','contactEmail','','fa-envelope text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field('phoneNumber','Phone Number','text',${applications.phoneNumber},'phoneNumber','phoneNumber','','fa-phone text-indigo-800',false,false)"></div>
+            </div>
+
+
+
+            <div class="pb-2 pt-6">
+              <div class="small-head flex flex-row gap-x-1 items-center text-[14px] font-semibold border-b border-gray-200 pb-2">
+                <i class="fa-solid fa-location-dot text-indigo-800"></i> Location Details
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+              <div th:replace="fragments/input-field::input-field('address','Address','text',${applications.address},'address','address','','fa-location-dot text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field('longitude','Longitude','text',${applications.longitude},'longitude','longitude','','fa-location-crosshairs text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field('latitude','Latitude','text',${applications.latitude},'latitude','latitude','','fa-location-crosshairs text-indigo-800',false,false)"></div>
+            </div>
+
+            <div class="pb-2 pt-6">
+              <div class="small-head flex flex-row gap-x-1 items-center text-[14px] font-semibold border-b border-gray-200 pb-2">
+                <i class="fa-solid fa-chart-simple text-indigo-800"></i> Application Status
+              </div>
+            </div>
+
+
+            <div class="grid grid-cols-3 gap-4">
+
+              <div class="w-full mx-auto">
+                <label for="applicationStatus" class="block mb-2 text-xs font-medium">Application Status</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+                    <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
+              applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
+              applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
+              applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
+              'fa-solid fa-question-circle'}">
+                    </i>
+                  </div>
+
+                  <input
+                          type="text"
+                          id="applicationStatus"
+                          name="applicationStatus"
+                          th:value="${applications.applicationStatus}"
+                          placeholder="Application Status"
+                          readonly disabled
+                          class="w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border"
+                          th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
+ applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
+ applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
+ applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}" />
+                </div>
+              </div>
+
+
+              <div class="w-full mx-auto">
+                <label for="applicationStatus" class="block mb-2 text-xs font-medium text-gray-900">Update Application Status</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+                    <i class="fa-solid fa-clipboard-list text-indigo-800"></i>
+                  </div>
+
+                  <select name="applicationStatus" class="form-select w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border border-gray-200">
+
+                    <th:block th:if="${applications.applicationStatus.status == 'Pending'}">
+                      <option th:each="status,iterStat : ${applicationWithPendingStatus}"
+                              th:value="${status.name()}"
+                              th:text="${status.getStatus()}"
+                              th:selected="${status.name() == applications.applicationStatus.name()}">
+                      </option>
+                    </th:block>
+
+                    <th:block th:if="${applications.applicationStatus.status != 'Pending'}">
+                      <option th:each="status,iterStat : ${applicationWithNonePendingStatus}"
+                              th:value="${status.name()}"
+                              th:text="${status.getStatus()}"
+                              th:selected="${status.name() == applications.applicationStatus.name()}">
+                      </option>
+                    </th:block>
+
+                  </select>
+                </div>
+              </div>
+
+              <div class="w-full mx-auto">
+                <label for="submittedBy" class="block mb-2 text-xs font-medium text-gray-900">Submitted By?</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <input
+                          type="text"
+                          id="submittedBy"
+                          th:value="${applications.submittedBy.fullName}"
+                          placeholder="submittedBy"
+                          readonly
+                          class="w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border border-gray-300 bg-gray-300 text-gray-700" />
+                  <input type="hidden" name="submittedBy" th:value="${applications.submittedBy.id}">
+                </div>
+              </div>
+
+              <div th:replace="fragments/input-field::input-field('applicationDate','Application Date','text',${applications.applicationDate},'applicationDate','applicationDate','','fa-calendar text-indigo-800',false,false)"></div>
+          </div>
+
+
+            <div class="grid grid-cols-1 mt-6">
+              <div class="w-full mx-auto">
+                <label for="comment" class="block mb-2 text-xs font-medium text-gray-900"><i class="fa-solid fa-comment text-indigo-800"></i> Comment</label>
+                <div class="relative">
+                  <textarea rows="3" id="comment" name="comment" th:text="${applications.comment}" class="bg-gray-50 focus:outline-hidden border border-gray-300 text-gray-900 text-xs rounded-lg w-full ps-4 p-2.5 max-h-20 min-h-10"></textarea>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="button-group flex flex-row justify-between gap-x-2 pt-7 items-center">
+
+              <div>
+                <a th:href="@{/technical/application/allApplications}" class="px-5 py-3 bg-transparent border border-gray-300 rounded-md cursor-pointer text-xs"><i class="fa-solid fa-chevron-left mr-1"></i> Back</a>
+              </div>
+
+              <div>
+                <button type="submit" class="px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-md cursor-pointer text-xs"><i class="fa-solid fa-pen-to-square"></i> Update Application</button>
+              </div>
+            </div>
+          </form>
+      </div>
+        <div class="hidden p-4 rounded-lg bg-gray-100" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+          <p class="text-sm text-gray-600">This is some placeholder content the <strong class="font-medium text-gray-800">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+        </div>
+        <div class="hidden p-4 rounded-lg bg-gray-100" id="styled-settings" role="tabpanel" aria-labelledby="settings-tab">
+          <p class="text-sm text-gray-600">This is some placeholder content the <strong class="font-medium text-gray-800">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+        </div>
+      </div>
 
     </div>
   </section>

@@ -119,6 +119,8 @@ public class ApplicationController {
        return "redirect:/technical/application/allApplications";
     }
 
+
+
     @PostMapping("survey/updateStatus")
     public String updateSurveyStatus(@RequestParam SurveyStatus status, @RequestParam Long id, RedirectAttributes redirectAttributes,@RequestParam User TechPerson) {
         boolean survey = surveyService.updateStatus(id,status,TechPerson);
@@ -132,6 +134,20 @@ public class ApplicationController {
         }
         return "redirect:/technical/survey/allSurvey";
     }
+
+//    @PostMapping("/application/details/{id}")
+//    public String updateApplication(@PathVariable String id, @ModelAttribute Application application, RedirectAttributes redirectAttributes) {
+//        boolean app= applicationService.updateApplication(id,application);
+//        if(app){
+//            redirectAttributes.addFlashAttribute("message", "Application status updated");
+//            redirectAttributes.addFlashAttribute("messageType", "success");
+//        }
+//        else{
+//            redirectAttributes.addFlashAttribute("message", "Application status not updated");
+//            redirectAttributes.addFlashAttribute("messageType", "error");
+//        }
+//        return "redirect:/technical/application/allApplications";
+//    }
 
 //    @GetMapping("application/details/{id}")
 //    public String getApplicationDetails(Model model, @PathVariable String id) {

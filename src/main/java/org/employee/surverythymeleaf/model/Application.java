@@ -46,6 +46,7 @@ public class Application {
     private String contactEmail;
     private Double latitude;
     private Double longitude;
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String comment;

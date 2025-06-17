@@ -1,17 +1,14 @@
 package org.employee.surverythymeleaf.service;
-
-
 import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.ApplicationStatus;
-import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+
 
 @Service
 public class ApplicationService {
@@ -59,11 +56,32 @@ public class ApplicationService {
         }
     }
 
-//    public void updateApplicationStatus(Long id, ApplicationStatus status) {
-//
-//    }
-
     public Application searchLatestApplication() {
        return applicationRepository.findLatestApplication();
     }
+
+    public boolean updateApplication(String id, Application application) {
+        Optional<Application> applicationOpt= applicationRepository.findByGeneratedApplicationId((id));
+        if(applicationOpt.isPresent()) {
+            Application app = applicationOpt.get();
+//            BeanUtils.copyProperties(application,app,"id","generatedApplicationId","generatedApplicationId");
+            app.setCompanyName(application.getCompanyName());
+            app.setCustomerName(application.getCustomerName());
+            app.setContactEmail(application.getContactEmail());
+            app.setPhoneNumber(application.getPhoneNumber());
+            app.setAddress(application.getAddress());
+            app.setLongitude(application.getLongitude());
+            app.setLatitude(application.getLatitude());
+            app.setApplicationStatus(application.getApplicationStatus());
+            app.setSubmittedBy(application.getSubmittedBy());
+            app.setComment(application.getComment());
+            app.setApplicationDate(application.getApplicationDate());
+            applicationRepository.save(app);
+        }
+        else{
+            throw new UsernameNotFoundException("Application with id " + id + " not found");
+        }
+        return true;
+    }
+
 }

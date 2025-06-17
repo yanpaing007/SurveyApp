@@ -166,12 +166,12 @@ public class UserController {
            writer.close();
        }
        else if(Objects.equals(type, "excel")){
-           // Set content type and filename
+
            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
            response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".xlsx");
 
-           // Validate sorting
+
            List<String> allowedList = List.of("id", "fullName", "email", "phoneNumber");
            if (!allowedList.contains(sortField) || sortDir == null || sortDir.isEmpty()) {
                sortField = "id";
@@ -180,11 +180,11 @@ public class UserController {
            Sort sort = Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
            List<User> users = userService.filterUsers(query, role, status, sort);
 
-           // Excel workbook
+
            XSSFWorkbook workbook = new XSSFWorkbook();
            XSSFSheet sheet = workbook.createSheet("Users");
 
-           // Style for header
+
            CellStyle headerStyle = workbook.createCellStyle();
            XSSFFont headerFont = workbook.createFont();
            headerFont.setBold(true);
@@ -192,20 +192,11 @@ public class UserController {
 
            int rowNum = 0;
 
-           // Optional: Export date and filters
+
            Row metaRow = sheet.createRow(rowNum++);
            metaRow.createCell(0).setCellValue("Exported on:");
            metaRow.createCell(1).setCellValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-//           Row filterRow = sheet.createRow(rowNum++);
-//           filterRow.createCell(0).setCellValue("Filters:");
-//           filterRow.createCell(1).setCellValue("Query=" + (query != null ? query : ""));
-//           filterRow.createCell(2).setCellValue("Role=" + (role != null ? role : ""));
-//           filterRow.createCell(3).setCellValue("Status=" + (status != null ? status : "All"));
-
-//           rowNum++; // Blank line
-
-           // Header Row
            Row header = sheet.createRow(rowNum++);
            String[] columns = {"ID", "Full Name", "Email Address", "Phone Number", "Role", "Status"};
            for (int i = 0; i < columns.length; i++) {
@@ -214,7 +205,6 @@ public class UserController {
                cell.setCellStyle(headerStyle);
            }
 
-           // Data Rows
            for (User user : users) {
                Row row = sheet.createRow(rowNum++);
                row.createCell(0).setCellValue(user.getId());
@@ -225,12 +215,10 @@ public class UserController {
                row.createCell(5).setCellValue(user.isEnabled() ? "Active" : "Not Active");
            }
 
-           // Auto-size columns
            for (int i = 0; i < columns.length; i++) {
                sheet.autoSizeColumn(i);
            }
 
-           // Write to output
            workbook.write(response.getOutputStream());
            workbook.close();
        }

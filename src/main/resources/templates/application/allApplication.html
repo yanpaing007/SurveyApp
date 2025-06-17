@@ -12,7 +12,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                             </svg>
                         </div>
-                        <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-100 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search applications by ID,Name,Phone Number">
+                        <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-50 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search application">
                     </div>
                 </form>
             </div>
@@ -68,7 +68,7 @@
                         <td class="px-6 py-4" th:text="${app.generatedApplicationId}">
                         </td>
 
-                        <td class="px-6 py-4" th:text="${app.survey.generatedSurveyId}">
+                        <td class="px-6 py-4" th:text="${app.survey?.generatedSurveyId}">
                         </td>
 
                         <td class="px-6 py-4">
@@ -108,16 +108,20 @@
                                                     th:selected="${status == app.applicationStatus}">
                                             </option>
                                         </th:block>
+
                                     </select>
                                 </form>
                             </div>
                         </td>
+
                         <td class="px-6 py-4">
-                            <span th:text="${app.submittedBy.fullName}"></span>
+                            <span th:text="${app.submittedBy?.fullName}"></span>
                         </td>
+
                         <td th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'',''Sale'')')}" class="px-6 py-4 text-center">
                             <a th:href="@{/application/details/{id}(id=${app.getGeneratedApplicationId()})}" th:classappend="${application}" class="px-3 py-2 bg-indigo-800 rounded-md text-white"><i class="fa-solid fa-arrow-right"></i></a>
                         </td>
+
                     </tr>
                     </tbody>
                 </table>

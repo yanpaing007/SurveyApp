@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
@@ -24,4 +26,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 
     Application findApplicationByGeneratedApplicationId(String generatedApplicationId);
+
+    Optional<Application> findByGeneratedApplicationId(String generatedApplicationId);
+
+    boolean deleteByGeneratedApplicationId(String id);
 }
