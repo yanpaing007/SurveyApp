@@ -1,12 +1,15 @@
 
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-  <section class="mx-auto max-w-9/10 mt-6 overflow-hidden">
-    <div class="relative rounded-lg">
-      <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
-        <div class="flex flex-row space-x-2">
+
+  <section class="mx-auto w-full flex justify-center py-3">
+    <div class="w-full max-w-[90%] overflow-hidden">
+      <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 bg-white">
+        <div class="flex flex-row space-x-2 pb-2">
+
           <div class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs">
             <i class="fa-solid fa-user-plus pr-1"></i><a th:href="@{/admin/create}" th:text="Add+' '+User"></a>
           </div>
+
           <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs inline-flex items-center space-x-1">
             <i class="fa-solid fa-file-export"></i>
             <button id="dropdownDefaultButton"
@@ -82,7 +85,7 @@
         </form>
       </div>
 
-      <div class="table_main max-h-120 overflow-y-auto overflow-x-auto">
+      <div class="table_main max-h-180 w-full overflow-y-auto overflow-x-auto">
         <table id="table-search" class="table-auto w-full min-w-full whitespace-nowrap text-xs text-left rtl:text-right text-gray-500">
           <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10">
           <tr>
@@ -138,9 +141,10 @@
               <i th:classappend="${user.role.getRoleName() == 'Admin' ? 'fa-user-tie' : (user.role.getRoleName() == 'Sale' ? 'fa-square-poll-vertical' : 'fa-gear')}" class="fa-solid"></i>
               <span th:text="${user.role.getRoleName()}"></span>
             </td>
-            <td class="px-6 py-4">
-              <div class="flex items-center">
-                <div th:classappend="${user.status ? 'bg-green-500' : 'bg-red-500'}" class="h-2.5 w-2.5 rounded-full me-2"></div> <p th:text="${user.status ? 'Active' : 'Inactive'}"></p>
+            <td class="px-1 py-4">
+              <div th:classappend="${user.status ? 'bg-green-50' : 'bg-red-50'}" class="flex items-center space-x-2 px-2 py-1 justify-center rounded-xl">
+                <span th:classappend="${user.status ? 'bg-green-500' : 'bg-red-500'}" class="inline-block h-2.5 w-2.5 rounded-full"></span>
+                <span th:text="${user.status ? 'Active' : 'Inactive'}" class="text-xs"></span>
               </div>
             </td>
             <td class="px-6 py-4 text-center">

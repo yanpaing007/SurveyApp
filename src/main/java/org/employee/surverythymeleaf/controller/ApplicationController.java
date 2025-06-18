@@ -27,7 +27,7 @@ public class ApplicationController {
     @GetMapping("/application/allApplications")
     public String getAllApplications(Model model, @RequestParam(required = false) String query,
                                      @RequestParam(required = false,defaultValue = "0") int page,
-                                     @RequestParam(required = false,defaultValue = "9") int size){
+                                     @RequestParam(required = false,defaultValue = "13") int size){
         Page<Application> applicationPage;
         if(query != null && !query.isEmpty()){
             applicationPage = applicationService.searchApplicationWithQuery(query,page,size);
@@ -54,7 +54,7 @@ public class ApplicationController {
     public String getAllSurveys(Model model,
                                 @RequestParam(required = false) String query,
                                 @RequestParam(required = false,defaultValue = "0") int page,
-                                @RequestParam(required = false,defaultValue = "9") int size,
+                                @RequestParam(required = false,defaultValue = "13") int size,
                                 @RequestParam(required = false) String status,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
@@ -72,6 +72,7 @@ public class ApplicationController {
         }else{
             surveyPage = surveyService.getAllSuvey(page,size);
         }
+
 
         model.addAttribute("surveyWithNonePendingStatus", SurveyStatus.getNonPendingSurveyStatus());
         model.addAttribute("surveyWithPendingStatus", SurveyStatus.values());

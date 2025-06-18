@@ -1,8 +1,8 @@
 
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-    <section class="mx-auto max-w-9/10 mt-8 overflow-hidden">
-        <div class="relative rounded-lg">
-            <div th:classappend="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')') ? 'justify-between' : 'justify-end'}" class="flex items-center flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
+    <section class="mx-auto w-full flex justify-center items-center py-3">
+        <div class="w-full max-w-[90%] items-center overflow-hidden">
+            <div th:classappend="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')') ? 'justify-between' : 'justify-end'}" class="flex items-center flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 bg-white pb-2">
 
                 <div class="flex flex-row space-x-2" th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}">
                     <div class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs">
@@ -35,7 +35,7 @@
             </div>
 
 
-            <div class="table_main max-h-125 overflow-y-auto overflow-x-auto">
+            <div class="table_main max-h-170 w-full overflow-y-auto overflow-x-auto">
                 <table id="table-search" class="table-auto w-full min-w-full whitespace-nowrap text-xs text-gray-500">
                     <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10 text-left">
                     <tr>
@@ -134,13 +134,22 @@
 <!--                            <span th:text="${survey.technicalPerson != null ? survey.technicalPerson.fullName : 'Not Assigned'}"></span>-->
 <!--                            <span th:text="${survey.updatedAt != null ? '[' + survey.updatedAt.toLocalDate() + ']' : ''}"></span>-->
 <!--                        </td>-->
+
                         <td th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}" class="text-center">
-                            <a th:href="@{/sale/application/create/{id}(id=${survey.getGeneratedSurveyId()})}"
-                               th:class="${survey.status.status=='Pending' ?
-                                'pointer-events-none cursor-not-allowed bg-gray-400 px-3 py-2 rounded-md text-gray-100' : (survey.status.status == 'Failed' ?
-                                'pointer-events-none cursor-not-allowed bg-red-300 px-3 py-2 rounded-md text-white': (survey.status.status == 'Succeeded' ? 'bg-indigo-800 px-3 py-2 rounded-md text-white': ''))
-                              }">
-                                <i th:class="${survey.status.status == 'Failed' or survey.status.status == 'Pending'} ? 'fa-solid fa-ban' : 'fa-solid fa-plus'"></i> App
+                            <a th:if="${survey.application != null}"
+                               th:href="@{/application/details/{id}(id=${survey.application.generatedApplicationId})}"
+                               class="bg-green-600 px-3 py-2 rounded-md text-white inline-flex items-center space-x-1">
+                                <i class="fa-solid fa-check"></i>
+                                <span>App</span>
+                            </a>
+
+                            <a th:if="${survey.application == null}"
+                               th:href="@{/sale/application/create/{id}(id=${survey.generatedSurveyId})}"
+                               th:class="${survey.status.status == 'Succeeded' ?
+             'bg-indigo-800 px-3 py-2 rounded-md text-white inline-flex items-center space-x-1' :
+             'pointer-events-none cursor-not-allowed bg-gray-400 px-3 py-2 rounded-md text-gray-100 inline-flex items-center space-x-1'}">
+                                <i th:class="${survey.status.status == 'Succeeded' ? 'fa-solid fa-plus' : 'fa-solid fa-ban'}"></i>
+                                <span>App</span>
                             </a>
 
                             <a th:href="@{/technical/survey/details/{id}(id=${survey.getGeneratedSurveyId()})}" class="ml-3 px-3 py-2 bg-indigo-900 rounded-md text-white">

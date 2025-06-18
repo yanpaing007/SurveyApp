@@ -1,8 +1,8 @@
 
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-    <section class="mx-auto max-w-9/10 mt-8 overflow-hidden">
-        <div class="relative rounded-lg">
-            <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white">
+    <section class="mx-auto w-full flex justify-center items-center py-3">
+        <div class="w-full max-w-[90%] items-center overflow-hidden">
+            <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-2 bg-white">
 
                 <form th:action="@{/technical/application/allApplications}" method="get" id="filterForm">
                     <label for="table-search" class="sr-only">Search</label>
@@ -17,7 +17,7 @@
                 </form>
             </div>
 
-            <div class="table_main max-h-125 overflow-y-auto overflow-x-auto">
+            <div class="table_main max-h-170 overflow-y-auto overflow-x-auto">
                 <table id="table-search" class="table-auto min-w-full w-full whitespace-nowrap text-xs rtl:text-right text-gray-500">
                     <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10 text-left">
                     <tr>

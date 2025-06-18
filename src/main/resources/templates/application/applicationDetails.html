@@ -1,8 +1,7 @@
 <div th:replace="~{fragments/layout::layout(~{::section})}">
 
-  <section class="max-w-9/10 mx-auto mt-3 mb-10 text-xs">
-    <div class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 h-2 rounded-t-md">
-    </div>
+  <section class="mx-auto w-[90%] py-6">
+    <div class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 h-2 rounded-t-md"></div>
     <div class="px-7 py-1 shadow-md">
 
 
@@ -10,23 +9,26 @@
 
         <div class="inline-flex items-center gap-x-3">
           <p class="header-text text-xl font-semibold text-indigo-700">Application Details</p>
-          <span th:text="${applications.generatedApplicationId}" class="text-indigo-800 bg-indigo-100 px-3 py-1 rounded-xl"></span>
+          <span th:text="${applications.generatedApplicationId}" class="text-indigo-800 bg-indigo-100 px-3 py-1 text-xs rounded-xl"></span>
         </div>
 
-        <div class="items-center flex gap-x-2 rounded-xl px-3 py-1">
+        <div class="items-center flex gap-x-1 rounded-xl px-4 py-1 text-xs"
+             th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
+             applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
+             applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
+             applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}">
           <div class="circle w-2 h-2 rounded-xl"></div>
+
           <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
               applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
               applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
               applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
               'fa-solid fa-question-circle'}">
           </i>
-          <p class="text-indigo-700" th:text="${applications.applicationStatus.status}"
-             th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
- applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
- applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
- applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}"></p>
+
+          <p th:text="${applications.applicationStatus.status}"></p>
         </div>
+
 
       </div>
 
@@ -213,7 +215,7 @@
                 </div>
               </div>
 
-              <div th:replace="fragments/input-field::input-field('applicationDate','Application Date','text',${applications.applicationDate},'applicationDate','applicationDate','','fa-calendar text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field('applicationDate','Application Date','date',${applications.applicationDate},'applicationDate','applicationDate','','fa-calendar text-indigo-800',false,false)"></div>
           </div>
 
 

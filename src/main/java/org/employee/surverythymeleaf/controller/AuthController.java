@@ -73,7 +73,7 @@ public class AuthController {
         return "dashboard";
     }
 
-    @GetMapping("application/details/{id}")
+    @GetMapping("/application/details/{id}")
     public String getApplicationDetails(Model model, @PathVariable String id) {
         Application application = applicationService.findApplicationByGeneratedApplicationId(id);
         model.addAttribute("applications", application);
