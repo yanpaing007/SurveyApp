@@ -7,6 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 
@@ -28,9 +31,9 @@ public class ApplicationService {
         
     }
 
-    public Page<Application> searchApplicationWithQuery(String query, int page, int size) {
+    public Page<Application> searchApplicationWithQuery(String query, int page, int size, ApplicationStatus applicationStatus, LocalDate fromDate, LocalDate toDate) {
         Pageable pageable = PageRequest.of(page,size);
-        return applicationRepository.searchApplication(query,pageable);
+        return applicationRepository.searchApplication(query,pageable,applicationStatus,fromDate,toDate);
     }
 
     public Application findApplicationById(Long id) {
@@ -40,7 +43,8 @@ public class ApplicationService {
     }
 
     public Application findApplicationByGeneratedApplicationId(String generatedApplicationId) {
-        return applicationRepository.findApplicationByGeneratedApplicationId(generatedApplicationId);
+        return applicationRepository.findApplicationByGeneratedApplicationId(generatedApplicationId)
+                .orElseThrow(() -> new UsernameNotFoundException("Application with id " + generatedApplicationId + " not found"));
     }
 
     public boolean updateStatus(Long id, ApplicationStatus status) {

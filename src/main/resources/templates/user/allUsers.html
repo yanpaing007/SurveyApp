@@ -38,27 +38,28 @@
         </div>
 
         <form th:action="@{/admin/users}" method="get" id="filterForm">
-        <div class="flex flex-row">
+        <div class="flex flex-row gap-x-4">
 
-        <div class="pageSize p-3 text-xs">
-          <label for="pageSize">Size</label>
-          <select name="size" id="pageSize" onchange="cleanAndSubmit(this.form)">
-            <option value="6" th:selected="${size == 6}">6</option>
-            <option value="20" th:selected="${size == 20}">20</option>
-            <option value="40" th:selected="${size == 40}">40</option>
-            <option value="60" th:selected="${size == 60}">60</option>
-          </select>
-        </div>
+          <div class="flex flex-row text-xs gap-x-2 items-center">
+            <label for="size">Size</label>
+            <select name="size" id="size" class="border border-gray-200 px-2 py-2 bg-gray-50 rounded-md" onchange="cleanAndSubmit(this.form)">
+              <option value="9" th:selected="${size==9}">9</option>
+              <option value="20" th:selected="${size==20}">20</option>
+              <option value="60" th:selected="${size==60}">60</option>
+              <option value="100" th:selected="${size==100}">100</option>
+              <option value="200" th:selected="${size==200}">200</option>
+            </select>
+          </div>
 
-          <div class="checkActive pr-3">
-              <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 px-4" name="role" onchange="cleanAndSubmit(this.form)">
+          <div class="checkActive">
+              <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="role" onchange="cleanAndSubmit(this.form)">
                 <option value="">Filter By Role</option>
                 <option th:selected="${roles.roleName == selectedRole}" th:each="roles:${role}" th:value="${roles.roleName}" th:text="${roles.roleName}"></option>
               </select>
           </div>
 
-          <div class="checkActive pr-3">
-              <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 px-4" name="status" onchange="cleanAndSubmit(this.form)">
+          <div class="checkActive">
+              <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="status" onchange="cleanAndSubmit(this.form)">
                 <option value="">Filter By Status</option>
                 <option value="true" th:selected="*{selectedStatus==true}">Active</option>
                 <option value="false" th:selected="*{selectedStatus==false}">Inactive</option>
@@ -74,7 +75,7 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                   </svg>
                 </div>
-                <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-50 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search users">
+                <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search users">
               </div>
           </div>
 
@@ -133,13 +134,19 @@
                   <div class="font-normal text-gray-500" th:text="${user.email}"></div>
                 </div>
             </th>
+
             <td class="px-6 py-4">
-              <i class="fa-solid fa-phone"></i>
-              <span th:text="${user.phoneNumber}"></span>
+              <div class="flex flex-row gap-x-2 items-center">
+                <i class="fa-solid fa-phone"></i>
+                <p th:text="${user.phoneNumber}"></p>
+              </div>
             </td>
+
             <td class="px-6 py-4">
-              <i th:classappend="${user.role.getRoleName() == 'Admin' ? 'fa-user-tie' : (user.role.getRoleName() == 'Sale' ? 'fa-square-poll-vertical' : 'fa-gear')}" class="fa-solid"></i>
-              <span th:text="${user.role.getRoleName()}"></span>
+              <div class="flex flex-row gap-x-2 items-center">
+                <i th:classappend="${user.role.getRoleName() == 'Admin' ? 'fa-user-tie' : (user.role.getRoleName() == 'Sale' ? 'fa-square-poll-vertical' : 'fa-gear')}" class="fa-solid"></i>
+                <p th:text="${user.role.getRoleName()}"></p>
+              </div>
             </td>
             <td class="px-1 py-4">
               <div th:classappend="${user.status ? 'bg-green-50' : 'bg-red-50'}" class="flex items-center space-x-2 px-2 py-1 justify-center rounded-xl">

@@ -56,7 +56,9 @@ public class SurveyService {
         return surveyRepository.findLatestSurvey();
     }
 
-    public Survey findApplicationByGeneratedId(String id) {
-        return surveyRepository.findSurveyByGeneratedSurveyId(id);
+    public Survey findSurveyByGeneratedSurveyId(String id) {
+        return surveyRepository.findSurveyByGeneratedSurveyId(id)
+                .orElseThrow(() -> new RuntimeException("Survey with "+id+ " was not found on server"));
     }
+
 }

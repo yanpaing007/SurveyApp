@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
@@ -29,5 +30,5 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     @Query("SELECT s from Survey s ORDER BY s.id DESC LIMIT 1")
     Survey findLatestSurvey();
 
-    Survey findSurveyByGeneratedSurveyId(String generatedSurveyId);
+    Optional<Survey> findSurveyByGeneratedSurveyId(String generatedSurveyId);
 }

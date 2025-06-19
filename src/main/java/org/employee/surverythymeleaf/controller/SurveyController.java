@@ -1,8 +1,5 @@
 package org.employee.surverythymeleaf.controller;
-import org.employee.surverythymeleaf.model.Application;
-import org.employee.surverythymeleaf.model.Survey;
-import org.employee.surverythymeleaf.model.SurveyStatus;
-import org.employee.surverythymeleaf.model.User;
+import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
@@ -56,46 +53,73 @@ public class SurveyController {
 
         String newSurveyId = String.format("SUR-%05d", newNumber);
         survey.setGeneratedSurveyId(newSurveyId);
+
         survey.setStatus(SurveyStatus.PENDING);
         surveyService.addNewSurvey(survey);
         return "redirect:/sale/survey/allSurvey";
     }
 
     @GetMapping("/survey/allSurvey")
-    public String getAllSurveys(Model model,@RequestParam(required = false) String query,
-                              @RequestParam(required = false,defaultValue = "0") int page,
-                              @RequestParam(required = false,defaultValue = "5") int size,
-                                @RequestParam(required = false) SurveyStatus status,
-                                @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE ) LocalDate fromDate,
-                                @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE ) LocalDate toDate){
+    public String getAllSurveys(Model model,
+                                @RequestParam(required = false) String query,
+                                @RequestParam(required = false,defaultValue = "0") int page,
+                                @RequestParam(required = false,defaultValue = "13") int size,
+                                @RequestParam(required = false) String status,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
+    {
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService);
+    }
+
+    static String getAllSurveysDouble(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "13") int size, @RequestParam(required = false) String status, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate fromDate, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate toDate, SurveyService surveyService) {
         Page<Survey> surveyPage;
-        if((query != null && !query.isEmpty()) || status != null){
-            surveyPage = surveyService.searchSurveyWithQuery(query,page,size, status,fromDate,toDate);
+        SurveyStatus surveyStatus = null;
+
+        if( status != null && !status.trim().isEmpty() ){
+            surveyStatus = SurveyStatus.valueOf(status);
+        }
+
+        if((query != null && !query.isEmpty()) || status != null || (fromDate != null && toDate != null)){
+
+            surveyPage = surveyService.searchSurveyWithQuery(query,page,size, surveyStatus,fromDate,toDate);
         }else{
             surveyPage = surveyService.getAllSuvey(page,size);
         }
-        model.addAttribute("surveyStatus", SurveyStatus.getNonPendingSurveyStatus());
-        return getString(model, query, page, size, surveyPage,status,fromDate,toDate);
+
+
+        model.addAttribute("surveyWithNonePendingStatus", SurveyStatus.getNonPendingSurveyStatus());
+        model.addAttribute("surveyWithPendingStatus", SurveyStatus.values());
+        return getString(model, query, page, size, surveyPage,surveyStatus,fromDate,toDate);
     }
 
     @GetMapping("/application/allApplications")
     public String getAllApplications(Model model, @RequestParam(required = false) String query,
                                      @RequestParam(required = false,defaultValue = "0") int page,
-                                     @RequestParam(required = false,defaultValue = "5") int size){
+                                     @RequestParam(required = false,defaultValue = "13") int size,
+                                     @RequestParam(required = false) String status,
+                                     @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
+                                     @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate){
         Page<Application> applicationPage;
-        if(query != null && !query.isEmpty()){
-            applicationPage = applicationService.searchApplicationWithQuery(query,page,size);
+        ApplicationStatus applicationStatus = null;
+        if( status != null && !status.trim().isEmpty() ){
+            applicationStatus = ApplicationStatus.valueOf(status);
+        }
+        if(query != null && !query.isEmpty() || (fromDate != null && toDate != null) || status != null){
+            applicationPage = applicationService.searchApplicationWithQuery(query,page,size,applicationStatus,fromDate,toDate);
         }else{
             applicationPage = applicationService.getAllApplicationPaginated(page,size);
         }
 
-        return getAllApplication(model, query, page, size, applicationPage);
+        model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
+        model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
+        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate);
     }
 
     @GetMapping("/application/create/{id}")
     public String getApplicationForm(Model model, @PathVariable String id) {
         Application application = new Application();
-        model.addAttribute("surveyId", id);
+        Survey findSurvey = surveyService.findSurveyByGeneratedSurveyId(id);
+        model.addAttribute("surveyId", findSurvey.getId());
         model.addAttribute("applications", application);
         return "application/applicationForm";
     }

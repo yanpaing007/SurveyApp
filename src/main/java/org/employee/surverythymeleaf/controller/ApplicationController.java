@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.employee.surverythymeleaf.controller.SurveyController.getAllSurveysDouble;
 
 
 @Controller
@@ -27,25 +30,41 @@ public class ApplicationController {
     @GetMapping("/application/allApplications")
     public String getAllApplications(Model model, @RequestParam(required = false) String query,
                                      @RequestParam(required = false,defaultValue = "0") int page,
-                                     @RequestParam(required = false,defaultValue = "13") int size){
+                                     @RequestParam(required = false,defaultValue = "13") int size,
+                                     @RequestParam(required = false) String status,
+                                     @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
+                                     @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate){
         Page<Application> applicationPage;
-        if(query != null && !query.isEmpty()){
-            applicationPage = applicationService.searchApplicationWithQuery(query,page,size);
+        ApplicationStatus applicationStatus = null;
+        if( status != null && !status.trim().isEmpty() ){
+            applicationStatus = ApplicationStatus.valueOf(status);
+        }
+        if(query != null && !query.isEmpty() || (fromDate != null && toDate != null) || status != null){
+            applicationPage = applicationService.searchApplicationWithQuery(query,page,size,applicationStatus,fromDate,toDate);
         }else{
             applicationPage = applicationService.getAllApplicationPaginated(page,size);
         }
 
         model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
         model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
-        return getAllApplication(model, query, page, size, applicationPage);
+        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate);
     }
 
-    static String getAllApplication(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Application> applicationPage) {
+    static String getAllApplication(Model model,
+                                    @RequestParam(required = false) String query,
+                                    @RequestParam(required = false, defaultValue = "0") int page,
+                                    @RequestParam(required = false, defaultValue = "5") int size, Page<Application> applicationPage,
+                                    @RequestParam(required = false) ApplicationStatus applicationStatus,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate) {
         model.addAttribute("applications",applicationPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",applicationPage.getTotalElements());
         model.addAttribute("size",size);
         model.addAttribute("currentPage",page);
+        model.addAttribute("currentStatus",applicationStatus);
+        model.addAttribute("fromDate",fromDate);
+        model.addAttribute("toDate",toDate);
         model.addAttribute("totalPages",applicationPage.getTotalPages());
         return "application/allApplication";
     }
@@ -59,24 +78,7 @@ public class ApplicationController {
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
     {
-        Page<Survey> surveyPage;
-        SurveyStatus surveyStatus = null;
-
-        if( status != null && !status.trim().isEmpty() ){
-            surveyStatus = SurveyStatus.valueOf(status);
-        }
-
-        if((query != null && !query.isEmpty()) || status != null || (fromDate != null && toDate != null)){
-
-            surveyPage = surveyService.searchSurveyWithQuery(query,page,size, surveyStatus,fromDate,toDate);
-        }else{
-            surveyPage = surveyService.getAllSuvey(page,size);
-        }
-
-
-        model.addAttribute("surveyWithNonePendingStatus", SurveyStatus.getNonPendingSurveyStatus());
-        model.addAttribute("surveyWithPendingStatus", SurveyStatus.values());
-        return getString(model, query, page, size, surveyPage,surveyStatus,fromDate,toDate);
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService);
     }
 
     static String getString(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Survey> surveyPage,SurveyStatus status, LocalDate fromDate, LocalDate toDate) {
@@ -101,7 +103,7 @@ public class ApplicationController {
 
     @GetMapping("/survey/details/{id}")
     public String getDetailSurveyForm(Model model, @PathVariable String id) {
-        Survey survey=surveyService.findApplicationByGeneratedId(id);
+        Survey survey=surveyService.findSurveyByGeneratedSurveyId(id);
         model.addAttribute("survey", survey);
         return "survey/surveyDetails";
     }

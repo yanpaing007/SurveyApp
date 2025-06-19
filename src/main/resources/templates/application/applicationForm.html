@@ -5,7 +5,7 @@
       <div class="border-b border-gray-900/10 pb-7 max-w-5xl mx-auto mt-2 shadow-lg p-5 rounded-xl">
         <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.token}">
         <input type="hidden" name="submittedBy" th:value="${currentUser.id}"/>
-          <input type="hidden" name="generatedSurveyId" th:value="${surveyId}"/>
+          <input type="hidden" name="survey" th:value="${surveyId}"/>
         <h1>Create New application</h1>
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div class="sm:col-span-3">

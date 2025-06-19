@@ -173,7 +173,7 @@
     </li>
 
     <li th:if="${totalPages > 1}">
-      <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+      <a th:href="@{?(page=${totalPages - 1}, size=${size}, query=${query} , role=${selectedRole} , status=${status},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
          th:text="${totalPages}"
          th:classappend="${currentPage == totalPages - 1} ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
          class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
@@ -181,7 +181,7 @@
     </li>
 
     <li>
-      <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query} , role=${selectedRole} , status=${selectedStatus},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
+      <a th:href="@{?(page=${currentPage + 1}, size=${size}, query=${query} , role=${selectedRole} , status=${status},sortDir=${sortDir},sortField=${sortField},fromDate=${fromDate},toDate=${toDate})}"
          th:classappend="${currentPage + 1 < totalPages} ? 'bg-white text-gray-800 hover:text-gray-700 hover:bg-gray-100' : 'bg-gray-300 pointer-events-none text-white'"
          class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg">
         Next

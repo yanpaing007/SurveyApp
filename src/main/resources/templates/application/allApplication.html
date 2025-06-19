@@ -1,19 +1,46 @@
 
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-    <section class="mx-auto w-full flex justify-center items-center py-3">
+    <section class="mx-auto w-full flex justify-center py-3">
         <div class="w-full max-w-[90%] items-center overflow-hidden">
             <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-2 bg-white">
 
-                <form th:action="@{/technical/application/allApplications}" method="get" id="filterForm">
-                    <label for="table-search" class="sr-only">Search</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
+                <form th:action="@{/technical/application/allApplications}" method="get">
+                    <div class="flex flex-row justify-center items-center gap-4">
+
+                        <div class="flex flex-row text-xs gap-x-2 items-center">
+                            <label for="size">Size</label>
+                            <select name="size" id="size" class="border border-gray-200 px-2 py-2 bg-gray-50 rounded-md" onchange="cleanAndSubmit(this.form)">
+                                <option value="13" th:selected="${size==13}">13</option>
+                                <option value="30" th:selected="${size==30}">30</option>
+                                <option value="60" th:selected="${size==60}">60</option>
+                                <option value="100" th:selected="${size==100}">100</option>
+                                <option value="200" th:selected="${size==200}">200</option>
+                            </select>
                         </div>
-                        <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-50 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search application">
+
+
+                        <div class="checkActive pr-3 border-r border-gray-200">
+                            <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="status" onchange="cleanAndSubmit(this.form)">
+                                <option value="" th:selected="${currentStatus == null}">Filter By Status</option>
+                                <option th:each="appStatus : ${applicationWithPendingStatus}" th:value="${appStatus.name()}" th:text="${appStatus.getStatus()}" th:selected="${currentStatus != null and appStatus.name() == currentStatus.name()}"></option>
+                            </select>
+                        </div>
+                        <div th:replace="~{fragments/dateSelect::dateSelect}">
+                        </div>
+
+
+
+                        <label for="table-search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search application">
+                        </div>
                     </div>
+
                 </form>
             </div>
 
