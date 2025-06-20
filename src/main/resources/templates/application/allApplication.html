@@ -2,10 +2,10 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
     <section class="mx-auto w-full flex justify-center py-3">
         <div class="w-full max-w-[90%] items-center overflow-hidden">
-            <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-2 bg-white">
+            <div class="flex items-center md:justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-2 bg-white">
 
                 <form th:action="@{/technical/application/allApplications}" method="get">
-                    <div class="flex flex-row justify-center items-center gap-4">
+                    <div class="flex md:flex-row flex-col justify-start md:justify-center md:items-center gap-4">
 
                         <div class="flex flex-row text-xs gap-x-2 items-center">
                             <label for="size">Size</label>

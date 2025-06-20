@@ -67,9 +67,9 @@ public class AuthController {
 
     @GetMapping("/")
     public String home(Model model, Principal principal) {
-//        String email = principal.getName();
-//        User userDetails = userService.findByEmail(email);
-//        model.addAttribute("user", userDetails);
+        String email = principal.getName();
+        User userDetails = userService.findByEmail(email);
+        model.addAttribute("user", userDetails);
         return "dashboard";
     }
 

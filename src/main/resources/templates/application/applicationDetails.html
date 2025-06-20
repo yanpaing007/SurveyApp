@@ -146,10 +146,10 @@
                 <div class="relative">
                   <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                     <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
-              applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
-              applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
-              applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
-              'fa-solid fa-question-circle'}">
+                    applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
+                    applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
+                    applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
+                    'fa-solid fa-question-circle'}">
                     </i>
                   </div>
 
@@ -162,9 +162,9 @@
                           readonly disabled
                           class="w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border"
                           th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
- applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
- applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
- applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}" />
+                           applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
+                           applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
+                           applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}" />
                 </div>
               </div>
 
