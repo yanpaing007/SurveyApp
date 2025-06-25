@@ -102,16 +102,19 @@ public class UserController {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String encodedPassword = encoder.encode(rawPassword);
             user.setPassword(encodedPassword);
+            user.setUpdatedAt(LocalDateTime.now());
         }else {
             User exitingUser = userService.getUserById(user.getId());
             user.setPassword(exitingUser.getPassword());
+            user.setUpdatedAt(LocalDateTime.now());
         }
+
         boolean check = userService.updateUser(user);
         if(check){
             redirectAttributes.addFlashAttribute("message", "User updated successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
         }
-        return "redirect:/admin/users";
+        return "redirect:/admin/user/edit/" + user.getId();
     }
 
     @GetMapping("/user/delete/{id}")

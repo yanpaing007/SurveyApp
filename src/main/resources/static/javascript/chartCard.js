@@ -1,74 +1,130 @@
-const options = {
-    chart: {
-        height: "100%",
-        maxWidth: "100%",
-        type: "area",
-        fontFamily: "Inter, sans-serif",
-        dropShadow: {
-            enabled: false,
-        },
-        toolbar: {
-            show: false,
-        },
-    },
-    tooltip: {
-        enabled: true,
-        x: {
-            show: false,
-        },
-    },
-    fill: {
-        type: "gradient",
-        gradient: {
-            opacityFrom: 0.55,
-            opacityTo: 0,
-            shade: "#1C64F2",
-            gradientToColors: ["#1C64F2"],
-        },
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    stroke: {
-        width: 6,
-    },
-    grid: {
-        show: false,
-        strokeDashArray: 4,
-        padding: {
-            left: 2,
-            right: 2,
-            top: 0
-        },
-    },
-    series: [
-        {
-            name: "New users",
-            data: [6500, 6418, 6456, 6526, 6356, 6456],
-            color: "#1A56DB",
-        },
-    ],
-    xaxis: {
-        categories: ['01 February', '02 February', '03 February', '04 February', '05 February', '06 February', '07 February'],
-        labels: {
-            show: false,
-        },
-        axisBorder: {
-            show: false,
-        },
-        axisTicks: {
-            show: false,
-        },
-    },
-    yaxis: {
-        show: false,
-    },
-}
+document.addEventListener("DOMContentLoaded", function () {
+    const surveyStatusCounts = [45, 35, 100];
+    const monthlySurveyLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul"];
+    const monthlySurveyData = [12, 19, 3, 5, 2, 100];
+    const applicationStatusCounts = [30, 25, 80, 15];
+    const monthlyApplicationLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+    const monthlyApplicationData = [8, 15, 7, 12, 5, 20];
 
-if (document.getElementById("area-chart") && typeof ApexCharts !== 'undefined') {
-    const chart = new ApexCharts(document.getElementById("area-chart"), options);
-    chart.render();
-}
+    const ctxSurveyStatus = document.getElementById('surveyStatusChart');
+    if (ctxSurveyStatus) {
+        new Chart(ctxSurveyStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'Succeeded', 'Failed'],
+                datasets: [{
+                    label: 'Survey Status',
+                    data: surveyStatusCounts,
+                    backgroundColor: ['#facc15', '#22c55e', '#ef4444'],
+                    borderWidth: 1
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'left',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                        }
+
+                    }
+                }
+            }
+        });
+    }
+
+    const ctxMonthlySurvey = document.getElementById('monthlySurveyChart');
+    if (ctxMonthlySurvey) {
+        new Chart(ctxMonthlySurvey, {
+            type: 'line',
+            data: {
+                labels: monthlySurveyLabels,
+                datasets: [{
+                    label: 'Surveys',
+                    data: monthlySurveyData,
+                    fill: false,
+                    borderColor: '#6366f1',
+                    tension: 0.3
+                },
+                    {
+                        label: 'Applications',
+                        data: monthlyApplicationData,
+                        fill: false,
+                        borderColor: '#d10b23',
+                        tension: 0.3
+                    }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    const ctxApplicationStatus = document.getElementById('applicationStatusChart');
+    if (ctxApplicationStatus) {
+        new Chart(ctxApplicationStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'Processing', 'Completed', 'Cancelled'],
+                datasets: [{
+                    label: 'Application Status',
+                    data: applicationStatusCounts,
+                    backgroundColor: ['#facc15', '#f97316', '#22c55e', '#ef4444'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position:'left',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const ctxMonthlyApplication = document.getElementById('monthlyApplicationChart');
+    if (ctxMonthlyApplication) {
+        new Chart(ctxMonthlyApplication, {
+            type: 'line',
+            data: {
+                labels: monthlyApplicationLabels,
+                datasets: [{
+                    label: 'Applications',
+                    data: monthlyApplicationData,
+                    backgroundColor: '#818cf8',
+                    borderColor: '#6366f1',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+});
 
 function cleanAndSubmit(form) {
     const inputs = form.querySelectorAll("input, select");

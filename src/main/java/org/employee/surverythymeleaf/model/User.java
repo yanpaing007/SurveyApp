@@ -34,6 +34,8 @@ public class User implements UserDetails {
 
     @Column(nullable = false,unique = true)
     private String email;
+
+    private LocalDateTime updatedAt;
 //    @Enumerated(EnumType.STRING) For using with Enum, need this Annotation
     @ManyToOne
     @Nullable

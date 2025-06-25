@@ -27,3 +27,25 @@
 .btn-animated:hover:after {
     left: 100%;
 }
+
+.surveyStatus, .surveyChart {
+    transition: all 0.3s ease;
+}
+
+.surveyStatus:hover, .surveyChart:hover {
+    transform: translateY(-5px);
+}
+
+canvas::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+canvas::-webkit-scrollbar-thumb {
+    background-color: rgba(99, 102, 241, 0.6);
+    border-radius: 3px;
+}
+
+canvas::-webkit-scrollbar-track {
+    background-color: rgba(99, 102, 241, 0.1);
+}

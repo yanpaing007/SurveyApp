@@ -70,7 +70,7 @@ public class AuthController {
         String email = principal.getName();
         User userDetails = userService.findByEmail(email);
         model.addAttribute("user", userDetails);
-        return "dashboard";
+        return "dashboard2";
     }
 
     @GetMapping("/application/details/{id}")
