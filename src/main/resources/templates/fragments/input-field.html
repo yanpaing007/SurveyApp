@@ -1,8 +1,8 @@
 <div class="w-full mx-auto" th:fragment="input-field(for,name,type,value,id,placeholder,moreClass,icon,isReadOnly,isDisabled)">
   <label th:for="${for}" th:text="${name}" class="block mb-2 text-xs font-medium text-gray-900"></label>
   <div class="relative">
-    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5" th:classappend="${#strings.equalsIgnoreCase(value,'COMPLETED') ? 'text-white' :''}">
-      <i th:class="'fa-solid ' + ${icon}"></i>
+    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+      <i th:class="'fa-solid ' + ${icon} + ' text-indigo-800'"></i>
     </div>
 
     <input
@@ -12,6 +12,6 @@
             th:value="${value}"
             th:placeholder="${placeholder}"
             th:attr="readonly=${isReadOnly} ? 'readonly' : null, disabled=${isDisabled} ? 'disabled' : null"
-            class="border-gray-300 focus:outline-hidden border text-xs rounded-lg ps-10 p-2 w-full" />
+            class="border-gray-300 focus:outline-hidden border text-xs rounded-lg ps-10 p-2 w-full text-blackx" />
   </div>
 </div>

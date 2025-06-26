@@ -1,177 +1,209 @@
-
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
 
-  <section class="mx-auto w-full flex justify-center py-3">
-    <div class="w-full max-w-[90%] overflow-hidden">
-      <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 bg-white">
-        <div class="flex flex-row space-x-2 pb-2">
+    <section class="mx-auto w-full flex justify-start md:justify-center py-3">
+        <div class="w-full max-w-[90%] overflow-hidden">
+            <div class="flex flex-col lg:flex-row lg-items-center p-5 lg:p-0 justify-start md:justify-between space-y-4 md:space-y-0 bg-white">
+                <div class="flex flex-row space-x-2 pb-2">
+                    <button data-modal-target="addNewUser" data-modal-toggle="addNewUser" class="px-1.5 py-1 lg:px-3 lg:py-2 bg-gray-900 text-white rounded-md text-xs cursor-pointer"><i class="fa-solid fa-user-plus pr-1"></i> Add New User</button>
+                    <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs inline-flex items-center space-x-1">
+                        <i class="fa-solid fa-file-export"></i>
+                        <button id="dropdownDefaultButton"
+                                data-dropdown-toggle="dropdown"
+                                class="flex items-center space-x-1 cursor-pointer">
+                            <span>Export Users</span>
+                            <svg class="w-2.5 h-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="M1 1l4 4 4-4"/>
+                            </svg>
+                        </button>
 
-          <div class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs">
-            <i class="fa-solid fa-user-plus pr-1"></i><a th:href="@{/admin/create}" th:text="Add+' '+User"></a>
-          </div>
+                        <div th:replace="~{fragments/modal::addNewUser(user_details=${users},roles=${role})}"></div>
 
-          <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs inline-flex items-center space-x-1">
-            <i class="fa-solid fa-file-export"></i>
-            <button id="dropdownDefaultButton"
-               data-dropdown-toggle="dropdown"
-               class="flex items-center space-x-1 cursor-pointer">
-              <span>Export Users</span>
-              <svg class="w-2.5 h-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l4 4 4-4"/>
-              </svg>
-            </button>
+                        <div id="dropdown"
+                             class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+                            <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+                                <li>
+                                    <a th:href="@{/admin/users/export(query=${query},role=${selectedRole},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},type='excel')}"
+                                       class="block px-4 py-2 hover:bg-gray-100"><i
+                                            class="fa-solid fa-file-excel mr-2"></i>Export to Excel</a>
+                                </li>
+
+                                <li>
+                                    <a th:href="@{/admin/users/export(query=${query},role=${selectedRole},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},type='csv')}"
+                                       class="block px-4 py-2 hover:bg-gray-100"><i
+                                            class="fa-solid fa-file-csv mr-2"></i>Export to CSV</a>
+                                </li>
+                            </ul>
+                        </div>
 
 
-            <div id="dropdown" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
-              <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
-                <li>
-                  <a th:href="@{/admin/users/export(query=${query},role=${selectedRole},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},type='excel')}" class="block px-4 py-2 hover:bg-gray-100"><i class="fa-solid fa-file-excel mr-2"></i>Export to Excel</a>
-                </li>
-                <li>
-                  <a th:href="@{/admin/users/export(query=${query},role=${selectedRole},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},type='csv')}" class="block px-4 py-2 hover:bg-gray-100"><i class="fa-solid fa-file-csv mr-2"></i>Export to CSV</a>
-                </li>
-              </ul>
+                    </div>
+                </div>
+
+                <form th:action="@{/admin/users}" method="get" id="filterForm">
+                    <div class="flex flex-col gap-y-1.5 lg:flex-row gap-x-4">
+
+                        <div class="flex flex-row text-xs gap-x-2 items-center">
+                            <label for="size">Size</label>
+                            <select name="size" id="size" class="border border-gray-200 px-2 py-2 bg-gray-50 rounded-md"
+                                    onchange="cleanAndSubmit(this.form)">
+                                <option value="9" th:selected="${size==9}">9</option>
+                                <option value="20" th:selected="${size==20}">20</option>
+                                <option value="60" th:selected="${size==60}">60</option>
+                                <option value="100" th:selected="${size==100}">100</option>
+                                <option value="200" th:selected="${size==200}">200</option>
+                            </select>
+                        </div>
+
+                        <div class="checkActive">
+                            <select id="role"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4"
+                                    name="role" onchange="cleanAndSubmit(this.form)">
+                                <option value="" disabled>Filter By Role</option>
+                                <option value="">All Role</option>
+                                <option th:selected="${roles.roleName == selectedRole}" th:each="roles:${role}"
+                                        th:value="${roles.roleName}" th:text="${roles.roleName}"></option>
+                            </select>
+                        </div>
+
+                        <div class="checkActive">
+                            <select id="status"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4"
+                                    name="status" onchange="cleanAndSubmit(this.form)">
+                                <option value="" disabled>Filter By Status</option>
+                                <option value="">Both Status</option>
+                                <option value="true" th:selected="*{selectedStatus==true}">Active</option>
+                                <option value="false" th:selected="*{selectedStatus==false}">Inactive</option>
+                            </select>
+                        </div>
+
+
+                        <div>
+                            <label for="table-search" class="sr-only">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users"
+                                       name="query" th:value="${query}"
+                                       class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-full lg:w-60 xl:w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                       placeholder="Search users">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="sortDir" th:value="${sortDir}">
+                    <input type="hidden" name="sortField" th:value="${sortField}">
+                </form>
             </div>
 
+            <div class="table_main max-h-180 w-full overflow-y-auto overflow-x-auto">
+                <table id="table-search"
+                       class="table-auto w-full min-w-full whitespace-nowrap text-xs text-left rtl:text-right text-gray-500">
+                    <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            <a th:href="@{/admin/users(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
+                                No.
+                                <span th:text="${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            <a th:href="@{/admin/users(sortField='fullName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
+                                Name
+                                <span th:text="${sortField == 'fullName' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Phone Number
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Role
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Action
+                        </th>
+                    </tr>
+                    </thead>
 
-          </div>
-        </div>
+                    <tbody>
+                    <tr th:if="${!users.hasContent()}" class="text-center">
+                        <td class="text-center py-4" colspan="13">No user found!</td>
+                    </tr>
 
-        <form th:action="@{/admin/users}" method="get" id="filterForm">
-        <div class="flex flex-row gap-x-4">
+                    <tr class="bg-white border-b border-gray-200" th:each="user,iterStat : ${users}">
+                        <td class="px-6 py-4" th:text="${(currentPage*size)+ iterStat.index+1}">
+                        </td>
 
-          <div class="flex flex-row text-xs gap-x-2 items-center">
-            <label for="size">Size</label>
-            <select name="size" id="size" class="border border-gray-200 px-2 py-2 bg-gray-50 rounded-md" onchange="cleanAndSubmit(this.form)">
-              <option value="9" th:selected="${size==9}">9</option>
-              <option value="20" th:selected="${size==20}">20</option>
-              <option value="60" th:selected="${size==60}">60</option>
-              <option value="100" th:selected="${size==100}">100</option>
-              <option value="200" th:selected="${size==200}">200</option>
-            </select>
-          </div>
+                        <th class="flex items-center px-6 py-4 text-gray-900 min-w-100">
+                            <div>
+                                <img class="w-10 h-10 rounded-full"
+                                     src="https://img.freepik.com/premium-vector/social-media-logo_1305298-29989.jpg?semt=ais_hybrid&w=740"
+                                     alt="Jese image">
+                            </div>
+                            <div class="ps-1 text-left">
+                                <div class="text-base font-semibold" th:text="${user.fullName}"></div>
+                                <div class="font-normal text-gray-500" th:text="${user.email}"></div>
+                            </div>
+                        </th>
 
-          <div class="checkActive">
-              <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="role" onchange="cleanAndSubmit(this.form)">
-                <option value="">Filter By Role</option>
-                <option th:selected="${roles.roleName == selectedRole}" th:each="roles:${role}" th:value="${roles.roleName}" th:text="${roles.roleName}"></option>
-              </select>
-          </div>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-row gap-x-2 items-center">
+                                <i class="fa-solid fa-phone"></i>
+                                <p th:text="${user.phoneNumber}"></p>
+                            </div>
+                        </td>
 
-          <div class="checkActive">
-              <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="status" onchange="cleanAndSubmit(this.form)">
-                <option value="">Filter By Status</option>
-                <option value="true" th:selected="*{selectedStatus==true}">Active</option>
-                <option value="false" th:selected="*{selectedStatus==false}">Inactive</option>
-              </select>
-          </div>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-row gap-x-2 items-center">
+                                <div th:text="${user.role.roleName}"
+                                     th:classappend="${user.role.roleName == 'Admin'} ? ' bg-yellow-500' :
+                     (${user.role.roleName == 'Technical'} ? ' bg-indigo-500' :
+                     (${user.role.roleName == 'Sale'} ? ' bg-cyan-500' :
+                     (${user.role.roleName == 'Member'} ? ' bg-emerald-500' : ''))) "
+                                     class="px-2 py-1 text-white text-xs rounded-md w-full xl:w-[70%] text-center">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-1 py-4">
+                            <div th:classappend="${user.status ? 'bg-green-50' : 'bg-red-50'}"
+                                 class="flex items-center space-x-2 px-2 py-1 justify-center rounded-xl">
+                                <span th:classappend="${user.status ? 'bg-green-500' : 'bg-red-500'}"
+                                      class="inline-block h-2.5 w-2.5 rounded-full"></span>
+                                <span th:text="${user.status ? 'Active' : 'Inactive'}" class="text-xs"></span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <a th:href="@{/admin/user/edit/{id}(id=${user.id})}"
+                               class="font-medium text-blue-600 px-3 py-2 bg-indigo-800 text-white rounded-md">
+                                <i class="fa-solid fa-user-pen"></i> Edit</a>
+                            <button th:attr="data-modal-target='popup-modal-'+${user.id}"
+                                    th:attrappend="data-modal-toggle='popup-modal-'+ ${user.id}"
+                                    class="cursor-pointer font-medium text-xs text-blue-600 px-3 py-2 bg-red-800 text-white rounded-md">
+                                <i class="fa-solid fa-delete-left"></i> Delete
+                            </button>
 
+                            <div th:replace="~{fragments/alertModal::alertModal(${user.fullName},${user.id})}">
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-          <div>
-              <label for="table-search" class="sr-only">Search</label>
-              <div class="relative">
-                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                  </svg>
-                </div>
-                <input onchange="cleanAndSubmit(this.form)" type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search users">
-              </div>
-          </div>
-
-        </div>
-
-          <input type="hidden" name="sortDir" th:value="${sortDir}">
-          <input type="hidden" name="sortField" th:value="${sortField}">
-        </form>
-      </div>
-
-      <div class="table_main max-h-180 w-full overflow-y-auto overflow-x-auto">
-        <table id="table-search" class="table-auto w-full min-w-full whitespace-nowrap text-xs text-left rtl:text-right text-gray-500">
-          <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10">
-          <tr>
-            <th scope="col" class="px-6 py-3">
-              <a th:href="@{/admin/users(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
-                No.
-                <span th:text="${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
-              </a>
-            </th>
-            <th scope="col" class="px-6 py-3">
-              <a th:href="@{/admin/users(sortField='fullName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
-                Name
-                <span th:text="${sortField == 'fullName' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
-              </a>
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Phone Number
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Role
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Status
-            </th>
-            <th scope="col" class="px-6 py-3 text-center">
-              Action
-            </th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr th:if="${!users.hasContent()}" class="text-center">
-            <td class="text-center py-4" colspan="13">No user found!</td>
-          </tr>
-
-          <tr class="bg-white border-b border-gray-200" th:each="user,iterStat : ${users}">
-            <td class="px-6 py-4" th:text="${(currentPage*size)+ iterStat.index+1}">
-            </td>
-            <th scope="row" class="flex items-center px-6 py-4 text-gray-900">
-                <div>
-                  <img class="w-10 h-10 rounded-full" src="https://img.freepik.com/premium-vector/social-media-logo_1305298-29989.jpg?semt=ais_hybrid&w=740" alt="Jese image">
-                </div>
-                <div class="ps-1 text-left">
-                  <div class="text-base font-semibold" th:text="${user.fullName}"></div>
-                  <div class="font-normal text-gray-500" th:text="${user.email}"></div>
-                </div>
-            </th>
-
-            <td class="px-6 py-4">
-              <div class="flex flex-row gap-x-2 items-center">
-                <i class="fa-solid fa-phone"></i>
-                <p th:text="${user.phoneNumber}"></p>
-              </div>
-            </td>
-
-            <td class="px-6 py-4">
-              <div class="flex flex-row gap-x-2 items-center">
-                <i th:classappend="${user.role.getRoleName() == 'Admin' ? 'fa-user-tie' : (user.role.getRoleName() == 'Sale' ? 'fa-square-poll-vertical' : 'fa-gear')}" class="fa-solid"></i>
-                <p th:text="${user.role.getRoleName()}"></p>
-              </div>
-            </td>
-            <td class="px-1 py-4">
-              <div th:classappend="${user.status ? 'bg-green-50' : 'bg-red-50'}" class="flex items-center space-x-2 px-2 py-1 justify-center rounded-xl">
-                <span th:classappend="${user.status ? 'bg-green-500' : 'bg-red-500'}" class="inline-block h-2.5 w-2.5 rounded-full"></span>
-                <span th:text="${user.status ? 'Active' : 'Inactive'}" class="text-xs"></span>
-              </div>
-            </td>
-            <td class="px-6 py-4 text-center">
-              <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="font-medium text-blue-600 px-3 py-2 bg-indigo-800 text-white rounded-md">
-                <i class="fa-solid fa-user-pen"></i> Edit</a>
-              <button th:attr="data-modal-target='popup-modal-'+${user.id}" th:attrappend="data-modal-toggle='popup-modal-'+ ${user.id}" class="cursor-pointer font-medium text-xs text-blue-600 px-3 py-2 bg-red-800 text-white rounded-md">
-                <i class="fa-solid fa-delete-left"></i> Delete</button>
-
-              <div th:replace="~{fragments/alertModal::alertModal(${user.fullName},${user.id})}">
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div th:replace="~{fragments/pagination::pagination(${users},${currentPage},${totalPages},${size},${query},${selectedRole},${selectedStatus},
+            <div th:replace="~{fragments/pagination::pagination(${users},${currentPage},${totalPages},${size},${query},${selectedRole},${selectedStatus},
       ${sortDir},${sortField})}"></div>
 
-    </div>
+        </div>
 
-  </section>
+    </section>
 </div>

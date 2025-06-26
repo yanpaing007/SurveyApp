@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const surveyStatusCounts = [45, 35, 100];
-    const monthlySurveyLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul"];
+    const monthlySurveyLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
     const monthlySurveyData = [12, 19, 3, 5, 2, 100];
     const applicationStatusCounts = [30, 25, 80, 15];
     const monthlyApplicationLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position:'left',
+                        position: 'left',
                         labels: {
                             usePointStyle: true,
                             pointStyle: 'circle',

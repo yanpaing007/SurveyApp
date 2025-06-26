@@ -5,7 +5,7 @@
     <div class="relative flex h-16 items-center justify-between">
 
 
-      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+      <div class="absolute inset-y-0 right-0 flex items-center lg:hidden">
         <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
           <span class="absolute -inset-0.5"></span>
           <span class="sr-only">Open main menu</span>
@@ -20,16 +20,18 @@
 
 
       <div class="flex flex-1 items-center justify-between">
-        <!-- LEFT SIDE: Logo + Nav -->
+
         <div class="flex items-center space-x-8">
-          <!-- Logo -->
+
           <div class="shrink-0 flex flex-row justify-center items-center gap-x-3">
             <img class="h-8 w-auto" src="https://flowbite.com/docs/images/logo.svg" alt="Survey">
             <div class="text-indigo-700 font-bold text-lg">SurveyApp</div>
           </div>
 
 
-          <div class="hidden sm:block flex space-x-2">
+
+
+          <div class="hidden lg:block flex space-x-2">
 
             <a th:if="${#authorization.expression('isAuthenticated()')}" th:classappend="${servletPath == '/'} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
               <i class="fa-solid fa-cube"></i>
@@ -68,7 +70,7 @@
               <i class="fa-solid fa-user-plus"></i>
               Register
             </a>
-            <form th:if="${#authorization.expression('isAuthenticated()')}" method="post" th:action="@{/logout}" class="ml-3">
+            <form th:if="${#authorization.expression('isAuthenticated()')}" method="post" th:action="@{/logout}" class="ml-3 lg:block hidden">
                 <button type="submit" class="cursor-pointer btn-animated inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-600/20 hover:bg-red-100">
                   <i class="fa-solid fa-right-from-bracket mr-1.5"></i>
                   Logout

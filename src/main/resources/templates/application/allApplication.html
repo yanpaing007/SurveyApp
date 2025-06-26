@@ -113,32 +113,44 @@
                         <td class="px-6 py-4">
                             <span th:text="${app.applicationDate}"></span>
                         </td>
-                        <td class="px-6 py-4">
-                            <span th:if="${#authorization.expression('hasAnyAuthority(''Sale'')')}" th:text="${app.applicationStatus}"></span>
-                            <div th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}">
-                                <form th:action="@{/technical/application/updateStatus}" method="post">
-                                    <input type="hidden" name="id" th:value="${app.id}" />
-                                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <td class="px-6 py-4 flex flex-row items-center gap-x-1">
 
-                                        <th:block th:if="${app.applicationStatus.status == 'Pending'}">
-                                            <option th:each="status,iterStat : ${applicationWithPendingStatus}"
-                                                    th:value="${status}"
-                                                    th:text="${status.status}"
-                                                    th:selected="${status == app.applicationStatus}">
-                                            </option>
-                                        </th:block>
+                            <div th:classappend="${app.applicationStatus.status == 'Pending' ? 'bg-yellow-500' :
+                            (app.applicationStatus.status == 'Processing' ? 'bg-orange-500' :
+                            (app.applicationStatus.status == 'Completed' ? 'bg-green-500' :
+                            'bg-red-500'))}" class="w-2.5 h-2.5 rounded-full">
 
-                                        <th:block th:if="${app.applicationStatus.status != 'Pending'}">
-                                            <option th:each="status,iterStat : ${applicationWithNonePendingStatus}"
-                                                    th:value="${status}"
-                                                    th:text="${status.status}"
-                                                    th:selected="${status == app.applicationStatus}">
-                                            </option>
-                                        </th:block>
-
-                                    </select>
-                                </form>
                             </div>
+
+                            <div>
+                                <span th:if="${#authorization.expression('hasAnyAuthority(''Sale'')')}" th:text="${app.applicationStatus}"></span>
+                                <div th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}">
+                                    <form th:action="@{/technical/application/updateStatus}" method="post">
+                                        <input type="hidden" name="id" th:value="${app.id}" />
+                                        <select name="status" class="form-select" onchange="this.form.submit()">
+
+                                            <th:block th:if="${app.applicationStatus.status == 'Pending'}">
+                                                <option th:each="status,iterStat : ${applicationWithPendingStatus}"
+                                                        th:value="${status}"
+                                                        th:text="${status.status}"
+                                                        th:selected="${status == app.applicationStatus}">
+                                                </option>
+                                            </th:block>
+
+                                            <th:block th:if="${app.applicationStatus.status != 'Pending'}">
+                                                <option th:each="status,iterStat : ${applicationWithNonePendingStatus}"
+                                                        th:value="${status}"
+                                                        th:text="${status.status}"
+                                                        th:selected="${status == app.applicationStatus}">
+                                                </option>
+                                            </th:block>
+
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+
+
                         </td>
 
                         <td class="px-6 py-4">

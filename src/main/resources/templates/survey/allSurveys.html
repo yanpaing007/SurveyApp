@@ -1,8 +1,8 @@
 
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
     <section class="mx-auto w-full flex justify-center py-3">
-        <div class="w-full max-w-[90%] items-center overflow-hidden">
-            <div th:classappend="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')') ? 'justify-between' : 'justify-end'}" class="flex items-center flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 bg-white pb-2">
+        <div class="w-full max-w-[90%] lg:items-center overflow-hidden">
+            <div th:classappend="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')') ? 'justify-between' : 'justify-end'}" class="flex xl:items-center flex-col xl:flex-row space-y-4 md:space-y-0 bg-white pb-2">
 
                 <div class="flex flex-row space-x-2" th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}">
                     <div class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs">
@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <form th:action="@{/technical/survey/allSurvey}" method="get">
-                <div class="flex flex-row justify-center items-center gap-4">
+                <div class="flex flex-col lg:flex-row justify-center lg:items-center gap-2 lg:gap-4">
 
                     <div class="flex flex-row text-xs gap-x-2 items-center">
                         <label for="size">Size</label>
@@ -23,7 +23,6 @@
                         </select>
                     </div>
 
-
                     <div class="checkActive pr-3 border-r border-gray-200">
                         <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="status" onchange="cleanAndSubmit(this.form)">
                             <option value="" th:selected="${currentStatus == null}">Filter By Status</option>
@@ -33,8 +32,6 @@
                     <div th:replace="~{fragments/dateSelect::dateSelect}">
                     </div>
 
-
-
                         <label for="table-search" class="sr-only">Search</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -42,7 +39,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search Survey">
+                            <input type="text" id="table-search-users" name="query" th:value="${query}" class="block p-2 ps-10 text-xs text-gray-900 border border-gray-300 rounded-lg w-40 xl:w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search Survey">
                         </div>
                 </div>
 
@@ -72,18 +69,9 @@
                         <th scope="col" class="px-6 py-3">
                             Survey Status
                         </th>
-<!--                        <th scope="col" class="px-6 py-3">-->
-<!--                            TownShip-->
-<!--                        </th>-->
                         <th scope="col" class="px-6 py-3">
                             Survey Date
                         </th>
-<!--                        <th scope="col" class="px-6 py-3">-->
-<!--                            Create Date-->
-<!--                        </th>-->
-<!--                        <th scope="col" class="px-6 py-3">-->
-<!--                           Technical Person-->
-<!--                        </th>-->
                         <th th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}" scope="col" class="px-6 py-3 text-center">
                             Action
                         </th>
@@ -110,45 +98,43 @@
                         <td class="px-6 py-4">
                             <span th:text="${survey.salePerson.fullName}"></span>
                         </td>
-                        <td class="px-6 py-4">
-                            <span th:if="${#authorization.expression('hasAuthority(''Sale'')')}" th:text="${survey.status}"></span>
-                            <div th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Technical'')')}">
-                                <form th:action="@{/technical/survey/updateStatus}" method="post">
-                                    <input type="hidden" name="id" th:value="${survey.id}" />
-                                    <input type="hidden" name="TechPerson" th:value="${currentUser.id}" />
-                                    <select name="status" class="form-select" onchange="this.form.submit()">
-                                        <th:block th:if="${survey.status.status == 'Pending'}">
-                                            <option th:each="status : ${surveyWithPendingStatus}"
-                                                    th:value="${status.name()}"
-                                                    th:text="${status.getStatus()}"
-                                                    th:selected="${status.getStatus() == survey.status.status}">
-                                            </option>
-                                        </th:block>
-
-                                        <th:block th:if="${survey.status.status != 'Pending'}">
-                                        <option th:each="status : ${surveyWithNonePendingStatus}"
-                                                th:value="${status.name()}"
-                                                th:text="${status.getStatus()}"
-                                                th:selected="${status.getStatus() == survey.status.status}">
-                                        </option>
-                                            </th:block>
-                                    </select>
-                                </form>
+                        <td class="px-6 py-4 flex flex-row items-center gap-x-1">
+                            <div>
+                                <div th:classappend="${survey.status.status == 'Pending' ? 'bg-yellow-500' :
+                                (survey.status.status == 'Succeeded' ? 'bg-green-500' : 'bg-red-500')}" class="w-2.5 h-2.5 rounded-full"></div>
                             </div>
+                            <div>
+                                <span th:if="${#authorization.expression('hasAuthority(''Sale'')')}" th:text="${survey.status}"></span>
+                                <div th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Technical'')')}">
+                                    <form th:action="@{/technical/survey/updateStatus}" method="post">
+                                        <input type="hidden" name="id" th:value="${survey.id}" />
+                                        <input type="hidden" name="TechPerson" th:value="${currentUser.id}" />
+                                        <select name="status" class="form-select" onchange="this.form.submit()">
+                                            <th:block th:if="${survey.status.status == 'Pending'}">
+                                                <option th:each="status : ${surveyWithPendingStatus}"
+                                                        th:value="${status.name()}"
+                                                        th:text="${status.getStatus()}"
+                                                        th:selected="${status.getStatus() == survey.status.status}">
+                                                </option>
+                                            </th:block>
+
+                                            <th:block th:if="${survey.status.status != 'Pending'}">
+                                                <option th:each="status : ${surveyWithNonePendingStatus}"
+                                                        th:value="${status.name()}"
+                                                        th:text="${status.getStatus()}"
+                                                        th:selected="${status.getStatus() == survey.status.status}">
+                                                </option>
+                                            </th:block>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+
                         </td>
-<!--                        <td class="px-6 py-4">-->
-<!--                            <span th:text="${survey.townShip}"></span>-->
-<!--                        </td>-->
+
                         <td class="px-6 py-4">
                             <span th:text="${survey.requestDate}"></span>
                         </td>
-<!--                        <td class="px-6 py-4">-->
-<!--                            <span th:text="${survey.createdAt.toLocalDate()}"></span>-->
-<!--                        </td>-->
-<!--                        <td class="px-6 py-4">-->
-<!--                            <span th:text="${survey.technicalPerson != null ? survey.technicalPerson.fullName : 'Not Assigned'}"></span>-->
-<!--                            <span th:text="${survey.updatedAt != null ? '[' + survey.updatedAt.toLocalDate() + ']' : ''}"></span>-->
-<!--                        </td>-->
 
                         <td th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}" class="text-center">
                             <a th:if="${survey.application != null}"

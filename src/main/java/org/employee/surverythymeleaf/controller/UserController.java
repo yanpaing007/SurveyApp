@@ -40,7 +40,7 @@ public class UserController {
     public String getUserForm(Model model){
         model.addAttribute("user",new User());
         model.addAttribute("role", roleService.findAll());
-        return "user/createUser";
+        return "user/allUsers";
     }
     
     @PostMapping("/create")
