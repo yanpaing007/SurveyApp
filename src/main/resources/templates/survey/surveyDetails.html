@@ -6,13 +6,46 @@
       <div th:replace="fragments/input-field::input-field('customerName','Customer Name','text',${survey.customerName},'customerName','customerName','','fa-clipboard-list',false,false)"></div>
       <div th:replace="fragments/input-field::input-field('phoneNumber','Phone Number','text',${survey.phoneNumber},'phoneNumber','phoneNumber','','fa-building',false,false)"></div>
 
-      <div th:replace="fragments/input-field::input-field('salePerson','Sale Person','text',${survey.salePerson.fullName},'salePerson','salePerson','','fa-user',false,false)"></div>
+<!--      <div th:replace="fragments/input-field::input-field('salePerson','Sale Person','text',${survey.salePerson.fullName},'salePerson','salePerson','','fa-user',false,false)"></div>-->
+      <div class="w-full mx-auto">
+        <label for="salePerson" class="block mb-2 text-xs font-medium text-gray-900">Sale Person</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+            <i th:class="'fa-solid fa-user text-indigo-800'"></i>
+          </div>
+
+          <input
+                  type="text"
+                  id="salePerson"
+                  name="salePerson"
+                  th:value="${survey.salePerson?.fullName}"
+                  placeholder="Survey Creator name"
+                  readonly disabled
+                  class="border-gray-300 focus:outline-hidden border text-xs rounded-lg ps-10 p-2 w-full text-black" />
+        </div>
+      </div>
       <div th:replace="fragments/input-field::input-field('status','Status','text',${survey.status.getStatus()},'status','status','','fa-envelope',false,false)"></div>
       <div th:replace="fragments/input-field::input-field('townShip','Township','text',${survey.townShip},'townShip','townShip','','fa-phone',false,false)"></div>
 
       <div th:replace="fragments/input-field::input-field('requestDate','Request Date','text',${survey.requestDate},'requestDate','requestDate','','fa-location-dot',false,false)"></div>
       <div th:replace="fragments/input-field::input-field('createdAt','CreatedAt','text',${survey.createdAt},'createdAt','createdAt','','fa-location-crosshairs',false,false)"></div>
-      <div th:replace="fragments/input-field::input-field('technicalPerson','TechPerson','text',${survey.technicalPerson.fullName},'technicalPerson','technicalPerson','','fa-location-crosshairs',false,false)"></div>
+      <div class="w-full mx-auto">
+        <label for="techPerson" class="block mb-2 text-xs font-medium text-gray-900">Technical Person</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
+            <i th:class="'fa-solid fa-user text-indigo-800'"></i>
+          </div>
+
+          <input
+                  type="text"
+                  id="techPerson"
+                  name="techPerson"
+                  th:value="${survey.technicalPerson != null ? survey.technicalPerson.fullName : 'Not Assigned'}"
+                  placeholder="Technical Person name"
+                  readonly disabled
+                  class="border-gray-300 focus:outline-hidden border text-xs rounded-lg ps-10 p-2 w-full text-black" />
+        </div>
+      </div>
 
     </div>
   </section>

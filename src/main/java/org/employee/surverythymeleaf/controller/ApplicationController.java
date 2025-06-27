@@ -2,6 +2,7 @@ package org.employee.surverythymeleaf.controller;
 import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
+import org.employee.surverythymeleaf.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -21,10 +23,12 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
     private final SurveyService surveyService;
+    private final UserService userService;
 
-    public ApplicationController(ApplicationService applicationService, SurveyService surveyService) {
+    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService) {
         this.applicationService = applicationService;
         this.surveyService = surveyService;
+        this.userService = userService;
     }
 
     @GetMapping("/application/allApplications")
@@ -70,7 +74,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/survey/allSurvey")
-    public String getAllSurveys(Model model,
+    public String getAllSurveys(Model model, Principal principal,
                                 @RequestParam(required = false) String query,
                                 @RequestParam(required = false,defaultValue = "0") int page,
                                 @RequestParam(required = false,defaultValue = "13") int size,
@@ -78,7 +82,12 @@ public class ApplicationController {
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
     {
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService);
+        String email = principal.getName();
+        Survey survey = new Survey();
+        User currentUser = userService.findByEmail(email);
+        survey.setSalePerson(currentUser);
+
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey);
     }
 
     static String getString(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Survey> surveyPage,SurveyStatus status, LocalDate fromDate, LocalDate toDate) {

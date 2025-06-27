@@ -37,7 +37,7 @@ public class SurveyController {
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
         model.addAttribute("survey", survey);
-        return "survey/createSurvey";
+        return "survey/a";
     }
 
     @PostMapping("/survey/add")
@@ -60,7 +60,7 @@ public class SurveyController {
     }
 
     @GetMapping("/survey/allSurvey")
-    public String getAllSurveys(Model model,
+    public String getAllSurveys(Model model,Principal principal,
                                 @RequestParam(required = false) String query,
                                 @RequestParam(required = false,defaultValue = "0") int page,
                                 @RequestParam(required = false,defaultValue = "13") int size,
@@ -68,10 +68,15 @@ public class SurveyController {
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
     {
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService);
+        String email = principal.getName();
+        Survey survey = new Survey();
+        User currentUser = userService.findByEmail(email);
+        survey.setSalePerson(currentUser);
+
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey);
     }
 
-    static String getAllSurveysDouble(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "13") int size, @RequestParam(required = false) String status, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate fromDate, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate toDate, SurveyService surveyService) {
+    static String getAllSurveysDouble(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "13") int size, @RequestParam(required = false) String status, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate fromDate, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate toDate, SurveyService surveyService,Survey survey) {
         Page<Survey> surveyPage;
         SurveyStatus surveyStatus = null;
 
@@ -86,9 +91,9 @@ public class SurveyController {
             surveyPage = surveyService.getAllSuvey(page,size);
         }
 
-
         model.addAttribute("surveyWithNonePendingStatus", SurveyStatus.getNonPendingSurveyStatus());
         model.addAttribute("surveyWithPendingStatus", SurveyStatus.values());
+        model.addAttribute("survey", survey);
         return getString(model, query, page, size, surveyPage,surveyStatus,fromDate,toDate);
     }
 
