@@ -12,7 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.employee.surverythymeleaf.controller.SurveyController.getAllSurveysDouble;
 
@@ -84,10 +83,11 @@ public class ApplicationController {
     {
         String email = principal.getName();
         Survey survey = new Survey();
+        Application app = new Application();
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
 
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey);
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app);
     }
 
     static String getString(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Survey> surveyPage,SurveyStatus status, LocalDate fromDate, LocalDate toDate) {

@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -41,7 +42,7 @@ public class SurveyController {
     }
 
     @PostMapping("/survey/add")
-    public String addSurvey(@ModelAttribute("survey") Survey survey) {
+    public String addSurvey(@ModelAttribute("survey") Survey survey, Model model, RedirectAttributes redirectAttributes) {
         survey.setRequestDate(LocalDate.now());
         Survey latestSurvey = surveyService.searchLatestSurvey();
         int newNumber = 2131;
@@ -55,7 +56,15 @@ public class SurveyController {
         survey.setGeneratedSurveyId(newSurveyId);
 
         survey.setStatus(SurveyStatus.PENDING);
-        surveyService.addNewSurvey(survey);
+        boolean success =surveyService.addNewSurvey(survey);
+        if(success) {
+            redirectAttributes.addFlashAttribute("message", "Survey added successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        }
+        else {
+            redirectAttributes.addFlashAttribute("message", "Error adding new survey");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
         return "redirect:/sale/survey/allSurvey";
     }
 
@@ -70,13 +79,16 @@ public class SurveyController {
     {
         String email = principal.getName();
         Survey survey = new Survey();
+        Application app = new Application();
+
+        model.addAttribute("app", new Application());
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
 
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey);
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey, app);
     }
 
-    static String getAllSurveysDouble(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "13") int size, @RequestParam(required = false) String status, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate fromDate, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate toDate, SurveyService surveyService,Survey survey) {
+    static String getAllSurveysDouble(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "13") int size, @RequestParam(required = false) String status, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate fromDate, @DateTimeFormat(pattern = "MM/dd/yyyy") @RequestParam(required = false) LocalDate toDate, SurveyService surveyService, Survey survey, Application app) {
         Page<Survey> surveyPage;
         SurveyStatus surveyStatus = null;
 
@@ -94,6 +106,7 @@ public class SurveyController {
         model.addAttribute("surveyWithNonePendingStatus", SurveyStatus.getNonPendingSurveyStatus());
         model.addAttribute("surveyWithPendingStatus", SurveyStatus.values());
         model.addAttribute("survey", survey);
+        model.addAttribute("app", app);
         return getString(model, query, page, size, surveyPage,surveyStatus,fromDate,toDate);
     }
 
@@ -120,17 +133,8 @@ public class SurveyController {
         return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate);
     }
 
-    @GetMapping("/application/create/{id}")
-    public String getApplicationForm(Model model, @PathVariable String id) {
-        Application application = new Application();
-        Survey findSurvey = surveyService.findSurveyByGeneratedSurveyId(id);
-        model.addAttribute("surveyId", findSurvey.getId());
-        model.addAttribute("applications", application);
-        return "application/applicationForm";
-    }
-
     @PostMapping("/application/add")
-    public String addApplication(@ModelAttribute("application") Application application) {
+    public String addApplication(@ModelAttribute("application") Application application,@ModelAttribute("surveyId") String surveyId) {
         application.setApplicationDate(LocalDate.now());
 
         Application latestApplication = applicationService.searchLatestApplication();
@@ -141,8 +145,12 @@ public class SurveyController {
             newNumber = Integer.parseInt(numberString) + 1;
         }
 
+        Survey findSurveyId = surveyService.findSurveyByGeneratedSurveyId(surveyId);
+
         String newApplicationId = String.format("APP-%05d", newNumber);
         application.setGeneratedApplicationId(newApplicationId);
+        application.setApplicationDate(LocalDate.now());
+        application.setSurvey(findSurveyId);
         applicationService.addNewApplication(application);
         return "redirect:/sale/survey/allSurvey";
     }

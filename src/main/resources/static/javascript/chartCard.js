@@ -135,3 +135,12 @@ function cleanAndSubmit(form) {
     });
     form.submit();
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".createApplicationBtn");
+    buttons.forEach(button => {
+        button.addEventListener("click", function () {
+            document.querySelector("#newApplication #surveyId").value = this.getAttribute("data-survey-id");
+        })
+    })
+})

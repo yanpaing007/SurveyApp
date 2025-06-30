@@ -1,14 +1,13 @@
-
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
     <section class="mx-auto w-full flex justify-center py-3">
         <div class="w-full max-w-[90%] lg:items-center overflow-hidden">
             <div th:classappend="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')') ? 'justify-between' : 'justify-end'}" class="flex xl:items-center flex-col xl:flex-row space-y-4 md:space-y-0 bg-white pb-2">
 
                 <div class="flex flex-row space-x-2" th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}">
-                    <button data-modal-target="addNewSurvey" data-modal-toggle="addNewSurvey" class="px-1.5 py-1 lg:px-3 lg:py-2 bg-gray-900 text-white rounded-md text-xs cursor-pointer"><i class="fa-solid fa-user-plus pr-1"></i> Add New Survey</button>
+                    <button data-modal-target="newSurvey" data-modal-toggle="newSurvey" class="px-1.5 py-1 lg:px-3 lg:py-2 bg-gray-900 text-white rounded-md text-xs cursor-pointer"><i class="fa-solid fa-user-plus pr-1"></i> Add New Survey</button>
                 </div>
 
-                <div th:replace="~{fragments/modal::addNewSurvey(survey=${survey})}"></div>
+                <div th:replace="~{fragments/modal/addNewSurvey::newSurvey(survey=${survey})}"></div>
                 <form th:action="@{/technical/survey/allSurvey}" method="get">
                 <div class="flex flex-col lg:flex-row justify-center lg:items-center gap-2 lg:gap-4">
 
@@ -145,14 +144,17 @@
                                 <span>App</span>
                             </a>
 
-                            <a th:if="${survey.application == null}"
-                               th:href="@{/sale/application/create/{id}(id=${survey.generatedSurveyId})}"
+                            <button th:if="${survey.application == null}"
+                               data-modal-target="newApplication"
+                               data-modal-toggle="newApplication"
+                                    th:data-survey-id="${survey.generatedSurveyId}"
                                th:class="${survey.status.status == 'Succeeded' ?
-             'bg-indigo-800 px-3 py-2 rounded-md text-white inline-flex items-center space-x-1' :
+             'bg-indigo-800 px-3 py-2 rounded-md text-white inline-flex items-center space-x-1 cursor-pointer createApplicationBtn' :
              'pointer-events-none cursor-not-allowed bg-gray-400 px-3 py-2 rounded-md text-gray-100 inline-flex items-center space-x-1'}">
                                 <i th:class="${survey.status.status == 'Succeeded' ? 'fa-solid fa-plus' : 'fa-solid fa-ban'}"></i>
                                 <span>App</span>
-                            </a>
+                            </button>
+
 
                             <a th:href="@{/technical/survey/details/{id}(id=${survey.getGeneratedSurveyId()})}" class="ml-3 px-3 py-2 bg-indigo-900 rounded-md text-white">
                                 <i class="fa-solid fa-arrow-right"></i> Details
@@ -162,7 +164,7 @@
                     </tbody>
                 </table>
             </div>
-
+            <div th:replace="~{fragments/modal/addNewApplication::newApplication(app=${app})}"></div>
             <div th:replace="~{fragments/pagination::SurveyPagination(${surveys},${currentPage},${totalPages},${size},${query},${currentStatus},${fromDate},${toDate})}"></div>
         </div>
 

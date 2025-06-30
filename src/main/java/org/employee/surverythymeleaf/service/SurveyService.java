@@ -21,8 +21,9 @@ public class SurveyService {
         this.surveyRepository = surveyRepository;
     }
 
-    public void addNewSurvey(Survey survey) {
-        surveyRepository.save(survey);
+    public boolean addNewSurvey(Survey survey) {
+        Survey savedSurvey = surveyRepository.save(survey);
+        return savedSurvey.getId() != null;
     }
 
     public Page<Survey> searchSurveyWithQuery(String query, int page, int size, SurveyStatus status, LocalDate fromDate, LocalDate toDate) {
