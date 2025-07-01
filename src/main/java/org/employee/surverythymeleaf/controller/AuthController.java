@@ -8,6 +8,7 @@ import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,6 +76,12 @@ public class AuthController {
 
     @GetMapping("/application/details/{id}")
     public String getApplicationDetails(Model model, @PathVariable String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("Admin"));
+        boolean isTechnical = authentication.getAuthorities().contains(new SimpleGrantedAuthority("Technical"));
+
+        boolean isEditable = isAdmin || isTechnical;
+        model.addAttribute("isEditable", isEditable);
         Application application = applicationService.findApplicationByGeneratedApplicationId(id);
         model.addAttribute("applications", application);
         model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());

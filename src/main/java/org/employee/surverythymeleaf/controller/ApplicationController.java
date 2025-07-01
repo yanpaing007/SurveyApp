@@ -3,7 +3,9 @@ import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.SortUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.time.LocalDate;
 
-import static org.employee.surverythymeleaf.controller.SurveyController.getAllSurveysDouble;
+import static org.employee.surverythymeleaf.util.SortUtils.getAllSurveysDouble;
+import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
+
+import java.time.format.DateTimeFormatter;
 
 
 @Controller
@@ -77,6 +82,8 @@ public class ApplicationController {
                                 @RequestParam(required = false) String query,
                                 @RequestParam(required = false,defaultValue = "0") int page,
                                 @RequestParam(required = false,defaultValue = "13") int size,
+                                @RequestParam(required = false, defaultValue = "id") String sortField,
+                                @RequestParam(required = false, defaultValue = "desc") String sortDir,
                                 @RequestParam(required = false) String status,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate)
@@ -86,22 +93,11 @@ public class ApplicationController {
         Application app = new Application();
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
+        Sort sort = sortFunction(sortField, sortDir);
 
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app);
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app,sort,sortField,sortDir);
     }
 
-    static String getString(Model model, @RequestParam(required = false) String query, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, Page<Survey> surveyPage,SurveyStatus status, LocalDate fromDate, LocalDate toDate) {
-        model.addAttribute("surveys",surveyPage);
-        model.addAttribute("query",query);
-        model.addAttribute("totalItems",surveyPage.getTotalElements());
-        model.addAttribute("size",size);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("currentStatus",status);
-        model.addAttribute("totalPages",surveyPage.getTotalPages());
-        model.addAttribute("fromDate",fromDate);
-        model.addAttribute("toDate",toDate);
-        return "survey/allSurveys";
-    }
 
     @GetMapping("survey/edit/{id}")
     public String getEditSurveyForm(Model model, @PathVariable Long id) {

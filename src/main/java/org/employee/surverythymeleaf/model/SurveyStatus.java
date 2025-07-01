@@ -25,4 +25,5 @@ public enum SurveyStatus {
                 .filter(status -> status != PENDING )
                 .collect(Collectors.toList());
     }
+
 }

@@ -67,7 +67,7 @@
                 <label for="generatedApplicationId" class="block mb-2 text-xs font-medium text-gray-900">Generated Application ID</label>
                 <div class="relative">
                   <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
-                    <i class="fa-solid fa-clipboard-list text-xs"></i>
+                    <i class="fa-solid fa-clipboard-list"></i>
                   </div>
                   <input
                           type="text"
@@ -101,7 +101,18 @@
               </div>
 
 
-              <div th:replace="fragments/input-field::input-field('companyName','Company Name','text',${applications.companyName},'companyName','companyName','','fa-building text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::
+                input-field('companyName',
+                'Company Name',
+                'text',
+                ${applications.companyName},
+                'companyName',
+                'companyName',
+                '',
+                'fa-building text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
 
               </div>
 
@@ -113,9 +124,42 @@
                 </div>
               </div>
             <div class="grid grid-cols-3 gap-4">
-              <div th:replace="fragments/input-field::input-field('customerName','Customer Name','text',${applications.customerName},'customerName','customerName','','fa-user text-indigo-800',false,false)"></div>
-              <div th:replace="fragments/input-field::input-field('contactEmail','Contact Email','text',${applications.contactEmail},'contactEmail','contactEmail','','fa-envelope text-indigo-800',false,false)"></div>
-              <div th:replace="fragments/input-field::input-field('phoneNumber','Phone Number','text',${applications.phoneNumber},'phoneNumber','phoneNumber','','fa-phone text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field(
+                'customerName',
+                'Customer Name',
+                'text',
+                ${applications.customerName},
+                'customerName',
+                'customerName',
+                '',
+                'fa-user text-indigo-800'
+                ,${!isEditable},
+                ${!isEditable})">
+              </div>
+              <div th:replace="fragments/input-field::input-field(
+                'contactEmail',
+                'Contact Email',
+                'text',
+                ${applications.contactEmail},
+                'contactEmail',
+                'contactEmail',
+                '',
+                'fa-envelope text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
+              <div th:replace="fragments/input-field::input-field(
+                'phoneNumber',
+                'Phone Number',
+                'text',
+                ${applications.phoneNumber},
+                'phoneNumber',
+                'phoneNumber',
+                '',
+                'fa-phone text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
             </div>
 
 
@@ -127,9 +171,46 @@
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-              <div th:replace="fragments/input-field::input-field('address','Address','text',${applications.address},'address','address','','fa-location-dot text-indigo-800',false,false)"></div>
-              <div th:replace="fragments/input-field::input-field('longitude','Longitude','text',${applications.longitude},'longitude','longitude','','fa-location-crosshairs text-indigo-800',false,false)"></div>
-              <div th:replace="fragments/input-field::input-field('latitude','Latitude','text',${applications.latitude},'latitude','latitude','','fa-location-crosshairs text-indigo-800',false,false)"></div>
+
+              <div th:replace="fragments/input-field::input-field(
+                'address',
+                'Address',
+                'text',
+                ${applications.address},
+                'address',
+                'address',
+                '',
+                'fa-location-dot text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
+
+              <div th:replace="fragments/input-field::input-field(
+                'longitude',
+                'Longitude',
+                'text',
+                ${applications.longitude},
+                'longitude',
+                'longitude',
+                '',
+                'fa-location-crosshairs text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
+
+              <div th:replace="fragments/input-field::input-field(
+                'latitude',
+                'Latitude',
+                'text',
+                ${applications.latitude},
+                'latitude',
+                'latitude',
+                '',
+                'fa-location-crosshairs text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
+
             </div>
 
             <div class="pb-2 pt-6">
@@ -169,7 +250,7 @@
               </div>
 
 
-              <div class="w-full mx-auto">
+              <div class="w-full mx-auto" th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Technical'')')}">
                 <label for="applicationStatus" class="block mb-2 text-xs font-medium text-gray-900">Update Application Status</label>
                 <div class="relative">
                   <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
@@ -210,12 +291,24 @@
                           th:value="${applications.submittedBy.fullName}"
                           placeholder="submittedBy"
                           readonly
+                          disabled
                           class="w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border border-gray-300 bg-gray-300 text-gray-700" />
                   <input type="hidden" name="submittedBy" th:value="${applications.submittedBy.id}">
                 </div>
               </div>
 
-              <div th:replace="fragments/input-field::input-field('applicationDate','Application Date','date',${applications.applicationDate},'applicationDate','applicationDate','','fa-calendar text-indigo-800',false,false)"></div>
+              <div th:replace="fragments/input-field::input-field(
+                'applicationDate',
+                'Application Date',
+                'date',
+                ${applications.applicationDate},
+                'applicationDate',
+                'applicationDate',
+                '',
+                'fa-calendar text-indigo-800',
+                ${!isEditable},
+                ${!isEditable})">
+              </div>
           </div>
 
 
@@ -223,7 +316,13 @@
               <div class="w-full mx-auto">
                 <label for="comment" class="block mb-2 text-xs font-medium text-gray-900"><i class="fa-solid fa-comment text-indigo-800"></i> Comment</label>
                 <div class="relative">
-                  <textarea rows="3" id="comment" name="comment" th:text="${applications.comment}" class="bg-gray-50 focus:outline-hidden border border-gray-300 text-gray-900 text-xs rounded-lg w-full ps-4 p-2.5 max-h-20 min-h-10"></textarea>
+                  <textarea rows="3" id="comment" name="comment"
+                            th:text="${applications.comment}"
+                            th:readonly="${!isEditable}"
+                            th:disabled="${!isEditable}"
+                            class="bg-gray-50 focus:outline-hidden border border-gray-300 text-gray-900 text-xs rounded-lg w-full ps-4 p-2.5 max-h-20 min-h-10">
+
+                  </textarea>
                 </div>
               </div>
 
@@ -232,11 +331,12 @@
             <div class="button-group flex flex-row justify-between gap-x-2 pt-7 items-center">
 
               <div>
-                <a th:href="@{/technical/application/allApplications}" class="px-5 py-3 bg-transparent border border-gray-300 rounded-md cursor-pointer text-xs"><i class="fa-solid fa-chevron-left mr-1"></i> Back</a>
+                <a th:if="${isEditable}" th:href="@{/technical/application/allApplications}" class="px-5 py-3 bg-transparent border border-gray-300 rounded-md cursor-pointer text-xs"><i class="fa-solid fa-chevron-left mr-1"></i> Back</a>
+                <a th:if="${!isEditable}" th:href="@{/sale/application/allApplications}" class="px-5 py-3 bg-transparent border border-gray-300 rounded-md cursor-pointer text-xs"><i class="fa-solid fa-chevron-left mr-1"></i> Back</a>
               </div>
 
-              <div>
-                <button type="submit" class="px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-md cursor-pointer text-xs"><i class="fa-solid fa-pen-to-square"></i> Update Application</button>
+              <div th:if="${isEditable}">
+                <button type="submit" class="btn-animated px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-md cursor-pointer text-xs"><i class="fa-solid fa-pen-to-square"></i> Update</button>
               </div>
             </div>
           </form>

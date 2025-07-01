@@ -24,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
+import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -59,11 +61,7 @@ public class UserController {
                               @RequestParam(required = false, defaultValue = "desc") String sortDir,
                               @RequestParam(required = false) Boolean status
                               ){
-        List<String> allowedList= List.of("id","fullName","email","phoneNumber");
-        if(!allowedList.contains(sortField) || sortDir.isEmpty()){
-            sortField="id";
-        }
-        Sort sort = Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+       Sort sort = sortFunction(sortField, sortDir);
         Page<User> userPage;
         if((query != null && !query.isEmpty()) || (role != null && !role.isEmpty()) || (status != null)){
             userPage = userService.searchUser(query,page,size,role,status,sort);
@@ -85,6 +83,8 @@ public class UserController {
         model.addAttribute("reverseSortDir",sortDir.equals("asc") ? "desc" : "asc");
         return "user/allUsers";
     }
+
+
 
     @GetMapping("/user/edit/{id}")
     public String getEditUserForm(@PathVariable("id") Long id , Model model){
@@ -134,19 +134,14 @@ public class UserController {
                             @RequestParam(required = false, defaultValue = "id") String sortField,
                             @RequestParam(required = false, defaultValue = "desc") String sortDir,
                             @RequestParam(required = false) Boolean status,
-                            @RequestParam(required = true) String type
+                            @RequestParam() String type
     ) throws IOException {
        if(Objects.equals(type, "csv")){
            response.setContentType("text/csv");
            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
            response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".csv");
 
-           List<String> allowedList= List.of("id","fullName","email","phoneNumber");
-           if(!allowedList.contains(sortField) || sortDir.isEmpty()){
-               sortField="id";
-           }
-
-           Sort sort=Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC,sortField);
+           Sort sort = sortFunction(sortField, sortDir);
 
            List<User> users = userService.filterUsers(query,role,status,sort);
 
@@ -175,18 +170,11 @@ public class UserController {
            response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".xlsx");
 
 
-           List<String> allowedList = List.of("id", "fullName", "email", "phoneNumber");
-           if (!allowedList.contains(sortField) || sortDir == null || sortDir.isEmpty()) {
-               sortField = "id";
-           }
-
-           Sort sort = Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+           Sort sort = sortFunction(sortField, sortDir);
            List<User> users = userService.filterUsers(query, role, status, sort);
-
 
            XSSFWorkbook workbook = new XSSFWorkbook();
            XSSFSheet sheet = workbook.createSheet("Users");
-
 
            CellStyle headerStyle = workbook.createCellStyle();
            XSSFFont headerFont = workbook.createFont();

@@ -1,15 +1,11 @@
 package org.employee.surverythymeleaf.service;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -79,7 +75,6 @@ public class UserService {
                 .orElseThrow(
                         () -> new UsernameNotFoundException("Email not found")
                 );
-        System.out.println("user found: " + user);
         return user;
     }
 

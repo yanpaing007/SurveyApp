@@ -6,6 +6,7 @@ import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,12 +27,12 @@ public class SurveyService {
         return savedSurvey.getId() != null;
     }
 
-    public Page<Survey> searchSurveyWithQuery(String query, int page, int size, SurveyStatus status, LocalDate fromDate, LocalDate toDate) {
-        return surveyRepository.searchSurvey(query,PageRequest.of(page,size),status,fromDate,toDate);
+    public Page<Survey> searchSurveyWithQuery(String query, int page, int size, SurveyStatus status, LocalDate fromDate, LocalDate toDate, Sort sort) {
+        return surveyRepository.searchSurvey(query,PageRequest.of(page,size,sort),status,fromDate,toDate);
     }
 
-    public Page<Survey> getAllSuvey(int page, int size) {
-        return surveyRepository.findAll(PageRequest.of(page, size));
+    public Page<Survey> getAllSurvey(int page, int size, Sort sort) {
+        return surveyRepository.findAll(PageRequest.of(page, size,sort));
     }
 
     public Survey findSurveyById(Long id) {

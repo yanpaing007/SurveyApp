@@ -21,8 +21,13 @@
 
                         <div class="checkActive pr-3 border-r border-gray-200">
                             <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4" name="status" onchange="cleanAndSubmit(this.form)">
-                                <option value="" th:selected="${currentStatus == null}">Filter By Status</option>
-                                <option th:each="appStatus : ${applicationWithPendingStatus}" th:value="${appStatus.name()}" th:text="${appStatus.getStatus()}" th:selected="${currentStatus != null and appStatus.name() == currentStatus.name()}"></option>
+                                <option value="" disabled>Filter By Status</option>
+                                <option value="" th:selected="${currentStatus == null}">All Status</option>
+                                <option th:each="appStatus : ${applicationWithPendingStatus}"
+                                        th:value="${appStatus.name()}"
+                                        th:text="${appStatus.getStatus()}"
+                                        th:selected="${currentStatus != null and appStatus.name() == currentStatus.name()}">
+                                </option>
                             </select>
                         </div>
                         <div th:replace="~{fragments/dateSelect::dateSelect}">
