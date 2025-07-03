@@ -141,6 +141,11 @@ document.addEventListener("DOMContentLoaded", function () {
     buttons.forEach(button => {
         button.addEventListener("click", function () {
             document.querySelector("#newApplication #surveyId").value = this.getAttribute("data-survey-id");
+            document.querySelector("#newApplication #customerName").value = this.getAttribute("data-customer-name");
+            document.querySelector("#newApplication #phoneNumber").value = this.getAttribute("data-phone-number");
+            document.querySelector("#newApplication #address").value = this.getAttribute("data-address")
+            document.querySelector("#newApplication #longitude").value = this.getAttribute("data-longitude");
+            document.querySelector("#newApplication #latitude").value = this.getAttribute("data-latitude");
         })
     })
 })

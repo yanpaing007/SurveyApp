@@ -23,6 +23,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.sendRedirect("/technical/survey/allSurvey");
         } else if (roles.contains("Sale")){
             response.sendRedirect("/sale/survey/allSurvey");
+        } else if (roles.contains("Member")){
+            response.sendRedirect("/pending");
         } else{
             response.sendRedirect("/access-denied");
         }

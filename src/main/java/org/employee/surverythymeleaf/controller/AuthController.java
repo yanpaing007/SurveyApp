@@ -73,6 +73,14 @@ public class AuthController {
         return "dashboard";
     }
 
+    @GetMapping("/pending")
+    public String pending(Model model, Principal principal) {
+        String email = principal.getName();
+        User userDetails = userService.findByEmail(email);
+        model.addAttribute("user", userDetails);
+        return "pending";
+    }
+
     @GetMapping("/application/details/{id}")
     public String getApplicationDetails(Model model, @PathVariable String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

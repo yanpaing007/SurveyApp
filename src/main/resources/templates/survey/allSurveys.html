@@ -232,6 +232,11 @@
                                     data-modal-target="newApplication"
                                     data-modal-toggle="newApplication"
                                     th:data-survey-id="${survey.generatedSurveyId}"
+                                    th:data-customer-name="${survey.customerName}"
+                                    th:data-phone-number="${survey.phoneNumber}"
+                                    th:data-address="${survey.state + ', '+survey.townShip}"
+                                    th:data-longitude="${survey.longitude}"
+                                    th:data-latitude="${survey.latitude}"
                                     th:class="${survey.status.status == 'Succeeded' ?
              'bg-indigo-800 px-3 py-2 rounded-md text-white inline-flex items-center space-x-1 cursor-pointer createApplicationBtn' :
              'pointer-events-none cursor-not-allowed bg-gray-400 px-3 py-2 rounded-md text-gray-100 inline-flex items-center space-x-1'}">
@@ -245,7 +250,6 @@
                                 <i th:class="${survey.status.status=='Pending' or survey.status.status == 'Succeeded'} ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-ban'" style="color: #e5e9ec;"></i>
                                 <span>App</span>
                             </button>
-
 
                             <a th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Technical'')')}"
                                th:href="@{/technical/survey/details/{id}(id=${survey.getGeneratedSurveyId()})}"
