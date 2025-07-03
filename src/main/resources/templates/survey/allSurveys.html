@@ -121,20 +121,28 @@
                     <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10 text-left">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            <a th:href="@{/technical/survey/allSurvey(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                            <a th:href="@{/technical/survey/allSurvey(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus} ,fromDate=${fromDate},toDate=${toDate})}">
                                 No.
                                 <span th:text="${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : '-'}"></span>
                             </a>
                         </th>
 
                         <th scope="col" class="px-6 py-3">
-                            SurveyId
+                            <a th:href="@{/technical/survey/allSurvey(sortField='generatedSurveyId', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus},fromDate=${fromDate},toDate=${toDate})}">
+                                SurveyId
+                                <span th:text="${sortField == 'generatedSurveyId' ? (sortDir == 'asc' ? '↑' : '↓') : '-'}"></span>
+                            </a>
+
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Customer Name
+                            <a th:href="@{/technical/survey/allSurvey(sortField='customerName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus},fromDate=${fromDate},toDate=${toDate})}">
+                                Customer Name
+                            <span th:text="${sortField == 'customerName' ? (sortDir == 'asc' ? '↑' : '↓') : '-'}"></span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Phone Number
+
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Sale Person

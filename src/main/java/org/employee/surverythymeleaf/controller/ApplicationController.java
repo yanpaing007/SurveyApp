@@ -99,12 +99,12 @@ public class ApplicationController {
     }
 
 
-    @GetMapping("survey/edit/{id}")
-    public String getEditSurveyForm(Model model, @PathVariable Long id) {
-        Survey survey=surveyService.findSurveyById(id);
-        model.addAttribute("survey", survey);
-        return "survey/editSurveyForm";
-    }
+//    @GetMapping("survey/edit/{id}")
+//    public String getEditSurveyForm(Model model, @PathVariable Long id) {
+//        Survey survey=surveyService.findSurveyById(id);
+//        model.addAttribute("survey", survey);
+//        return "survey/editSurveyForm";
+//    }
 
     @GetMapping("/survey/details/{id}")
     public String getDetailSurveyForm(Model model, @PathVariable String id) {
