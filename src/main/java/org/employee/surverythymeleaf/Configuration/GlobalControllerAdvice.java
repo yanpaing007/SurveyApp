@@ -1,20 +1,18 @@
 package org.employee.surverythymeleaf.Configuration;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.employee.surverythymeleaf.DTO.UserDTO;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.UserService;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
 import java.security.Principal;
+
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
     private final UserService userService;
-
     public GlobalControllerAdvice(UserService userService) {
         this.userService = userService;
     }

@@ -2,7 +2,6 @@ package org.employee.surverythymeleaf.controller;
 
 import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.ApplicationStatus;
-import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.UserService;
@@ -102,5 +101,4 @@ public class AuthController {
         }
         return "redirect:/application/details/{id}";
     }
-
 }

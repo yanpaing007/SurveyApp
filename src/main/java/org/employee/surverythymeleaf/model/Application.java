@@ -1,8 +1,6 @@
 package org.employee.surverythymeleaf.model;
 
-
 import jakarta.persistence.*;
-import jakarta.websocket.Encoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

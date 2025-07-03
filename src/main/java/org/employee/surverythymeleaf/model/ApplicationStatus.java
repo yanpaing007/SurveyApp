@@ -1,8 +1,6 @@
 package org.employee.surverythymeleaf.model;
 
-
 import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,11 +10,9 @@ public enum ApplicationStatus {
     PENDING("Pending"),
     PROCESSING("Processing"),
     COMPLETED("Completed"),
-    CANCELLED("Cancelled"),
-    ;
+    CANCELLED("Cancelled");
 
     private final String status;
-
     ApplicationStatus(String status) {
         this.status = status;
     }

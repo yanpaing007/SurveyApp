@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
-
 import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
 
 
@@ -83,7 +82,6 @@ public class UserController {
         model.addAttribute("reverseSortDir",sortDir.equals("asc") ? "desc" : "asc");
         return "user/allUsers";
     }
-
 
 
     @GetMapping("/user/edit/{id}")
@@ -158,7 +156,7 @@ public class UserController {
                        user.getEmail(),
                        user.getPhoneNumber(),
                        user.getRole().getRoleName(),
-                       user.isEnabled() ? "Active" : "Not Active" );
+                       user.isStatus() ? "Active" : "Not Active" );
            }
            writer.flush();
            writer.close();
@@ -203,7 +201,7 @@ public class UserController {
                row.createCell(2).setCellValue(user.getEmail());
                row.createCell(3).setCellValue(user.getPhoneNumber());
                row.createCell(4).setCellValue(user.getRole().getRoleName());
-               row.createCell(5).setCellValue(user.isEnabled() ? "Active" : "Not Active");
+               row.createCell(5).setCellValue(user.isStatus() ? "Active" : "Not Active");
            }
 
            for (int i = 0; i < columns.length; i++) {
@@ -215,7 +213,6 @@ public class UserController {
        }
 
         }
-
 }
 
 

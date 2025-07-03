@@ -3,7 +3,6 @@ import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
-import org.employee.surverythymeleaf.util.SortUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,20 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.security.Principal;
 import java.time.LocalDate;
-
 import static org.employee.surverythymeleaf.util.SortUtils.getAllSurveysDouble;
 import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
-
-import java.time.format.DateTimeFormatter;
-
 
 @Controller
 @RequestMapping("/technical")
 public class ApplicationController {
-
     private final ApplicationService applicationService;
     private final SurveyService surveyService;
     private final UserService userService;
@@ -98,13 +91,6 @@ public class ApplicationController {
         return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app,sort,sortField,sortDir);
     }
 
-
-//    @GetMapping("survey/edit/{id}")
-//    public String getEditSurveyForm(Model model, @PathVariable Long id) {
-//        Survey survey=surveyService.findSurveyById(id);
-//        model.addAttribute("survey", survey);
-//        return "survey/editSurveyForm";
-//    }
 
     @GetMapping("/survey/details/{id}")
     public String getDetailSurveyForm(Model model, @PathVariable String id) {

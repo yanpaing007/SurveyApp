@@ -12,10 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.security.Principal;
 import java.time.LocalDate;
-
 import static org.employee.surverythymeleaf.controller.ApplicationController.getAllApplication;
 import static org.employee.surverythymeleaf.util.SortUtils.getAllSurveysDouble;
 
@@ -56,7 +54,6 @@ public class SurveyController {
 
         String newSurveyId = String.format("SUR-%05d", newNumber);
         survey.setGeneratedSurveyId(newSurveyId);
-
         survey.setStatus(SurveyStatus.PENDING);
         boolean success =surveyService.addNewSurvey(survey);
         if(success) {
@@ -84,13 +81,10 @@ public class SurveyController {
         String email = principal.getName();
         Survey survey = new Survey();
         Application app = new Application();
-
         model.addAttribute("app", new Application());
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
-
         Sort sort = SortUtils.sortFunction(sortField, sortDir);
-
         return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey, app,sort,sortField,sortDir);
     }
 
@@ -139,7 +133,6 @@ public class SurveyController {
         }
 
         Survey findSurveyId = surveyService.findSurveyByGeneratedSurveyId(surveyId);
-
         String newApplicationId = String.format("APP-%05d", newNumber);
         application.setGeneratedApplicationId(newApplicationId);
         application.setApplicationDate(LocalDate.now());
@@ -147,5 +140,4 @@ public class SurveyController {
         applicationService.addNewApplication(application);
         return "redirect:/sale/survey/allSurvey";
     }
-
 }
