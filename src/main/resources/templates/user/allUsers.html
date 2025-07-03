@@ -111,13 +111,23 @@
                         <th scope="col" class="px-6 py-3">
                             <a th:href="@{/admin/users(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
                                 No.
-                                <span th:text="${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'id' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'id' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
                             <a th:href="@{/admin/users(sortField='fullName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, role=${selectedRole}, status=${selectedStatus})}">
                                 Name
-                                <span th:text="${sortField == 'fullName' ? (sortDir == 'asc' ? '↑' : '↓') : ''}"></span>
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'fullName' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'fullName' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">

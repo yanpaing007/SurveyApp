@@ -54,19 +54,59 @@
                     <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10 text-left">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            No.
+                            <a th:href="@{/technical/application/allApplications(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                                No.
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'id' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'id' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            ApplicationId
+                            <a th:href="@{/technical/application/allApplications(sortField='generatedApplicationId', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                                ApplicationId
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'generatedApplicationId' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'generatedApplicationId' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            SurveyId
+                            <a th:href="@{/technical/application/allApplications(sortField='survey', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                                SurveyId
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'survey' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'survey' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                           Customer Name
+                            <a th:href="@{/technical/application/allApplications(sortField='customerName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                                Customer Name
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'customerName' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'customerName' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                           Company Name
+                            <a th:href="@{/technical/application/allApplications(sortField='companyName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                                Company Name
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'companyName' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'companyName' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Phone Number
@@ -78,7 +118,15 @@
                             Status
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Submitted By
+                            <a th:href="@{/technical/application/allApplications(sortField='submittedBy', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus})}">
+                                SubmittedBy?
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'submittedBy' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'submittedBy' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3 text-center">
                             Details

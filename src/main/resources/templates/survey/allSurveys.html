@@ -121,23 +121,45 @@
                     <thead class="sticky top-0 text-xs text-gray-700 bg-gray-50 z-10 text-left">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            <a th:href="@{/technical/survey/allSurvey(sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus} ,fromDate=${fromDate},toDate=${toDate})}">
+                            <a th:href="@{/technical/survey/allSurvey(sortField='id',
+                             sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             page=0,
+                             size=${size},
+                             query=${query},
+                             status=${selectedStatus} ,
+                             fromDate=${fromDate},
+                             toDate=${toDate})}">
                                 No.
-                                <span th:text="${sortField == 'id' ? (sortDir == 'asc' ? '↑' : '↓') : '-'}"></span>
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'id' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'id' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
                             </a>
                         </th>
 
                         <th scope="col" class="px-6 py-3">
                             <a th:href="@{/technical/survey/allSurvey(sortField='generatedSurveyId', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus},fromDate=${fromDate},toDate=${toDate})}">
                                 SurveyId
-                                <span th:text="${sortField == 'generatedSurveyId' ? (sortDir == 'asc' ? '↑' : '↓') : '-'}"></span>
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'generatedSurveyId' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'generatedSurveyId' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
                             </a>
 
                         </th>
                         <th scope="col" class="px-6 py-3">
                             <a th:href="@{/technical/survey/allSurvey(sortField='customerName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus},fromDate=${fromDate},toDate=${toDate})}">
                                 Customer Name
-                            <span th:text="${sortField == 'customerName' ? (sortDir == 'asc' ? '↑' : '↓') : '-'}"></span>
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'customerName' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'customerName' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -145,7 +167,16 @@
 
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Sale Person
+                            <a th:href="@{/technical/survey/allSurvey(sortField='salePerson', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, page=0, size=${size}, query=${query}, status=${selectedStatus},fromDate=${fromDate},toDate=${toDate})}">
+                                Sale Person
+                                <span class="ml-1">
+                                    <i class="fa-solid fa-arrow-up"
+                                       th:classappend="${sortField == 'salePerson' and sortDir == 'asc'} ? 'text-black' : 'text-gray-300'"></i>
+                                    <i class="fa-solid fa-arrow-down"
+                                       th:classappend="${sortField == 'salePerson' and sortDir == 'desc'} ? 'text-black' : 'text-gray-300'"></i>
+                                </span>
+
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Survey Status

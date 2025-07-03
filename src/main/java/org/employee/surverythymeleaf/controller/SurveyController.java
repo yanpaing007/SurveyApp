@@ -101,23 +101,26 @@ public class SurveyController {
     public String getAllApplications(Model model, @RequestParam(required = false) String query,
                                      @RequestParam(required = false,defaultValue = "0") int page,
                                      @RequestParam(required = false,defaultValue = "13") int size,
+                                     @RequestParam(required = false,defaultValue = "id") String sortField,
+                                     @RequestParam(required = false,defaultValue = "desc") String sortDir,
                                      @RequestParam(required = false) String status,
                                      @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                      @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate){
         Page<Application> applicationPage;
         ApplicationStatus applicationStatus = null;
+        Sort sort = SortUtils.sortFunction(sortField, sortDir);
         if( status != null && !status.trim().isEmpty() ){
             applicationStatus = ApplicationStatus.valueOf(status);
         }
         if(query != null && !query.isEmpty() || (fromDate != null && toDate != null) || status != null){
-            applicationPage = applicationService.searchApplicationWithQuery(query,page,size,applicationStatus,fromDate,toDate);
+            applicationPage = applicationService.searchApplicationWithQuery(query,page,size,applicationStatus,fromDate,toDate, sort);
         }else{
-            applicationPage = applicationService.getAllApplicationPaginated(page,size);
+            applicationPage = applicationService.getAllApplicationPaginated(page,size, sort);
         }
 
         model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
         model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
-        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate);
+        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate,sortField,sortDir);
     }
 
     @PostMapping("/application/add")

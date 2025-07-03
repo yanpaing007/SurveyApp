@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SortUtils {
     public static Sort sortFunction(String sortField, String sortDir){
-        List<String> allowedList= List.of("id","fullName","email","phoneNumber");
-        if(!allowedList.contains(sortField) || sortDir.isEmpty()){
+//        List<String> allowedList= List.of("id","fullName","email","phoneNumber");
+        if(sortDir.isEmpty()){
             sortField="id";
         }
         return Sort.by(sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);

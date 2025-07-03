@@ -5,11 +5,11 @@ import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 
 
@@ -26,13 +26,13 @@ public class ApplicationService {
         applicationRepository.save(application);
     }
 
-    public Page<Application> getAllApplicationPaginated(int page, int size) {
-        return applicationRepository.findAll(PageRequest.of(page,size));
+    public Page<Application> getAllApplicationPaginated(int page, int size, Sort sort) {
+        return applicationRepository.findAll(PageRequest.of(page,size,sort));
         
     }
 
-    public Page<Application> searchApplicationWithQuery(String query, int page, int size, ApplicationStatus applicationStatus, LocalDate fromDate, LocalDate toDate) {
-        Pageable pageable = PageRequest.of(page,size);
+    public Page<Application> searchApplicationWithQuery(String query, int page, int size, ApplicationStatus applicationStatus, LocalDate fromDate, LocalDate toDate, Sort sort) {
+        Pageable pageable = PageRequest.of(page,size,sort);
         return applicationRepository.searchApplication(query,pageable,applicationStatus,fromDate,toDate);
     }
 
