@@ -1,11 +1,13 @@
 package org.employee.surverythymeleaf.controller;
 
-import org.employee.surverythymeleaf.model.Application;
-import org.employee.surverythymeleaf.model.ApplicationStatus;
-import org.employee.surverythymeleaf.model.User;
+import org.employee.surverythymeleaf.model.*;
+import org.employee.surverythymeleaf.repository.ApplicationRepository;
+import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.service.ApplicationService;
+import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.AppStatusValidator;
+import org.employee.surverythymeleaf.util.CalculateDashboard;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,10 +27,16 @@ public class AuthController {
 
     private final UserService userService;
     private final ApplicationService applicationService;
+    private final SurveyService surveyService;
+    private final SurveyRepository surveyRepository;
+    private final ApplicationRepository applicationRepository;
 
-    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService) {
+    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService, SurveyService surveyService, SurveyRepository surveyRepository, ApplicationRepository applicationRepository) {
         this.userService = userService;
         this.applicationService = applicationService;
+        this.surveyService =surveyService;
+        this.surveyRepository = surveyRepository;
+        this.applicationRepository = applicationRepository;
     }
 
     public boolean check_authentication() {
@@ -72,8 +80,35 @@ public class AuthController {
         String email = principal.getName();
         User userDetails = userService.findByEmail(email);
         model.addAttribute("user", userDetails);
+
+        Long totalSurvey = (long) surveyRepository.findAll().size();
+        Long totalApplication = (long) applicationRepository.findAll().size();
+
+        Long pendingSurvey = surveyRepository.countByStatus(SurveyStatus.PENDING);
+        Long succeededSurvey = surveyRepository.countByStatus(SurveyStatus.SUCCEEDED);
+        Long failedSurvey = surveyRepository.countByStatus(SurveyStatus.FAILED);
+
+        Long pendingApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.PENDING);
+        Long processingApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.PROCESSING);
+        Long completedApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.COMPLETED);
+        Long cancelledApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.CANCELLED);
+        Long successRate = CalculateDashboard.calculateSuccessRate(totalApplication, pendingApplication);
+
+        model.addAttribute("totalSurvey", totalSurvey);
+        model.addAttribute("totalApplication", totalApplication);
+        model.addAttribute("pendingSurvey", pendingSurvey);
+        model.addAttribute("succeededSurvey", succeededSurvey);
+        model.addAttribute("failedSurvey", failedSurvey);
+        model.addAttribute("pendingApplication", pendingApplication);
+        model.addAttribute("processingApplication", processingApplication);
+        model.addAttribute("completedApplication", completedApplication);
+        model.addAttribute("cancelledApplication", cancelledApplication);
+        model.addAttribute("successRate", successRate);
+
         return "dashboard";
     }
+
+
 
     @GetMapping("/pending")
     public String pending(Model model, Principal principal) {

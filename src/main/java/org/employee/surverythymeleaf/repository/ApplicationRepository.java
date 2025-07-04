@@ -40,4 +40,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     Optional<Application> findByGeneratedApplicationId(String generatedApplicationId);
 
+    Long countByApplicationStatus(ApplicationStatus applicationStatus);
+
 }

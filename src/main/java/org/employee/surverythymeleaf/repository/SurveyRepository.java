@@ -31,4 +31,6 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     Survey findLatestSurvey();
 
     Optional<Survey> findSurveyByGeneratedSurveyId(String generatedSurveyId);
+
+    Long countByStatus(SurveyStatus status);
 }
