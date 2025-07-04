@@ -3,6 +3,7 @@ import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.employee.surverythymeleaf.util.SortUtils.getAllSurveysDouble;
 import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
 
@@ -49,8 +54,12 @@ public class ApplicationController {
             applicationPage = applicationService.getAllApplicationPaginated(page,size,sort);
         }
 
-        model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
-        model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
+        Map<Long, List<ApplicationStatus>> validStatusMap = new HashMap<>();
+        for(Application application : applicationPage.getContent()){
+            validStatusMap.put(application.getId(), AppStatusValidator.getNextValidStatuses(application.getApplicationStatus()));
+        }
+
+        model.addAttribute("validStatusMap", validStatusMap);
         return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate,sortField,sortDir);
     }
 
@@ -108,13 +117,13 @@ public class ApplicationController {
 
     @PostMapping("application/updateStatus")
     public String updateApplicationStatus(@RequestParam ApplicationStatus status, @RequestParam Long id, RedirectAttributes redirectAttributes) {
-       boolean application= applicationService.updateStatus(id,status);
-       if(application){
+       boolean updated= applicationService.updateStatus(id,status);
+       if(updated){
            redirectAttributes.addFlashAttribute("message", "Application status updated to " + status);
            redirectAttributes.addFlashAttribute("messageType", "success");
        }
        else{
-           redirectAttributes.addFlashAttribute("message", "Application status not updated to " + status);
+           redirectAttributes.addFlashAttribute("message", "Invalid transition:couldn't update from current state to " + status);
            redirectAttributes.addFlashAttribute("messageType", "error");
        }
        return "redirect:/technical/application/allApplications";
@@ -136,24 +145,4 @@ public class ApplicationController {
         return "redirect:/technical/survey/allSurvey";
     }
 
-//    @PostMapping("/application/details/{id}")
-//    public String updateApplication(@PathVariable String id, @ModelAttribute Application application, RedirectAttributes redirectAttributes) {
-//        boolean app= applicationService.updateApplication(id,application);
-//        if(app){
-//            redirectAttributes.addFlashAttribute("message", "Application status updated");
-//            redirectAttributes.addFlashAttribute("messageType", "success");
-//        }
-//        else{
-//            redirectAttributes.addFlashAttribute("message", "Application status not updated");
-//            redirectAttributes.addFlashAttribute("messageType", "error");
-//        }
-//        return "redirect:/technical/application/allApplications";
-//    }
-
-//    @GetMapping("application/details/{id}")
-//    public String getApplicationDetails(Model model, @PathVariable String id) {
-//        Application application = applicationService.findApplicationByGeneratedApplicationId(id);
-//        model.addAttribute("applications", application);
-//        return "application/applicationDetails";
-//    }
 }

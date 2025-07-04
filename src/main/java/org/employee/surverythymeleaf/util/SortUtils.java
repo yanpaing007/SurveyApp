@@ -1,6 +1,7 @@
 package org.employee.surverythymeleaf.util;
 
 import org.employee.surverythymeleaf.model.Application;
+import org.employee.surverythymeleaf.model.ApplicationStatus;
 import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.employee.surverythymeleaf.service.SurveyService;
@@ -9,12 +10,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class SortUtils {
     public static Sort sortFunction(String sortField, String sortDir){
-//        List<String> allowedList= List.of("id","fullName","email","phoneNumber");
+
         if(sortDir.isEmpty()){
             sortField="id";
         }
@@ -47,27 +50,18 @@ public class SortUtils {
         }else{
             surveyPage = surveyService.getAllSurvey(page,size,sort);
         }
-        List<SurveyStatus> surveyWithoutPending = SurveyStatus.getNonPendingSurveyStatus();
+        Map<Long, List<SurveyStatus>> validStatusMap = new HashMap<>();
 
-        return getString(model, query, page, size, surveyPage,surveyStatus,fromDate,toDate,app,survey,SurveyStatus.values(),surveyWithoutPending,sortField,sortDir);
-    }
+        for(Survey surv : surveyPage.getContent()){
+            SurveyStatus currentStatus = surv.getStatus();
+            List<SurveyStatus> validStatuses =switch (currentStatus){
+                case PENDING -> List.of(SurveyStatus.PENDING,SurveyStatus.SUCCEEDED,SurveyStatus.FAILED );
+                case SUCCEEDED -> List.of(SurveyStatus.SUCCEEDED);
+                case FAILED -> List.of(SurveyStatus.FAILED);
+            };
+            validStatusMap.put(surv.getId(),validStatuses);
+        }
 
-    static String getString(Model model,
-                            String query,
-                            int page,
-                            int size,
-                            Page<Survey> surveyPage,
-                            SurveyStatus status,
-                            LocalDate fromDate,
-                            LocalDate toDate,
-                            Application app,
-                            Survey survey,
-                            SurveyStatus[] allSurveyStatus,
-                            List<SurveyStatus> surveyWithoutPending,
-                            String sortField,
-                            String sortDir
-
-                            ) {
         model.addAttribute("surveys",surveyPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",surveyPage.getTotalElements());
@@ -79,8 +73,7 @@ public class SortUtils {
         model.addAttribute("toDate",toDate);
         model.addAttribute("app",app);
         model.addAttribute("survey",survey);
-        model.addAttribute("surveyWithNonePendingStatus",surveyWithoutPending);
-        model.addAttribute("surveyWithPendingStatus",allSurveyStatus);
+        model.addAttribute("validStatusMap",validStatusMap);
         model.addAttribute("sortField",sortField);
         model.addAttribute("sortDir",sortDir);
         return "survey/allSurveys";

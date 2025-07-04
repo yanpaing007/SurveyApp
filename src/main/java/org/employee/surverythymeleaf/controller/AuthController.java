@@ -5,6 +5,7 @@ import org.employee.surverythymeleaf.model.ApplicationStatus;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class AuthController {
@@ -90,9 +92,9 @@ public class AuthController {
         boolean isEditable = isAdmin || isTechnical;
         model.addAttribute("isEditable", isEditable);
         Application application = applicationService.findApplicationByGeneratedApplicationId(id);
+        List<ApplicationStatus> status = AppStatusValidator.getNextValidStatuses(application.getApplicationStatus());
         model.addAttribute("applications", application);
-        model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
-        model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
+        model.addAttribute("status", status);
         return "application/applicationDetails";
     }
 

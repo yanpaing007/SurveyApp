@@ -181,23 +181,11 @@
                                     <form th:action="@{/technical/application/updateStatus}" method="post">
                                         <input type="hidden" name="id" th:value="${app.id}" />
                                         <select name="status" class="form-select" onchange="this.form.submit()">
-
-                                            <th:block th:if="${app.applicationStatus.status == 'Pending'}">
-                                                <option th:each="status,iterStat : ${applicationWithPendingStatus}"
+                                                <option th:each="status,iterStat : ${validStatusMap[app.id]}"
                                                         th:value="${status}"
                                                         th:text="${status.status}"
                                                         th:selected="${status == app.applicationStatus}">
                                                 </option>
-                                            </th:block>
-
-                                            <th:block th:if="${app.applicationStatus.status != 'Pending'}">
-                                                <option th:each="status,iterStat : ${applicationWithNonePendingStatus}"
-                                                        th:value="${status}"
-                                                        th:text="${status.status}"
-                                                        th:selected="${status == app.applicationStatus}">
-                                                </option>
-                                            </th:block>
-
                                         </select>
                                     </form>
                                 </div>

@@ -259,21 +259,11 @@
 
                   <select name="applicationStatus" class="form-select w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border border-gray-200">
 
-                    <th:block th:if="${applications.applicationStatus.status == 'Pending'}">
-                      <option th:each="status,iterStat : ${applicationWithPendingStatus}"
+                      <option th:each="status,iterStat : ${status}"
                               th:value="${status.name()}"
                               th:text="${status.getStatus()}"
                               th:selected="${status.name() == applications.applicationStatus.name()}">
                       </option>
-                    </th:block>
-
-                    <th:block th:if="${applications.applicationStatus.status != 'Pending'}">
-                      <option th:each="status,iterStat : ${applicationWithNonePendingStatus}"
-                              th:value="${status.name()}"
-                              th:text="${status.getStatus()}"
-                              th:selected="${status.name() == applications.applicationStatus.name()}">
-                      </option>
-                    </th:block>
 
                   </select>
                 </div>

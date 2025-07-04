@@ -225,21 +225,12 @@
                                         <input type="hidden" name="id" th:value="${survey.id}"/>
                                         <input type="hidden" name="TechPerson" th:value="${currentUser.id}"/>
                                         <select name="status" class="form-select" onchange="this.form.submit()">
-                                            <th:block th:if="${survey.status.status == 'Pending'}">
-                                                <option th:each="status : ${surveyWithPendingStatus}"
-                                                        th:value="${status.name()}"
-                                                        th:text="${status.getStatus()}"
-                                                        th:selected="${status.getStatus() == survey.status.status}">
+                                                <option th:each="status : ${validStatusMap[survey.id]}"
+                                                        th:value="${status}"
+                                                        th:text="${status}"
+                                                        th:selected="${status == survey.status.status}">
                                                 </option>
-                                            </th:block>
 
-                                            <th:block th:if="${survey.status.status != 'Pending'}">
-                                                <option th:each="status : ${surveyWithNonePendingStatus}"
-                                                        th:value="${status.name()}"
-                                                        th:text="${status.getStatus()}"
-                                                        th:selected="${status.getStatus() == survey.status.status}">
-                                                </option>
-                                            </th:block>
                                         </select>
                                     </form>
                                 </div>

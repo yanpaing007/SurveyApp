@@ -2,6 +2,7 @@ package org.employee.surverythymeleaf.service;
 import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.ApplicationStatus;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
+import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,16 +49,15 @@ public class ApplicationService {
     }
 
     public boolean updateStatus(Long id, ApplicationStatus status) {
-        Optional<Application> applicationOpt= applicationRepository.findById(id);
-        if(applicationOpt.isPresent()) {
-            Application application = applicationOpt.get();
+           Application application= applicationRepository.findById(id).orElseThrow(
+                        () -> new UsernameNotFoundException("Application was not found on server"));
+            ApplicationStatus currentStatus = application.getApplicationStatus();
+            if(!AppStatusValidator.validateAppStatus(currentStatus, status)) {
+                return false;
+            }
             application.setApplicationStatus(status);
             applicationRepository.save(application);
             return true;
-        }
-        else{
-            throw new UsernameNotFoundException("Application with id " + id + " not found");
-        }
     }
 
     public Application searchLatestApplication() {
@@ -68,7 +68,11 @@ public class ApplicationService {
         Optional<Application> applicationOpt= applicationRepository.findByGeneratedApplicationId((id));
         if(applicationOpt.isPresent()) {
             Application app = applicationOpt.get();
-//            BeanUtils.copyProperties(application,app,"id","generatedApplicationId","generatedApplicationId");
+            ApplicationStatus currentStatus = app.getApplicationStatus();
+            ApplicationStatus nextStatus = application.getApplicationStatus();
+            if(!AppStatusValidator.validateAppStatus(currentStatus, nextStatus)) {
+                return false;
+            }
             app.setCompanyName(application.getCompanyName());
             app.setCustomerName(application.getCustomerName());
             app.setContactEmail(application.getContactEmail());
