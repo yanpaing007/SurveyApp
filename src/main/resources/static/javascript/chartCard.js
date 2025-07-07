@@ -1,5 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const surveyStatusCounts = [45, 35, 100];
+    const surveyData = document.getElementById("survey-data");
+    const pendingSurvey = parseInt(surveyData.dataset.pending || 0);
+    const successSurvey = parseInt(surveyData.dataset.success || 0);
+    const failSurvey = parseInt(surveyData.dataset.failed || 0);
+
+    const applicationData = document.getElementById("application-data");
+    const pendingApplication = parseInt(applicationData.dataset.pending);
+    const processingApplication = parseInt(applicationData.dataset.processing);
+    const completeApplication = parseInt(applicationData.dataset.completed);
+    const cancelledApplication = parseInt(applicationData.dataset.cancelled);
+
     const monthlySurveyLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
     const monthlySurveyData = [12, 19, 3, 5, 2, 100];
     const applicationStatusCounts = [30, 25, 80, 15];
@@ -14,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 labels: ['Pending', 'Succeeded', 'Failed'],
                 datasets: [{
                     label: 'Survey Status',
-                    data: surveyStatusCounts,
+                    data: [pendingSurvey, successSurvey, failSurvey],
                     backgroundColor: ['#facc15', '#22c55e', '#ef4444'],
                     borderWidth: 1
                 }]
@@ -78,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 labels: ['Pending', 'Processing', 'Completed', 'Cancelled'],
                 datasets: [{
                     label: 'Application Status',
-                    data: applicationStatusCounts,
+                    data: [pendingApplication,processingApplication,completeApplication,cancelledApplication],
                     backgroundColor: ['#facc15', '#f97316', '#22c55e', '#ef4444'],
                     borderWidth: 1
                 }]

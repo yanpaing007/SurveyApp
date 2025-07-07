@@ -11,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -41,5 +44,21 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findByGeneratedApplicationId(String generatedApplicationId);
 
     Long countByApplicationStatus(ApplicationStatus applicationStatus);
+
+    @Query("""
+        select count(a) from Application a where month(a.createdAt)=:month and year(a.createdAt)=:year
+""")
+    Long countApplicationByMonthAndYear(@Param("month") Integer month,@Param("year") Integer year);
+
+    @Query("""
+        select count(a) from Application a where month(a.createdAt)=:month and year(a.createdAt)=:year and a.applicationStatus=:status
+""")
+    Long countApplicationByMonthYearAndStatus(@Param("month") Integer month,@Param("year") Integer year,@Param("status") ApplicationStatus status);
+
+
+    @Query("""
+        select a.submittedBy , count(a) from Application a group by a.submittedBy order by count(a) desc
+""")
+    List<Object[]> findTopApplicationCreator(Pageable pageable);
 
 }

@@ -3,23 +3,33 @@ package org.employee.surverythymeleaf.service;
 import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.employee.surverythymeleaf.model.User;
+import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
+import org.employee.surverythymeleaf.util.CalculateDashboard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import static org.employee.surverythymeleaf.util.DateCalculator.
+        getCurrentMonthAndYearCounts;
 
 @Service
 public class SurveyService {
 
     private final SurveyRepository surveyRepository;
+    private final ApplicationRepository applicationRepository;
 
-    public SurveyService(SurveyRepository surveyRepository) {
+    public SurveyService(SurveyRepository surveyRepository, ApplicationRepository applicationRepository) {
         this.surveyRepository = surveyRepository;
+        this.applicationRepository = applicationRepository;
     }
 
     public boolean addNewSurvey(Survey survey) {
@@ -61,6 +71,32 @@ public class SurveyService {
     public Survey findSurveyByGeneratedSurveyId(String id) {
         return surveyRepository.findSurveyByGeneratedSurveyId(id)
                 .orElseThrow(() -> new RuntimeException("Survey with "+id+ " was not found on server"));
+    }
+
+
+    public Long surveyCompareToLastMonth() {
+        Map<String,Long> data = getCurrentMonthAndYearCounts(surveyRepository::countSurveyByMonthAndYear);
+        Long lastMonthSurveyCount = data.get("lastMonth");
+        Long currentMonthSurveyCount = data.get("currentMonth");
+        return CalculateDashboard.calculatePercentage(currentMonthSurveyCount,lastMonthSurveyCount);
+    }
+
+    public Long pendingSurveyCompareToLastMonth() {
+        Map<String,Long> data = getCurrentMonthAndYearCounts(surveyRepository::countPendingSurveyByMonthAndYear);
+        Long lastMonthSurveyCount = data.get("lastMonth");
+        Long currentMonthSurveyCount = data.get("currentMonth");
+        return CalculateDashboard.calculatePercentage(currentMonthSurveyCount,lastMonthSurveyCount);
+    }
+
+    public List<Survey> getRecentSurvey() {
+        Pageable pageable = PageRequest.of(0,5);
+        List<Survey> latestSurvey = surveyRepository.findAllByOrderByIdDesc(pageable);
+        return latestSurvey;
+    }
+
+    public Object[] findTopSurveyCreator() {
+        Pageable pageable1 = PageRequest.of(0,1);
+        return surveyRepository.findTopSurveyCreator(pageable1).getFirst();
     }
 
 }

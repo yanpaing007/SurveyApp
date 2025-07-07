@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -48,4 +51,8 @@ public class Application {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String comment;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    LocalDateTime createdAt;
 }

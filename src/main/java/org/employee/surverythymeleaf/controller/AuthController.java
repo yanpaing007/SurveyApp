@@ -8,6 +8,7 @@ import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class AuthController {
@@ -92,7 +94,21 @@ public class AuthController {
         Long processingApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.PROCESSING);
         Long completedApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.COMPLETED);
         Long cancelledApplication = applicationRepository.countByApplicationStatus(ApplicationStatus.CANCELLED);
-        Long successRate = CalculateDashboard.calculateSuccessRate(totalApplication, pendingApplication);
+        Long successRate = CalculateDashboard.calculateSuccessRate(totalApplication, completedApplication);
+
+        Long surveyPercentage = surveyService.surveyCompareToLastMonth();
+        Long pendingSurveyPercentage = surveyService.pendingSurveyCompareToLastMonth();
+        Long applicationPercentage = applicationService.applicationCompareToLastMonth();
+        Long successRatePercentage = applicationService.successRateCompareToLastMonth();
+
+        List<Survey> getRecentSurvey = surveyService.getRecentSurvey();
+        Object[] topSurvey = surveyService.findTopSurveyCreator();
+        User topSurveyCreator = (User) topSurvey[0];
+        Long topSurveyCount = (Long) topSurvey[1];
+
+        Object[] topApplication = applicationService.findTopApplicationCreator();
+        User topApplicationCreator = (User) topApplication[0];
+        Long topApplicationCount = (Long) topApplication[1];
 
         model.addAttribute("totalSurvey", totalSurvey);
         model.addAttribute("totalApplication", totalApplication);
@@ -104,6 +120,17 @@ public class AuthController {
         model.addAttribute("completedApplication", completedApplication);
         model.addAttribute("cancelledApplication", cancelledApplication);
         model.addAttribute("successRate", successRate);
+        model.addAttribute("surveyPercentage", surveyPercentage);
+        model.addAttribute("pendingSurveyPercentage", pendingSurveyPercentage);
+        model.addAttribute("applicationPercentage", applicationPercentage);
+        model.addAttribute("successRatePercentage", successRatePercentage);
+        model.addAttribute("recentSurvey", getRecentSurvey);
+        model.addAttribute("topSurveyCreator", topSurveyCreator);
+        model.addAttribute("topSurveyCreatorCount", topSurveyCount);
+        model.addAttribute("topApplicationCreator", topApplicationCreator);
+        model.addAttribute("topApplicationCreatorCount", topApplicationCount);
+
+        System.out.println(getRecentSurvey);
 
         return "dashboard";
     }

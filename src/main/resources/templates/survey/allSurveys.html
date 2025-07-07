@@ -227,7 +227,7 @@
                                         <select name="status" class="form-select" onchange="this.form.submit()">
                                                 <option th:each="status : ${validStatusMap[survey.id]}"
                                                         th:value="${status}"
-                                                        th:text="${status}"
+                                                        th:text="${status.status}"
                                                         th:selected="${status == survey.status.status}">
                                                 </option>
 

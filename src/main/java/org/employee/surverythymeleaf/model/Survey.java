@@ -61,8 +61,4 @@ public class Survey {
     private Double longitude;
     private Double latitude;
 
-
-    private boolean hasApplications(){
-        return application != null;
-    }
 }
