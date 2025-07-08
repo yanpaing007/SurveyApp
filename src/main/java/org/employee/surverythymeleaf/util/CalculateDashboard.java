@@ -10,8 +10,6 @@ public class CalculateDashboard {
     }
 
     public static Long calculatePercentage(Long currentMonthCount, Long lastMonthCount) {
-        System.out.println(currentMonthCount);
-        System.out.println(lastMonthCount);
         if(lastMonthCount == 0){
             return 100L;
         }

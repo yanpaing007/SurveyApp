@@ -71,11 +71,10 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-         User user = userRepo.findByEmail(email)
-                .orElseThrow(
-                        () -> new UsernameNotFoundException("Email not found")
-                );
-        return user;
+        return userRepo.findByEmail(email)
+               .orElseThrow(
+                       () -> new UsernameNotFoundException("Email not found")
+               );
     }
 
     public Page<User> searchUser(String query, int page, int size, String role, Boolean status, Sort sort) {

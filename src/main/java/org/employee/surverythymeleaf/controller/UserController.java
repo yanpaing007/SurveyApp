@@ -7,9 +7,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.employee.surverythymeleaf.Configuration.GlobalControllerAdvice;
+import org.employee.surverythymeleaf.model.ActivityType;
 import org.employee.surverythymeleaf.model.User;
+import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.RoleService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,10 +36,16 @@ import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
 public class UserController {
     private final UserService userService;
     private final RoleService roleService;
+    private final GlobalControllerAdvice globalControllerAdvice;
+    private final ActivityLogService activityLogService;
+    private final ActivityHelper activityHelper;
 
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService, GlobalControllerAdvice globalControllerAdvice, ActivityLogService activityLogService, ActivityHelper activityHelper) {
         this.userService = userService;
         this.roleService = roleService;
+        this.globalControllerAdvice = globalControllerAdvice;
+        this.activityLogService = activityLogService;
+        this.activityHelper = activityHelper;
     }
 
     @GetMapping("/create")
@@ -45,9 +56,10 @@ public class UserController {
     }
     
     @PostMapping("/create")
-    public String createuser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes){
+    public String createuser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes,Principal principal){
         userService.createuser(user);
         redirectAttributes.addFlashAttribute("message", "User created successfully");
+        activityHelper.saveActivity(ActivityType.CREATE_USER, principal);
         return "redirect:/admin/users";
     }
 
@@ -93,7 +105,7 @@ public class UserController {
     }
 
     @PostMapping("/user/edit/{id}")
-    public String updateUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes){
+    public String updateUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes, Principal principal){
 
         String rawPassword = user.getPassword();
         if(rawPassword != null && !rawPassword.isEmpty()){
@@ -111,17 +123,19 @@ public class UserController {
         if(check){
             redirectAttributes.addFlashAttribute("message", "User updated successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
+            activityHelper.saveActivity(ActivityType.UPDATE_USER,principal);
         }
         return "redirect:/admin/user/edit/" + user.getId();
     }
 
     @GetMapping("/user/delete/{id}")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes){
+    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes, Principal principal){
         User exitingUser = userService.getUserById(id);
         String fullName = exitingUser.getFullName();
         userService.deleteUserById(id);
         redirectAttributes.addFlashAttribute("message", "User["+ fullName +"] was deleted successfully");
         redirectAttributes.addFlashAttribute("messageType", "success");
+        activityHelper.saveActivity(ActivityType.DELETE_USER,principal);
         return "redirect:/admin/users";
     }
 
@@ -132,8 +146,8 @@ public class UserController {
                             @RequestParam(required = false, defaultValue = "id") String sortField,
                             @RequestParam(required = false, defaultValue = "desc") String sortDir,
                             @RequestParam(required = false) Boolean status,
-                            @RequestParam() String type
-    ) throws IOException {
+                            @RequestParam() String type,
+                            Principal principal) throws IOException {
        if(Objects.equals(type, "csv")){
            response.setContentType("text/csv");
            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
@@ -160,6 +174,7 @@ public class UserController {
            }
            writer.flush();
            writer.close();
+           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
        }
        else if(Objects.equals(type, "excel")){
 
@@ -210,6 +225,7 @@ public class UserController {
 
            workbook.write(response.getOutputStream());
            workbook.close();
+           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
        }
 
         }

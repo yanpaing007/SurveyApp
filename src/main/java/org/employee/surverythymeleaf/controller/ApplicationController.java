@@ -3,6 +3,7 @@ import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -26,11 +27,13 @@ public class ApplicationController {
     private final ApplicationService applicationService;
     private final SurveyService surveyService;
     private final UserService userService;
+    private final ActivityHelper activityHelper;
 
-    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService) {
+    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService, ActivityHelper activityHelper) {
         this.applicationService = applicationService;
         this.surveyService = surveyService;
         this.userService = userService;
+        this.activityHelper = activityHelper;
     }
 
     @GetMapping("/application/allApplications")
@@ -132,11 +135,13 @@ public class ApplicationController {
 
 
     @PostMapping("survey/updateStatus")
-    public String updateSurveyStatus(@RequestParam SurveyStatus status, @RequestParam Long id, RedirectAttributes redirectAttributes,@RequestParam User TechPerson) {
+    public String updateSurveyStatus(@RequestParam SurveyStatus status, @RequestParam Long id, RedirectAttributes redirectAttributes, @RequestParam User TechPerson, Principal principal) {
         boolean survey = surveyService.updateStatus(id,status,TechPerson);
         if(survey){
             redirectAttributes.addFlashAttribute("message", "Survey status updated to " + status);
             redirectAttributes.addFlashAttribute("messageType", "success");
+            ActivityType type = status.getStatus().equals("Succeeded") ? ActivityType.SUCCEEDED_SURVEY : ActivityType.FAILED_SURVEY;
+            activityHelper.saveActivity(type,principal);
         }
         else{
             redirectAttributes.addFlashAttribute("message", "Survey status not updated to " + status);

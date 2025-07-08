@@ -1,18 +1,18 @@
 package org.employee.surverythymeleaf.model;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"applications", "surveysSalePerson", "surveysTechnicalPerson"})
+@ToString(exclude = {"applications", "surveysSalePerson", "surveysTechnicalPerson","activities"})
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,6 @@ public class User{
     private LocalDateTime updatedAt;
 //    @Enumerated(EnumType.STRING) For using with Enum, need this Annotation
     @ManyToOne
-    @Nullable
     @JoinColumn(name = "role_id")
     private Role role;
 
@@ -53,4 +52,7 @@ public class User{
 
     @OneToMany(mappedBy = "technicalPerson",cascade = CascadeType.ALL)
     private List<Survey> surveysTechnicalPerson;
+
+    @OneToMany(mappedBy = "actor",cascade = CascadeType.ALL)
+    private List<ActivityLog> activities = new ArrayList<>();
 }
