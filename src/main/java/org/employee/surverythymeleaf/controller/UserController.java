@@ -172,9 +172,9 @@ public class UserController {
                        user.getRole().getRoleName(),
                        user.isStatus() ? "Active" : "Not Active" );
            }
+           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
            writer.flush();
            writer.close();
-           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
        }
        else if(Objects.equals(type, "excel")){
 
@@ -222,10 +222,9 @@ public class UserController {
            for (int i = 0; i < columns.length; i++) {
                sheet.autoSizeColumn(i);
            }
-
+           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
            workbook.write(response.getOutputStream());
            workbook.close();
-           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
        }
 
         }

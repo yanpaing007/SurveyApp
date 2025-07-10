@@ -4,6 +4,7 @@ import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.SortUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -24,11 +25,13 @@ public class SurveyController {
     private final SurveyService surveyService;
     private final UserService userService;
     private final ApplicationService applicationService;
+    private final ActivityHelper activityHelper;
 
-    public SurveyController(SurveyService surveyService, UserService userService, ApplicationRepository applicationRepository, ApplicationService applicationService) {
+    public SurveyController(SurveyService surveyService, UserService userService, ApplicationRepository applicationRepository, ApplicationService applicationService, ActivityHelper activityHelper) {
         this.surveyService = surveyService;
         this.userService = userService;
         this.applicationService = applicationService;
+        this.activityHelper = activityHelper;
     }
 
     @GetMapping("/survey/form")
@@ -42,7 +45,7 @@ public class SurveyController {
     }
 
     @PostMapping("/survey/add")
-    public String addSurvey(@ModelAttribute("survey") Survey survey, Model model, RedirectAttributes redirectAttributes) {
+    public String addSurvey(@ModelAttribute("survey") Survey survey, Model model, RedirectAttributes redirectAttributes, Principal principal) {
         survey.setRequestDate(LocalDate.now());
         Survey latestSurvey = surveyService.searchLatestSurvey();
         int newNumber = 2131;
@@ -59,6 +62,7 @@ public class SurveyController {
         if(success) {
             redirectAttributes.addFlashAttribute("message", "Survey added successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
+            activityHelper.saveActivity(ActivityType.CREATE_SURVEY,principal);
         }
         else {
             redirectAttributes.addFlashAttribute("message", "Error adding new survey");
@@ -126,7 +130,7 @@ public class SurveyController {
     }
 
     @PostMapping("/application/add")
-    public String addApplication(@ModelAttribute("application") Application application,@ModelAttribute("surveyId") String surveyId) {
+    public String addApplication(@ModelAttribute("application") Application application, @ModelAttribute("surveyId") String surveyId, Principal principal) {
         application.setApplicationDate(LocalDate.now());
 
         Application latestApplication = applicationService.searchLatestApplication();
@@ -143,6 +147,7 @@ public class SurveyController {
         application.setApplicationDate(LocalDate.now());
         application.setSurvey(findSurveyId);
         applicationService.addNewApplication(application);
+        activityHelper.saveActivity(ActivityType.CREATE_APPLICATION,principal);
         return "redirect:/sale/survey/allSurvey";
     }
 }

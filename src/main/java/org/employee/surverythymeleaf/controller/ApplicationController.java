@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.employee.surverythymeleaf.util.SortUtils.getAllSurveysDouble;
 import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
@@ -122,11 +123,15 @@ public class ApplicationController {
     }
 
     @PostMapping("application/updateStatus")
-    public String updateApplicationStatus(@RequestParam ApplicationStatus status, @RequestParam Long id, RedirectAttributes redirectAttributes) {
+    public String updateApplicationStatus(@RequestParam ApplicationStatus status, @RequestParam Long id, RedirectAttributes redirectAttributes, Principal principal) {
        boolean updated= applicationService.updateStatus(id,status);
        if(updated){
            redirectAttributes.addFlashAttribute("message", "Application status updated to " + status);
            redirectAttributes.addFlashAttribute("messageType", "success");
+
+           ActivityType typeOfActivity = Objects.equals(status.getStatus(), "Processing") ? ActivityType.PROCESS_APPLICATION  : (Objects.equals(status.getStatus(),"Completed") ? ActivityType.COMPLETE_APPLICATION : ActivityType.CANCEL_APPLICATION);
+
+           activityHelper.saveActivity(typeOfActivity,principal);
        }
        else{
            redirectAttributes.addFlashAttribute("message", "Invalid transition:couldn't update from current state to " + status);

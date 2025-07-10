@@ -3,9 +3,11 @@ package org.employee.surverythymeleaf.controller;
 import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
+import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
+import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
 import org.springframework.data.domain.Page;
@@ -32,13 +34,17 @@ public class AuthController {
     private final SurveyService surveyService;
     private final SurveyRepository surveyRepository;
     private final ApplicationRepository applicationRepository;
+    private final ActivityHelper activityHelper;
+    private final ActivityLogService activityLogService;
 
-    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService, SurveyService surveyService, SurveyRepository surveyRepository, ApplicationRepository applicationRepository) {
+    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService, SurveyService surveyService, SurveyRepository surveyRepository, ApplicationRepository applicationRepository, ActivityHelper activityHelper, ActivityLogService activityLogService) {
         this.userService = userService;
         this.applicationService = applicationService;
         this.surveyService =surveyService;
         this.surveyRepository = surveyRepository;
         this.applicationRepository = applicationRepository;
+        this.activityHelper = activityHelper;
+        this.activityLogService = activityLogService;
     }
 
     public boolean check_authentication() {
@@ -83,8 +89,8 @@ public class AuthController {
         User userDetails = userService.findByEmail(email);
         model.addAttribute("user", userDetails);
 
-        Long totalSurvey = (long) surveyRepository.findAll().size();
-        Long totalApplication = (long) applicationRepository.findAll().size();
+        Long totalSurvey = (long) surveyRepository.count();
+        Long totalApplication = (long) applicationRepository.count();
 
         Long pendingSurvey = surveyRepository.countByStatus(SurveyStatus.PENDING);
         Long succeededSurvey = surveyRepository.countByStatus(SurveyStatus.SUCCEEDED);
@@ -102,6 +108,7 @@ public class AuthController {
         Long successRatePercentage = applicationService.successRateCompareToLastMonth();
 
         List<Survey> getRecentSurvey = surveyService.getRecentSurvey();
+        List<ActivityLog> recentActivity = activityLogService.getRecentActivity();
         Object[] topSurvey = surveyService.findTopSurveyCreator();
         User topSurveyCreator = (User) topSurvey[0];
         Long topSurveyCount = (Long) topSurvey[1];
@@ -129,6 +136,7 @@ public class AuthController {
         model.addAttribute("topSurveyCreatorCount", topSurveyCount);
         model.addAttribute("topApplicationCreator", topApplicationCreator);
         model.addAttribute("topApplicationCreatorCount", topApplicationCount);
+        model.addAttribute("recentActivity", recentActivity);
 
         System.out.println(getRecentSurvey);
 
@@ -161,11 +169,12 @@ public class AuthController {
     }
 
     @PostMapping("/application/details/{id}")
-    public String updateApplication(@PathVariable String id, @ModelAttribute Application application, RedirectAttributes redirectAttributes) {
+    public String updateApplication(@PathVariable String id, @ModelAttribute Application application, RedirectAttributes redirectAttributes, Principal principal) {
         boolean app= applicationService.updateApplication(id,application);
         if(app){
             redirectAttributes.addFlashAttribute("message", "Application updated successfully!");
             redirectAttributes.addFlashAttribute("messageType", "success");
+            activityHelper.saveActivity(ActivityType.UPDATE_APPLICATION,principal);
         }
         else{
             redirectAttributes.addFlashAttribute("message", "Application wasn't updated!");

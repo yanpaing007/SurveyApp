@@ -135,72 +135,16 @@
 
         <div class="flex flex-col gap-y-2 pt-3">
 
-          <div class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
+          <div th:each="activity: ${recentActivity}" class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
             <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
               <img class="w-10 h-10 rounded-full"
                    src="/images/user-avatar.jpg"
                    alt="Jese image">
             </div>
-            <div class="activity-text max-w-[330px] break-words whitespace-normal">
+            <div class="activity-text max-w-[400px] break-words whitespace-normal">
               <div class="flex flex-col">
-                <p class="text-md font-semibold truncate">Nay Htoo Naing submitted an application</p>
-                <p class="text-sm font-light">Jun 19,2025 12:00 AM</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
-            <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
-              <img class="w-10 h-10 rounded-full"
-                   src="/images/user-avatar.jpg"
-                   alt="Jese image">
-            </div>
-            <div class="activity-text max-w-[330px] break-words whitespace-normal">
-              <div class="flex flex-col">
-                <p class="text-md font-semibold truncate">Sea Frost submitted an application</p>
-                <p class="text-sm font-light">Jun 19,2025 12:00 AM</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
-            <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
-             <img class="w-10 h-10 rounded-full"
-                                     src="/images/user-avatar.jpg"
-                                     alt="Jese image">
-            </div>
-            <div class="activity-text max-w-[330px] break-words whitespace-normal">
-              <div class="flex flex-col">
-                <p class="text-md font-semibold truncate">Nay Min Maung created a survey</p>
-                <p class="text-sm font-light">Jun 19,2025 12:00 AM</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
-            <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
-             <img class="w-10 h-10 rounded-full"
-                                     src="/images/user-avatar.jpg"
-                                     alt="Jese image">
-            </div>
-            <div class="activity-text max-w-[330px] break-words whitespace-normal">
-              <div class="flex flex-col">
-                <p class="text-md font-semibold truncate">Myat Thu Kha submitted application</p>
-                <p class="text-sm font-light">Jun 19,2025 12:00 AM</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
-            <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
-             <img class="w-10 h-10 rounded-full"
-                                     src="/images/user-avatar.jpg"
-                                     alt="Jese image">
-            </div>
-            <div class="activity-text max-w-[330px] break-words whitespace-normal">
-              <div class="flex flex-col">
-                <p class="text-md font-semibold truncate">Admin approved an application</p>
-                <p class="text-sm font-light">Jun 19,2025 12:00 AM</p>
+                <p class="text-md font-base truncate" th:text="${activity.actor.fullName +' ' + activity.getActivityType().getDescription()}"></p>
+                <p class="text-sm font-light" th:text="${#temporals.format(activity.timestamp,'dd/MM/yyyy h:m:s a')}"></p>
               </div>
             </div>
           </div>
