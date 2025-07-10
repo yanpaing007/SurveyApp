@@ -32,4 +32,9 @@ public class ActivityLogService {
         Pageable pageable = PageRequest.of(0, 5);
         return activityLogRepository.findAllByOrderByIdDesc(pageable);
     }
+
+    public Object[] getMostActiveUser(){
+        Pageable pageable = PageRequest.of(0, 1);
+        return activityLogRepository.findTopActivityUser(pageable).getFirst();
+    }
 }

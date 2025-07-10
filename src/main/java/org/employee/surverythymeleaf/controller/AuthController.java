@@ -117,6 +117,10 @@ public class AuthController {
         User topApplicationCreator = (User) topApplication[0];
         Long topApplicationCount = (Long) topApplication[1];
 
+        Object[] getmostActiveUser = activityLogService.getMostActiveUser();
+        User mostActiveUser = (User) getmostActiveUser[0];
+        Long mostActiveUserCount = (Long) getmostActiveUser[1];
+
         model.addAttribute("totalSurvey", totalSurvey);
         model.addAttribute("totalApplication", totalApplication);
         model.addAttribute("pendingSurvey", pendingSurvey);
@@ -137,6 +141,8 @@ public class AuthController {
         model.addAttribute("topApplicationCreator", topApplicationCreator);
         model.addAttribute("topApplicationCreatorCount", topApplicationCount);
         model.addAttribute("recentActivity", recentActivity);
+        model.addAttribute("mostActiveUser", mostActiveUser.getFullName());
+        model.addAttribute("mostActiveUserCount", mostActiveUserCount);
 
         System.out.println(getRecentSurvey);
 
