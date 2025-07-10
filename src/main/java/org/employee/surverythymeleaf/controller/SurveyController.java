@@ -85,7 +85,8 @@ public class SurveyController {
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
         Sort sort = SortUtils.sortFunction(sortField, sortDir);
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey, app,sort,sortField,sortDir);
+        SurveyStatus[] allSurveyStatus = SurveyStatus.values();
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey, app,sort,sortField,sortDir, allSurveyStatus);
     }
 
 
@@ -120,7 +121,8 @@ public class SurveyController {
 
         model.addAttribute("applicationWithNonePendingStatus", ApplicationStatus.getNonPendingApplicationStatus());
         model.addAttribute("applicationWithPendingStatus",ApplicationStatus.values());
-        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate,sortField,sortDir);
+        ApplicationStatus[] allApplicationStatus = ApplicationStatus.values();
+        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate,sortField,sortDir, allApplicationStatus);
     }
 
     @PostMapping("/application/add")

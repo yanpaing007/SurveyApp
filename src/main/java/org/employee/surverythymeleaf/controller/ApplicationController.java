@@ -63,7 +63,8 @@ public class ApplicationController {
         }
 
         model.addAttribute("validStatusMap", validStatusMap);
-        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate,sortField,sortDir);
+        ApplicationStatus[] allApplicationStatus = ApplicationStatus.values();
+        return getAllApplication(model, query, page, size, applicationPage,applicationStatus,fromDate,toDate,sortField,sortDir,allApplicationStatus);
     }
 
     static String getAllApplication(Model model,
@@ -74,7 +75,7 @@ public class ApplicationController {
                                     @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate fromDate,
                                     @RequestParam(required = false) @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate toDate,
                                     String sortField,
-                                    String sortDir){
+                                    String sortDir, ApplicationStatus[] allApplicationStatus){
         model.addAttribute("applications",applicationPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",applicationPage.getTotalElements());
@@ -86,6 +87,7 @@ public class ApplicationController {
         model.addAttribute("totalPages",applicationPage.getTotalPages());
         model.addAttribute("sortField",sortField);
         model.addAttribute("sortDir",sortDir);
+        model.addAttribute("allApplicationStatus",allApplicationStatus);
         return "application/allApplication";
     }
 
@@ -106,8 +108,9 @@ public class ApplicationController {
         User currentUser = userService.findByEmail(email);
         survey.setSalePerson(currentUser);
         Sort sort = sortFunction(sortField, sortDir);
+        SurveyStatus[] allSurveyStatus = SurveyStatus.values();
 
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app,sort,sortField,sortDir);
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app,sort,sortField,sortDir,allSurveyStatus);
     }
 
 

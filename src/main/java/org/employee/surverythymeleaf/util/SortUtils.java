@@ -1,7 +1,6 @@
 package org.employee.surverythymeleaf.util;
 
 import org.employee.surverythymeleaf.model.Application;
-import org.employee.surverythymeleaf.model.ApplicationStatus;
 import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.employee.surverythymeleaf.service.SurveyService;
@@ -37,7 +36,7 @@ public class SortUtils {
                                              Application app,
                                              Sort sort,
                                              String sortField,
-                                             String sortDir) {
+                                             String sortDir, SurveyStatus[] allSurveyStatus) {
         Page<Survey> surveyPage;
         SurveyStatus surveyStatus = null;
 
@@ -76,6 +75,7 @@ public class SortUtils {
         model.addAttribute("validStatusMap",validStatusMap);
         model.addAttribute("sortField",sortField);
         model.addAttribute("sortDir",sortDir);
+        model.addAttribute("allSurveyStatus",allSurveyStatus);
         return "survey/allSurveys";
     }
 

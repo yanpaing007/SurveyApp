@@ -35,9 +35,11 @@
                                     name="status" onchange="cleanAndSubmit(this.form)">
                                 <option value="" disabled>Filter By Status</option>
                                 <option value="" th:selected="${currentStatus == null}">All Status</option>
-                                <option th:each="surveyStatus : ${surveyWithPendingStatus}"
-                                        th:value="${surveyStatus.name()}" th:text="${surveyStatus.getStatus()}"
-                                        th:selected="${currentStatus != null and surveyStatus.name() == currentStatus.name()}"></option>
+                                <option th:each="surveyStatus : ${allSurveyStatus}"
+                                        th:value="${surveyStatus.name()}"
+                                        th:text="${surveyStatus.getStatus()}"
+                                        th:selected="${currentStatus != null} ? ${surveyStatus.name()} == ${currentStatus} : false">
+                                </option>
                             </select>
                         </div>
                         <div th:replace="~{fragments/dateSelect::dateSelect}">
