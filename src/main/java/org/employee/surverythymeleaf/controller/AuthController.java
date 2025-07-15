@@ -1,5 +1,6 @@
 package org.employee.surverythymeleaf.controller;
 
+import jakarta.validation.Valid;
 import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
@@ -10,13 +11,13 @@ import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
-import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -76,7 +77,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+    public String register(@Valid @ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            return "auth/register";
+        }
+
         userService.registerUser(user);
         redirectAttributes.addFlashAttribute("message", "User registered successfully");
         redirectAttributes.addFlashAttribute("messageType", "success");
@@ -89,8 +95,8 @@ public class AuthController {
         User userDetails = userService.findByEmail(email);
         model.addAttribute("user", userDetails);
 
-        Long totalSurvey = (long) surveyRepository.count();
-        Long totalApplication = (long) applicationRepository.count();
+        Long totalSurvey = surveyRepository.count();
+        Long totalApplication = applicationRepository.count();
 
         Long pendingSurvey = surveyRepository.countByStatus(SurveyStatus.PENDING);
         Long succeededSurvey = surveyRepository.countByStatus(SurveyStatus.SUCCEEDED);
@@ -109,9 +115,15 @@ public class AuthController {
 
         List<Survey> getRecentSurvey = surveyService.getRecentSurvey();
         List<ActivityLog> recentActivity = activityLogService.getRecentActivity();
-        Object[] topSurvey = surveyService.findTopSurveyCreator();
-        User topSurveyCreator = (User) topSurvey[0];
-        Long topSurveyCount = (Long) topSurvey[1];
+        Optional<Object[]> topSurvey = surveyService.findTopSurveyCreator();
+        User topSurveyCreator = null;
+        Long topSurveyCount = 0L;
+        if(topSurvey.isPresent()) {
+            Object[] survey = topSurvey.get();
+            topSurveyCreator = (User) survey[0];
+            topSurveyCount = (Long) survey[1];
+        }
+
 
         Object[] topApplication = applicationService.findTopApplicationCreator();
         User topApplicationCreator = (User) topApplication[0];
@@ -148,8 +160,6 @@ public class AuthController {
 
         return "dashboard";
     }
-
-
 
     @GetMapping("/pending")
     public String pending(Model model, Principal principal) {

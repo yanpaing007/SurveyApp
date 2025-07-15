@@ -6,6 +6,7 @@ import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -94,9 +95,16 @@ public class SurveyService {
         return latestSurvey;
     }
 
-    public Object[] findTopSurveyCreator() {
+
+    /**
+     * Finds the top survey creator
+     * @return Optional containing the result array if found, empty Optional otherwise
+     * @throws DataAccessException if there's a database access problem
+     */
+
+    public Optional<Object[]> findTopSurveyCreator() {
         Pageable pageable1 = PageRequest.of(0,1);
-        return surveyRepository.findTopSurveyCreator(pageable1).getFirst();
+        return surveyRepository.findTopSurveyCreator(pageable1).stream().findFirst();
     }
 
 }

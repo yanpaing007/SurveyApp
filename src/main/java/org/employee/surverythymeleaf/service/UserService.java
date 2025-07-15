@@ -65,7 +65,7 @@ public class UserService {
 
     public void registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(true);
+        user.setStatus(false);
         user.setRole(roleService.findByName("Member"));
         userRepo.save(user);
     }
@@ -105,6 +105,10 @@ public class UserService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         }, sort);
+    }
+
+    public boolean userExists(String email) {
+        return userRepo.findUserByEmail(email);
     }
 
 }

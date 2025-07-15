@@ -117,7 +117,7 @@ public class ApplicationService {
 
     public Object[] findTopApplicationCreator(){
         Pageable pageable = PageRequest.of(0, 1);
-        return applicationRepository.findTopApplicationCreator(pageable).getFirst();
+        return applicationRepository.findTopApplicationCreator(pageable).stream().findFirst().get();
     }
 
 

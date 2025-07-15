@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.validation.constraints.*;
 
 @Data
 @Entity
@@ -18,17 +19,23 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Column(nullable = false,name = "full_name")
+    @Column(name = "full_name")
+    @NotBlank(message="*Full name can't be empty")
+//    @Size(min = 4,max = 25, message = "*Full name should have at least 4 characters and maximum 25")
     private String fullName;
 
-    @Column(nullable = false,name = "phone_number")
+    @NotBlank(message = "*Phone number can't be empty")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false)
+
+    @NotBlank(message = "*Password can't be empty")
+//    @Size(min = 6, message = "*Password must at least 6 characters")
     private String password;
 
-    @Column(nullable = false,unique = true)
+    @NotBlank(message = "*Email can't be empty")
+    @Email(message = "*Invalid Email Format")
+    @Column(unique = true)
     private String email;
 
     private LocalDateTime updatedAt;
@@ -38,7 +45,7 @@ public class User{
     private Role role;
 
     @Column(nullable = false)
-    private boolean status=false;
+    private boolean status=true;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

@@ -1,6 +1,5 @@
-
-
-<div th:replace="~{fragments/layout::layout(~{::section})}">
+<div th:replace="~{fragments/layout::layout(~{::section})}" xmlns:x-bind="http://www.w3.org/1999/xhtml"
+     xmlns:x-data="http://www.w3.org/1999/xhtml">
 
   <section>
 
@@ -20,46 +19,70 @@
 
           <form th:action="@{/register}" method="post" th:object="${user}">
 
-            <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
+            <div class="flex flex-row justify-between">
+                <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
+                <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="text-red-500 text-xs"></span>
+            </div>
             <div class="flex mb-3">
                               <span class="inline-flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                              <i class="fa-solid fa-user"></i>
                               </span>
-              <input type="text" id="fullName" th:field="*{fullName}"
+              <input type="text" id="fullName" name="fullName" th:field="*{fullName}"
                      class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
-                     placeholder="John Doe" required>
+                     placeholder="John Doe">
             </div>
 
-            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+              <div class="flex flex-row justify-between">
+                  <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+                  <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red-500 text-xs"></span>
+              </div>
             <div class="flex mb-3">
                               <span class="inline-flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                               <i class="fa-solid fa-phone"></i>
                               </span>
               <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
                      class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
-                     placeholder="+959963...." required>
+                     placeholder="+959963....">
             </div>
 
 
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+              <div class="flex flex-row justify-between">
+                  <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                  <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs"></span>
+              </div>
             <div class="flex mb-3">
                               <span class="inline-flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                               <i class="fa-solid fa-envelope"></i>
                               </span>
               <input type="text" id="email" th:field="*{email}"
                      class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
-                     placeholder="elonmusk@gmail.com" required>
+                     placeholder="elonmusk@gmail.com">
             </div>
 
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-            <div class="flex mb-3">
-                              <span class="inline-flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
-                               <i class="fa-solid fa-lock"></i>
-                              </span>
-              <input type="password" id="password" th:field="*{password}"
-                     class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:placeholder-gray-400 focus:outline-hidden"
-                     placeholder="Enter your password..." required>
-            </div>
+              <div class="flex flex-row justify-between">
+                  <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+                  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-xs"></span>
+              </div>
+
+              <div x-data="{ IsShow: false }" class="relative mb-3">
+                    <div class="absolute inset-y-0 left-0 flex items-center px-3 text-sm text-gray-900 border rounded-e-0 border-gray-300 rounded-s-md">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                  <input
+                          :type="IsShow ? 'text' : 'password'"
+                          id="password"
+                          th:field="*{password}"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-12 pr-10 p-2.5 focus:outline-none"
+                          placeholder="Enter your password..."
+                  />
+
+                  <button type="button"
+                          @click="IsShow = !IsShow"
+                          class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 cursor-pointer">
+                     <i x-bind:class="IsShow ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                  </button>
+              </div>
 
             <button type="submit"
                     class="mt-5 w-full cursor-pointer text-white bg-indigo-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 btn-animated">
