@@ -115,9 +115,9 @@ public class ApplicationService {
         return CalculateDashboard.calculatePercentage(currentMonth,lastMonth);
     }
 
-    public Object[] findTopApplicationCreator(){
+    public Optional<Object[]> findTopApplicationCreator(){
         Pageable pageable = PageRequest.of(0, 1);
-        return applicationRepository.findTopApplicationCreator(pageable).stream().findFirst().get();
+        return applicationRepository.findTopApplicationCreator(pageable).stream().findFirst();
     }
 
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ActivityLogService {
@@ -33,8 +34,8 @@ public class ActivityLogService {
         return activityLogRepository.findAllByOrderByIdDesc(pageable);
     }
 
-    public Object[] getMostActiveUser(){
+    public Optional<Object[]> getMostActiveUser(){
         Pageable pageable = PageRequest.of(0, 1);
-        return activityLogRepository.findTopActivityUser(pageable).getFirst();
+        return activityLogRepository.findTopActivityUser(pageable).stream().findFirst();
     }
 }

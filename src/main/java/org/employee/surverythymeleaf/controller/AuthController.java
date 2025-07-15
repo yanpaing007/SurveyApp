@@ -116,6 +116,7 @@ public class AuthController {
         List<Survey> getRecentSurvey = surveyService.getRecentSurvey();
         List<ActivityLog> recentActivity = activityLogService.getRecentActivity();
         Optional<Object[]> topSurvey = surveyService.findTopSurveyCreator();
+
         User topSurveyCreator = null;
         Long topSurveyCount = 0L;
         if(topSurvey.isPresent()) {
@@ -124,14 +125,22 @@ public class AuthController {
             topSurveyCount = (Long) survey[1];
         }
 
+        User topApplicationCreator = null;
+        Long topApplicationCount = 0L;
+        Optional<Object[]> topApplication = applicationService.findTopApplicationCreator();
+        if(topApplication.isPresent()) {
+            Object[] application = topApplication.get();
+            topApplicationCreator = (User) application[0];
+            topApplicationCount = (Long) application[1];
+        }
 
-        Object[] topApplication = applicationService.findTopApplicationCreator();
-        User topApplicationCreator = (User) topApplication[0];
-        Long topApplicationCount = (Long) topApplication[1];
-
-        Object[] getmostActiveUser = activityLogService.getMostActiveUser();
-        User mostActiveUser = (User) getmostActiveUser[0];
-        Long mostActiveUserCount = (Long) getmostActiveUser[1];
+        User mostActiveUser = null;
+        Long mostActiveUserCount = 0L;
+        Optional<Object[]> getMostActiveUser = activityLogService.getMostActiveUser();
+        if(getMostActiveUser.isPresent()) {
+            mostActiveUserCount = (Long) getMostActiveUser.get()[1];
+            mostActiveUser = (User) getMostActiveUser.get()[0];
+        }
 
         model.addAttribute("totalSurvey", totalSurvey);
         model.addAttribute("totalApplication", totalApplication);
@@ -153,7 +162,7 @@ public class AuthController {
         model.addAttribute("topApplicationCreator", topApplicationCreator);
         model.addAttribute("topApplicationCreatorCount", topApplicationCount);
         model.addAttribute("recentActivity", recentActivity);
-        model.addAttribute("mostActiveUser", mostActiveUser.getFullName());
+        model.addAttribute("mostActiveUser", mostActiveUser);
         model.addAttribute("mostActiveUserCount", mostActiveUserCount);
 
         System.out.println(getRecentSurvey);
