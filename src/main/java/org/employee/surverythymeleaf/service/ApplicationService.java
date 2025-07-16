@@ -1,7 +1,6 @@
 package org.employee.surverythymeleaf.service;
 import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.ApplicationStatus;
-import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.util.AppStatusValidator;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

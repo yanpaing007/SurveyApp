@@ -90,7 +90,7 @@
       <div class="SurveyStatus col-span-4 md:col-span-4 lg:col-span-6 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl p-5">
         <div class="recent-survey-header flex flex-row items-center justify-between">
           <p class="font-semibold text-md text-gray-700">Recent Surveys</p>
-          <a th:href="@{/technical/survey/allSurvey}" class="text-sm text-blue-600">View All</a>
+          <a th:href="@{/technical/survey/allSurvey}" class="text-xs font-semibold text-blue-500">View All</a>
         </div>
 
 
@@ -113,7 +113,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="survey : ${recentSurvey}" class="bg-white hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
+            <tr th:if="${recentSurvey.size() > 0}" th:each="survey : ${recentSurvey}" class="bg-white hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
               <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap" th:text="${survey.generatedSurveyId}">
               </th>
               <td class="px-6 py-4" th:text="${survey.customerName}">
@@ -128,29 +128,45 @@
               <td class="px-6 py-4" th:text="${survey.requestDate}">
               </td>
             </tr>
+            <tr th:if="${recentSurvey.size() == 0}" class="text-center w-full">
+              <td colspan="4" class="py-4 text-gray-500 italic">
+                No recent Survey data available!
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
 
       </div>
       <div class="SurveyStatus col-span-4 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl h-[400px] p-5">
-        <p class="font-semibold text-gray-700 text-md">Team Activity</p>
+        <div class="flex flex-row justify-between">
+          <p class="font-semibold text-gray-700 text-md">Team Activity</p>
+          <p class="font-semibold text-blue-500 text-xs"><a href="#">View More</a></p>
+        </div>
 
 
         <div class="flex flex-col gap-y-2 pt-3">
 
-          <div th:each="activity: ${recentActivity}" class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
-            <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
-              <img class="w-10 h-10 rounded-full"
-                   src="/images/user-avatar.jpg"
-                   alt="Jese image">
-            </div>
-            <div class="activity-text max-w-[400px] break-words whitespace-normal">
-              <div class="flex flex-col">
-                <p class="text-md font-base truncate" th:text="${activity?.actor.fullName +' ' + activity?.getActivityType().getDescription()}"></p>
-                <p class="text-sm font-light" th:text="${#temporals.format(activity.timestamp,'dd/MM/yyyy h:m:s a')}"></p>
+          <div th:if="${recentActivity.size() > 0}" th:each="activity: ${recentActivity}" class="flex flex-row gap-x-3 items-center pt-3 hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
+              <div class="icon bg-indigo-100 w-10 h-10 rounded-full items-center justify-center flex">
+                <img class="w-10 h-10 rounded-full"
+                     src="/images/user-avatar.jpg"
+                     alt="Jese image">
               </div>
-            </div>
+              <div class="activity-text max-w-[400px] break-words whitespace-normal">
+                <div class="flex flex-col">
+                  <p class="text-md font-base truncate" th:text="${activity?.actor.fullName +' ' + activity?.getActivityType().getDescription()}"></p>
+                  <p class="text-sm font-light" th:text="${#temporals.format(activity.timestamp,'dd/MM/yyyy h:m:s a')}"></p>
+                </div>
+              </div>
+          </div>
+
+          <div th:if="${recentActivity.size() == 0}" class="w-full flex justify-center items-center">
+            <p class="py-30 text-gray-500 italic text-sm">No team activity available! </p>
+          </div>
+
+          <div>
+
           </div>
 
         </div>
@@ -171,50 +187,49 @@
           <div class="stat-card bg-white rounded-lg p-2.5 shadow-sm hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
             <div class="flex justify-between items-center">
               <p class="font-semibold text-sm text-gray-700">Most Survey Creator</p>
-              <div class="px-2 py-1 bg-orange-100 text-orange-700 rounded-md inline-block text-xs font-medium" th:text="${topSurveyCreatorCount}+' Surveys'">
-
+              <div class="px-2 py-1 bg-orange-100 text-orange-700 rounded-md inline-block text-xs font-medium" th:text="${topSurveyCreatorCount} ? ${topSurveyCreatorCount} + 'Surveys' : 'No Data'">
               </div>
             </div>
             <div class="flex items-center gap-x-3 mt-2">
               <div class="w-9 h-9 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-full">
-                <img class="w-9 h-9 rounded-full"
-                                     src="/images/user-avatar.jpg"
+                <img class="w-6 h-6 rounded-full"
+                                     th:src="${topSurveyCreator} ? '/images/user-avatar.jpg' : '/images/user-slash.png'"
                                      alt="Jese image">
               </div>
-              <p class="text-sm" th:text="${topSurveyCreator?.fullName}"></p>
+              <p class="text-sm font-base" th:text="${topSurveyCreator} ? ${topSurveyCreator.fullName} : 'No Survey available'"></p>
             </div>
           </div>
 
           <div class="stat-card bg-white rounded-lg p-2.5 shadow-sm hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
             <div class="flex justify-between items-center">
               <p class="font-semibold text-sm text-gray-700">Most Application Creator</p>
-              <div class="px-2 py-1 bg-pink-100 text-pink-700 rounded-md inline-block text-xs font-medium" th:text="${topApplicationCreatorCount}+' Apps'">
+              <div class="px-2 py-1 bg-pink-100 text-pink-700 rounded-md inline-block text-xs font-medium" th:text="${topApplicationCreatorCount} ? ${topApplicationCreatorCount}+' Apps' :'No data'">
               </div>
             </div>
             <div class="flex items-center gap-x-3 mt-2">
               <div class="w-9 h-9 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-full">
-                <img class="w-9 h-9 rounded-full"
-                                     src="/images/user-avatar.jpg"
+                <img class="w-6 h-6 rounded-full"
+                     th:src="${topApplicationCreator} ? '/images/user-avatar.jpg' : '/images/user-slash.png'"
                                      alt="Jese image">
               </div>
-              <p class="text-sm" th:text="${topApplicationCreator?.fullName}"></p>
+              <p class="text-sm" th:text="${topApplicationCreator} ? ${topApplicationCreator.fullName} : 'No Application Available'"></p>
             </div>
           </div>
 
           <div class="stat-card bg-white rounded-lg p-2.5 shadow-sm hover:bg-gray-50 transition transition-duration-300 ease-in-out cursor-pointer">
             <div class="flex justify-between items-center">
               <p class="font-semibold text-sm text-gray-700">Most Active User</p>
-              <div class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-md inline-block text-xs font-medium" th:text="${mostActiveUserCount}+' Activities'">
+              <div class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-md inline-block text-xs font-medium" th:text="${mostActiveUserCount}?${mostActiveUserCount}+' Activities':'No data'">
                 28 Activities
               </div>
             </div>
             <div class="flex items-center gap-x-3 mt-2">
               <div class="w-9 h-9 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-full">
-                <img class="w-9 h-9 rounded-full"
-                                     src="/images/user-avatar.jpg"
+                <img class="w-6 h-6 rounded-full"
+                     th:src="${mostActiveUser} ? '/images/user-avatar.jpg' : '/images/user-slash.png'"
                                      alt="Jese image">
               </div>
-              <p class="text-sm" th:text="${mostActiveUser?.fullName}"></p>
+              <p class="text-sm" th:text="${mostActiveUser}?${mostActiveUser.fullName}:'No activity available'"></p>
             </div>
           </div>
 

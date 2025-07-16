@@ -10,37 +10,82 @@ document.addEventListener("DOMContentLoaded", function () {
     const completeApplication = parseInt(applicationData.dataset.completed);
     const cancelledApplication = parseInt(applicationData.dataset.cancelled);
 
+    const hasSurveyData = (pendingSurvey + successSurvey + failSurvey) > 0;
+    const hasApplicationData = (pendingApplication+processingApplication+completeApplication+cancelledApplication) > 0;
+
 
     const ctxSurveyStatus = document.getElementById('surveyStatusChart');
     if (ctxSurveyStatus) {
-        new Chart(ctxSurveyStatus, {
-            type: 'doughnut',
-            data: {
-                labels: ['Pending', 'Succeeded', 'Failed'],
-                datasets: [{
-                    label: 'Survey Status',
-                    data: [pendingSurvey, successSurvey, failSurvey],
-                    backgroundColor: ['#facc15', '#22c55e', '#ef4444'],
-                    borderWidth: 1
-                }]
-            },
+        if(hasSurveyData) {
+            new Chart(ctxSurveyStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Succeeded', 'Failed'],
+                    datasets: [{
+                        label: 'Survey Status',
+                        data: [pendingSurvey, successSurvey, failSurvey],
+                        backgroundColor: ['#facc15', '#22c55e', '#ef4444'],
+                        borderWidth: 1
+                    }]
+                },
 
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'left',
-                        labels: {
-                            usePointStyle: true,
-                            pointStyle: 'circle',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'left',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                            }
+
                         }
-
                     }
                 }
-            }
-        });
+            });
+        }
+        else{
+            displayEmptyChart(ctxSurveyStatus,"No Survey data Available","Create your new survey to view data");
+        }
     }
+
+
+    const ctxApplicationStatus = document.getElementById('applicationStatusChart');
+    if (ctxApplicationStatus) {
+        if(hasApplicationData) {
+            new Chart(ctxApplicationStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Processing', 'Completed', 'Cancelled'],
+                    datasets: [{
+                        label: 'Application Status',
+                        data: [pendingApplication,processingApplication,completeApplication,cancelledApplication],
+                        backgroundColor: ['#facc15', '#f97316', '#22c55e', '#ef4444'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'left',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        else{
+            displayEmptyChart(ctxApplicationStatus,"No Application Data Available","Create your new application to view data");
+        }
+    }
+
+
 
 
     let chart;
@@ -188,35 +233,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    const ctxApplicationStatus = document.getElementById('applicationStatusChart');
-    if (ctxApplicationStatus) {
-        new Chart(ctxApplicationStatus, {
-            type: 'doughnut',
-            data: {
-                labels: ['Pending', 'Processing', 'Completed', 'Cancelled'],
-                datasets: [{
-                    label: 'Application Status',
-                    data: [pendingApplication,processingApplication,completeApplication,cancelledApplication],
-                    backgroundColor: ['#facc15', '#f97316', '#22c55e', '#ef4444'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'left',
-                        labels: {
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                        }
-                    }
-                }
-            }
-        });
-    }
-
 });
 
 function cleanAndSubmit(form) {
@@ -227,6 +243,25 @@ function cleanAndSubmit(form) {
         }
     });
     form.submit();
+}
+
+
+function displayEmptyChart(ctx, title, subtitle) {
+    const parentElement = ctx.parentElement;
+
+    ctx.style.display = 'none';
+
+    const emptyContainer = document.createElement('div');
+    emptyContainer.className = 'flex flex-col items-center justify-center h-full py-8 text-center';
+    emptyContainer.innerHTML = `
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <i class="fa-solid fa-chart-pie text-2xl text-gray-400"></i>
+            </div>
+            <h3 class="text-sm font-medium text-gray-900 mb-1">${title}</h3>
+            <p class="text-xs text-gray-500">${subtitle}</p>
+        `;
+
+    parentElement.appendChild(emptyContainer);
 }
 
 document.addEventListener("DOMContentLoaded", function () {

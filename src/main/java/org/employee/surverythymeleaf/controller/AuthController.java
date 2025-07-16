@@ -79,6 +79,8 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirectAttributes) {
 
+
+
         if (result.hasErrors()) {
             return "auth/register";
         }

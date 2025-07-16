@@ -10,14 +10,17 @@ public class CalculateDashboard {
     }
 
     public static Long calculatePercentage(Long currentMonthCount, Long lastMonthCount) {
+
         if(lastMonthCount == 0){
-            return 100L;
+            if(currentMonthCount == 0){
+                return 0L;
+            }
+            else {
+                return 100L;
+            }
         }
-        else {
             double percentage =  ((double)(currentMonthCount - lastMonthCount)/lastMonthCount) * 100;
             return Math.round(percentage);
-        }
-
 
     }
 }
