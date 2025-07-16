@@ -174,7 +174,6 @@ public class UserController {
                         user.getRole().getRoleName(),
                         user.isStatus() ? "Active" : "Not Active" );
             }
-
             writer.flush();
             writer.close();
         }
@@ -197,7 +196,6 @@ public class UserController {
             headerStyle.setFont(headerFont);
 
             int rowNum = 0;
-
 
             Row metaRow = sheet.createRow(rowNum++);
             metaRow.createCell(0).setCellValue("Exported on:");
@@ -224,7 +222,6 @@ public class UserController {
             for (int i = 0; i < columns.length; i++) {
                 sheet.autoSizeColumn(i);
             }
-
             workbook.write(response.getOutputStream());
             workbook.close();
         }

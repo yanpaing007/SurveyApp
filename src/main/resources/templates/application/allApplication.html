@@ -2,9 +2,44 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
     <section class="mx-auto w-full flex justify-center py-3">
         <div class="w-full max-w-[90%] items-center overflow-hidden">
-            <div class="flex items-center md:justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-2 bg-white">
+            <div class="flex justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-2 bg-white">
+                <div class="flex flex-row space-x-2">
 
+                    <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs inline-flex items-center space-x-1">
+                        <i class="fa-solid fa-file-export"></i>
+                        <button id="dropdownDefaultButton"
+                                data-dropdown-toggle="dropdown"
+                                class="flex items-center space-x-1 cursor-pointer">
+                            <span>Export applications</span>
+                            <svg class="w-2.5 h-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="M1 1l4 4 4-4"/>
+                            </svg>
+                        </button>
+
+                        <div id="dropdown"
+                             class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+                            <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+                                <li>
+                                    <a th:href="@{/technical/application/export(query=${query},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},fromDate=${fromDate},toDate=${toDate},type='excel')}"
+                                       class="block px-4 py-2 hover:bg-gray-100"><i
+                                            class="fa-solid fa-file-excel mr-2"></i>Export to Excel</a>
+                                </li>
+
+                                <li>
+                                    <a th:href="@{/technical/application/export(query=${query},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},fromDate=${fromDate},toDate=${toDate},type='csv')}"
+                                       class="block px-4 py-2 hover:bg-gray-100"><i
+                                            class="fa-solid fa-file-csv mr-2"></i>Export to CSV</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
                 <form th:action="@{/technical/application/allApplications}" method="get">
+
                     <div class="flex md:flex-row flex-col justify-start md:justify-center md:items-center gap-4">
 
                         <div class="flex flex-row text-xs gap-x-2 items-center">
