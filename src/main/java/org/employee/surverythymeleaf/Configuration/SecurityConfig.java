@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,11 +40,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/sale/survey/add").hasAnyAuthority("Sale","Admin")
+                        .requestMatchers(HttpMethod.DELETE,"/admin/user/delete").hasAuthority("Admin")
                         .requestMatchers("/login","/register","/css/**","/js/**").permitAll()
-                        .requestMatchers("/admin","/admin/**").hasAuthority("Admin")
+                        .requestMatchers("/admin","/","/admin/**").hasAuthority("Admin")
                         .requestMatchers("/sale","/sale/**").hasAnyAuthority("Sale","Admin")
                         .requestMatchers("/technical","/technical/**").hasAnyAuthority("Technical","Admin")
-                        .requestMatchers("/").hasAuthority("Admin")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

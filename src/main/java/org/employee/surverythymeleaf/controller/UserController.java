@@ -148,86 +148,87 @@ public class UserController {
                             @RequestParam(required = false) Boolean status,
                             @RequestParam() String type,
                             Principal principal) throws IOException {
-       if(Objects.equals(type, "csv")){
-           response.setContentType("text/csv");
-           String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-           response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".csv");
 
-           Sort sort = sortFunction(sortField, sortDir);
+        if(Objects.equals(type, "csv")){
+            response.setContentType("text/csv");
+            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".csv");
 
-           List<User> users = userService.filterUsers(query,role,status,sort);
+            Sort sort = sortFunction(sortField, sortDir);
+            activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
 
-           PrintWriter writer = response.getWriter();
-           writer.println("Exported on:," + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-           writer.println();
-           writer.println("ID,Full Name,Email Address,Phone Number,Role,Status");
+            List<User> users = userService.filterUsers(query,role,status,sort);
 
-           for(User user : users){
-               assert user.getRole() != null;
-               writer.printf("%d,%s,%s,%s,%s,%s%n",
-                       user.getId(),
-                       user.getFullName(),
-                       user.getEmail(),
-                       user.getPhoneNumber(),
-                       user.getRole().getRoleName(),
-                       user.isStatus() ? "Active" : "Not Active" );
-           }
-           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
-           writer.flush();
-           writer.close();
-       }
-       else if(Objects.equals(type, "excel")){
+            PrintWriter writer = response.getWriter();
+            writer.println("Exported on:," + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            writer.println();
+            writer.println("ID,Full Name,Email Address,Phone Number,Role,Status");
 
-           response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-           String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-           response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".xlsx");
+            for(User user : users){
+                assert user.getRole() != null;
+                writer.printf("%d,%s,%s,%s,%s,%s%n",
+                        user.getId(),
+                        user.getFullName(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        user.getRole().getRoleName(),
+                        user.isStatus() ? "Active" : "Not Active" );
+            }
 
-
-           Sort sort = sortFunction(sortField, sortDir);
-           List<User> users = userService.filterUsers(query, role, status, sort);
-
-           XSSFWorkbook workbook = new XSSFWorkbook();
-           XSSFSheet sheet = workbook.createSheet("Users");
-
-           CellStyle headerStyle = workbook.createCellStyle();
-           XSSFFont headerFont = workbook.createFont();
-           headerFont.setBold(true);
-           headerStyle.setFont(headerFont);
-
-           int rowNum = 0;
-
-
-           Row metaRow = sheet.createRow(rowNum++);
-           metaRow.createCell(0).setCellValue("Exported on:");
-           metaRow.createCell(1).setCellValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
-           Row header = sheet.createRow(rowNum++);
-           String[] columns = {"ID", "Full Name", "Email Address", "Phone Number", "Role", "Status"};
-           for (int i = 0; i < columns.length; i++) {
-               Cell cell = header.createCell(i);
-               cell.setCellValue(columns[i]);
-               cell.setCellStyle(headerStyle);
-           }
-
-           for (User user : users) {
-               Row row = sheet.createRow(rowNum++);
-               row.createCell(0).setCellValue(user.getId());
-               row.createCell(1).setCellValue(user.getFullName());
-               row.createCell(2).setCellValue(user.getEmail());
-               row.createCell(3).setCellValue(user.getPhoneNumber());
-               row.createCell(4).setCellValue(user.getRole().getRoleName());
-               row.createCell(5).setCellValue(user.isStatus() ? "Active" : "Not Active");
-           }
-
-           for (int i = 0; i < columns.length; i++) {
-               sheet.autoSizeColumn(i);
-           }
-           activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
-           workbook.write(response.getOutputStream());
-           workbook.close();
-       }
-
+            writer.flush();
+            writer.close();
         }
+        else if(Objects.equals(type, "excel")){
+
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            response.setHeader("Content-Disposition", "attachment; filename=users_" + now + ".xlsx");
+            activityHelper.saveActivity(ActivityType.EXPORT_USER,principal);
+
+            Sort sort = sortFunction(sortField, sortDir);
+            List<User> users = userService.filterUsers(query, role, status, sort);
+
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("Users");
+
+            CellStyle headerStyle = workbook.createCellStyle();
+            XSSFFont headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+
+            int rowNum = 0;
+
+
+            Row metaRow = sheet.createRow(rowNum++);
+            metaRow.createCell(0).setCellValue("Exported on:");
+            metaRow.createCell(1).setCellValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+            Row header = sheet.createRow(rowNum++);
+            String[] columns = {"ID", "Full Name", "Email Address", "Phone Number", "Role", "Status"};
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = header.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            for (User user : users) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(user.getId());
+                row.createCell(1).setCellValue(user.getFullName());
+                row.createCell(2).setCellValue(user.getEmail());
+                row.createCell(3).setCellValue(user.getPhoneNumber());
+                row.createCell(4).setCellValue(user.getRole().getRoleName());
+                row.createCell(5).setCellValue(user.isStatus() ? "Active" : "Not Active");
+            }
+
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(response.getOutputStream());
+            workbook.close();
+        }
+    }
 }
 
 

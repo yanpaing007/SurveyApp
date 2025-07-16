@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ActivityType {
     CREATE_SURVEY("created new survey"),
     UPDATE_SURVEY("update an survey"),
-    EXPORT_USER("exported user"),
+    EXPORT_USER("exported user list"),
     SUCCEEDED_SURVEY("update survey status to succeeded"),
     FAILED_SURVEY("update survey status to succeeded"),
     CREATE_USER("created new user"),

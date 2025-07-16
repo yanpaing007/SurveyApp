@@ -79,9 +79,13 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirectAttributes) {
 
-
-
         if (result.hasErrors()) {
+            return "auth/register";
+        }
+
+        Optional<User> findUser = userService.userExists(user.getEmail());
+        if(findUser.isPresent()) {
+            result.rejectValue("email","401", "*Email already exists");
             return "auth/register";
         }
 

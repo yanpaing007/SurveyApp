@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> , JpaSpecificationExecutor<User> {
-    Optional<User> findByEmail(String email);
+    Optional<User> findUserByEmail(String email);
 
     @Query("""
 SELECT u FROM User u
@@ -35,5 +35,4 @@ AND (:status IS NULL OR u.status = :status)
                           @Param("status") Boolean status,
                           Pageable pageable);
 
-    Boolean findUserByEmail(String email);
 }

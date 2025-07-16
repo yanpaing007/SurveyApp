@@ -19,7 +19,7 @@
 
           <form th:action="@{/register}" method="post" th:object="${user}">
 
-            <div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between items-center">
                 <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
                 <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="text-red-500 text-xs"></span>
             </div>
@@ -32,7 +32,7 @@
                      placeholder="John Doe">
             </div>
 
-              <div class="flex flex-row justify-between">
+              <div class="flex flex-row justify-between items-center">
                   <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
                   <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red-500 text-xs"></span>
               </div>
@@ -46,7 +46,7 @@
             </div>
 
 
-              <div class="flex flex-row justify-between">
+              <div class="flex flex-row justify-between items-center">
                   <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
                   <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs"></span>
               </div>
@@ -59,7 +59,7 @@
                      placeholder="elonmusk@gmail.com">
             </div>
 
-              <div class="flex flex-row justify-between">
+              <div class="flex flex-row justify-between items-center">
                   <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
                   <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-xs"></span>
               </div>

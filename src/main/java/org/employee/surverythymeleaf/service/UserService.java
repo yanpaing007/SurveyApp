@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -71,7 +72,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepo.findByEmail(email)
+        return userRepo.findUserByEmail(email)
                .orElseThrow(
                        () -> new UsernameNotFoundException("Email not found")
                );
@@ -107,7 +108,7 @@ public class UserService {
         }, sort);
     }
 
-    public boolean userExists(String email) {
+    public Optional<User> userExists(String email) {
         return userRepo.findUserByEmail(email);
     }
 
