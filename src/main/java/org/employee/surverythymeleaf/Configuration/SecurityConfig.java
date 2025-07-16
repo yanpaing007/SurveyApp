@@ -1,15 +1,19 @@
 package org.employee.surverythymeleaf.Configuration;
 
 import org.employee.surverythymeleaf.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -17,12 +21,13 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
 
-
+    private final DataSource dataSource;
     private final CustomAuthenticationSuccessHandler successHandler;
 
-    public SecurityConfig(CustomAuthenticationSuccessHandler successHandler,CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomAuthenticationSuccessHandler successHandler, CustomUserDetailsService userDetailsService, DataSource dataSource) {
         this.successHandler = successHandler;
         this.userDetailsService = userDetailsService;
+        this.dataSource = dataSource;
     }
 
     @Bean
@@ -31,7 +36,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, PersistentTokenRepository persistentTokenRepository) throws Exception{
         http
 
                 .authorizeHttpRequests(auth -> auth
@@ -49,8 +54,16 @@ public class SecurityConfig {
                         .successHandler(successHandler)
                         .permitAll()
                 )
+                .rememberMe(remember -> remember
+                .tokenRepository(persistentTokenRepository(dataSource))
+                .tokenValiditySeconds(7 * 24 * 60 * 60)
+                .userDetailsService(userDetailsService)
+                .key("Remember-Me-Key-38384792983")
+                )
+
                 .logout(logout -> logout
                                 .logoutUrl("/logout")
+                                .deleteCookies("JSESSIONID", "remember-me")
                                 .logoutSuccessUrl("/login?logout")
                                 .permitAll()
                         );
@@ -64,5 +77,13 @@ public class SecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(bCryptPasswordEncoder());
         return provider;
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource) {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        tokenRepository.setCreateTableOnStartup(false);
+        return tokenRepository;
     }
 }
