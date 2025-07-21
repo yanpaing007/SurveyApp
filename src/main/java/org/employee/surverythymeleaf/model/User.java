@@ -29,8 +29,7 @@ public class User{
     private String phoneNumber;
 
 
-    @NotBlank(message = "*Password can't be empty")
-//    @Size(min = 6, message = "*Password must at least 6 characters")
+    @Size(min = 6, message = "*Password must have at least 6 characters")
     private String password;
 
     @NotBlank(message = "*Email can't be empty")

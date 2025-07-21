@@ -2,6 +2,8 @@ package org.employee.surverythymeleaf.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,9 +24,12 @@ public class Survey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @NotBlank(message = "Customer name can't be blank")
     @Column(nullable = false)
     private String customerName;
 
+    @NotBlank(message = "You must fill this field")
     @Column(nullable = false)
     private String phoneNumber;
 
@@ -40,7 +45,11 @@ public class Survey {
     @Enumerated(EnumType.STRING)
     private SurveyStatus status = SurveyStatus.PENDING;
 
+
+    @NotBlank(message = "State can't be empty")
     private String state;
+
+    @NotBlank(message = "TownShip can't be empty")
     private String townShip;
 
     @Column(unique = true)
@@ -58,7 +67,10 @@ public class Survey {
     @JoinColumn(name = "technical_person")
     private User technicalPerson;
 
+    @NotNull(message = "Longitude can't be empty")
     private Double longitude;
+
+    @NotNull(message = "Latitude can't be empty")
     private Double latitude;
 
 }

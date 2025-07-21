@@ -3,9 +3,9 @@ import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.ApplicationStatus;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
-import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
 import org.employee.surverythymeleaf.util.DateCalculator;
+import org.employee.surverythymeleaf.util.StatusValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -58,7 +59,7 @@ public class ApplicationService {
            Application application= applicationRepository.findById(id).orElseThrow(
                         () -> new UsernameNotFoundException("Application was not found on server"));
             ApplicationStatus currentStatus = application.getApplicationStatus();
-            if(!AppStatusValidator.validateAppStatus(currentStatus, status)) {
+            if(!StatusValidator.validateAppStatus(currentStatus, status)) {
                 return false;
             }
             application.setApplicationStatus(status);
@@ -76,7 +77,7 @@ public class ApplicationService {
             Application app = applicationOpt.get();
             ApplicationStatus currentStatus = app.getApplicationStatus();
             ApplicationStatus nextStatus = application.getApplicationStatus();
-            if(!AppStatusValidator.validateAppStatus(currentStatus, nextStatus)) {
+            if(!StatusValidator.validateAppStatus(currentStatus, nextStatus)) {
                 return false;
             }
             app.setCompanyName(application.getCompanyName());
@@ -116,6 +117,14 @@ public class ApplicationService {
     public Optional<Object[]> findTopApplicationCreator(){
         Pageable pageable = PageRequest.of(0, 1);
         return applicationRepository.findTopApplicationCreator(pageable).stream().findFirst();
+    }
+
+    public List<Application> filterApplications(String query, ApplicationStatus status, LocalDate fromDate, LocalDate toDate, Sort sort) {
+        if((query != null && !query.isEmpty()) || status != null || (fromDate != null && toDate != null)){
+            return applicationRepository.searchApplication(query, Pageable.unpaged(), status, fromDate, toDate).getContent();
+        } else {
+            return applicationRepository.findAll(sort);
+        }
     }
 
 

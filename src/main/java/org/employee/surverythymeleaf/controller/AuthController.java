@@ -9,8 +9,8 @@ import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
-import org.employee.surverythymeleaf.util.AppStatusValidator;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
+import org.employee.surverythymeleaf.util.StatusValidator;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -193,7 +193,7 @@ public class AuthController {
         boolean isEditable = isAdmin || isTechnical;
         model.addAttribute("isEditable", isEditable);
         Application application = applicationService.findApplicationByGeneratedApplicationId(id);
-        List<ApplicationStatus> status = AppStatusValidator.getNextValidStatuses(application.getApplicationStatus());
+        List<ApplicationStatus> status = StatusValidator.getNextValidApplicationStatuses(application.getApplicationStatus());
         model.addAttribute("applications", application);
         model.addAttribute("status", status);
         return "application/applicationDetails";

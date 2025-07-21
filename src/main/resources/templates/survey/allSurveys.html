@@ -1,15 +1,20 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
     <section class="mx-auto w-full flex justify-center py-3">
         <div class="w-full max-w-[90%] lg:items-center overflow-hidden">
-            <div th:classappend="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')') ? 'justify-between' : 'justify-end'}"
-                 class="flex xl:items-center flex-col xl:flex-row space-y-4 md:space-y-0 bg-white pb-2">
+            <div class="flex justify-between flex-col xl:flex-row space-y-4 md:space-y-0 bg-white pb-2">
 
-                <div class="flex flex-row space-x-2 pb-2"
-                     th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}">
-                    <button data-modal-target="newSurvey" data-modal-toggle="newSurvey"
-                            class="px-1.5 py-1 lg:px-3 lg:py-2 bg-gray-900 text-white rounded-md text-xs cursor-pointer">
-                        <i class="fa-solid fa-user-plus pr-1"></i> Add New Survey
-                    </button>
+             <div class="flex flex-row space-x-2">
+                   <div>
+                       <button data-modal-target="newSurvey" data-modal-toggle="newSurvey"
+                               class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs cursor-pointer">
+                           <i class="fa-solid fa-user-plus pr-1"></i> Add New Survey
+                       </button>
+                   </div>
+
+
+<!--                Export Btn for tech and admin-->
+                <div class="flex flex-row space-x-2 items-center"
+                     th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}">
 
                     <div class="flex flex-row space-x-2">
 
@@ -30,6 +35,46 @@
                                  class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
                                     <li>
+                                        <a th:href="@{/technical/survey/export(query=${query},sortDir=${sortDir},sortField=${sortField},status=${currentStatus},fromDate=${fromDate},toDate=${toDate},type='excel')}"
+                                           class="block px-4 py-2 hover:bg-gray-100"><i
+                                                class="fa-solid fa-file-excel mr-2"></i>Export to Excel</a>
+                                    </li>
+
+                                    <li>
+                                        <a th:href="@{/technical/survey/export(query=${query},sortDir=${sortDir},sortField=${sortField},status=${currentStatus},fromDate=${fromDate},toDate=${toDate},type='csv')}"
+                                           class="block px-4 py-2 hover:bg-gray-100"><i
+                                                class="fa-solid fa-file-csv mr-2"></i>Export to CSV</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+<!--                Export Btn For Sale-->
+                <div class="flex flex-row space-x-2 items-center"
+                     th:if="${#authorization.expression('hasAuthority(''Sale'')')}">
+
+                    <div class="flex flex-row space-x-2">
+
+                        <div class="px-3 py-2 bg-indigo-800 text-white rounded-md text-xs inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-file-export"></i>
+                            <button id="dropdownDefaultButtonForSale"
+                                    data-dropdown-toggle="dropdownForSale"
+                                    class="flex items-center space-x-1 cursor-pointer">
+                                <span>Export Surveys</span>
+                                <svg class="w-2.5 h-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2" d="M1 1l4 4 4-4"/>
+                                </svg>
+                            </button>
+
+                            <div id="dropdownForSale"
+                                 class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButtonForSale">
+                                    <li>
                                         <a th:href="@{/sale/survey/export(query=${query},sortDir=${sortDir},sortField=${sortField},status=${selectedStatus},fromDate=${fromDate},toDate=${toDate},type='excel')}"
                                            class="block px-4 py-2 hover:bg-gray-100"><i
                                                 class="fa-solid fa-file-excel mr-2"></i>Export to Excel</a>
@@ -43,12 +88,14 @@
                                 </ul>
                             </div>
 
-
                         </div>
                     </div>
                 </div>
-
+             </div>
+<!--                Survey Modal Form Fragment-->
                 <div th:replace="~{fragments/modal/addNewSurvey::newSurvey(survey=${survey})}"></div>
+
+
                 <form th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Technical'')')}"
                       th:action="@{/technical/survey/allSurvey}" method="get">
                     <div class="flex flex-col lg:flex-row justify-center lg:items-center gap-2 lg:gap-4">
@@ -123,9 +170,11 @@
                                     name="status" onchange="cleanAndSubmit(this.form)">
                                 <option value="" disabled>Filter By Status</option>
                                 <option value="" th:selected="${currentStatus == null}">All Status</option>
-                                <option th:each="surveyStatus : ${surveyWithPendingStatus}"
-                                        th:value="${surveyStatus.name()}" th:text="${surveyStatus.getStatus()}"
-                                        th:selected="${currentStatus != null and surveyStatus.name() == currentStatus.name()}"></option>
+                                <option th:each="surveyStatus : ${allSurveyStatus}"
+                                        th:value="${surveyStatus.name()}"
+                                        th:text="${surveyStatus.status}"
+                                        th:selected="${currentStatus != null} ? ${surveyStatus.name()} == ${currentStatus} : false">
+                                </option>
                             </select>
                         </div>
 
@@ -257,7 +306,7 @@
                             </div>
                             <div>
                                 <span th:if="${#authorization.expression('hasAuthority(''Sale'')')}"
-                                      th:text="${survey.status}"></span>
+                                      th:text="${survey.status.status}"></span>
                                 <div th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Technical'')')}">
                                     <form th:action="@{/technical/survey/updateStatus}" method="post">
                                         <input type="hidden" name="id" th:value="${survey.id}"/>

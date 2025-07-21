@@ -53,11 +53,7 @@ public class SortUtils {
 
         for(Survey surv : surveyPage.getContent()){
             SurveyStatus currentStatus = surv.getStatus();
-            List<SurveyStatus> validStatuses =switch (currentStatus){
-                case PENDING -> List.of(SurveyStatus.PENDING,SurveyStatus.SUCCEEDED,SurveyStatus.FAILED );
-                case SUCCEEDED -> List.of(SurveyStatus.SUCCEEDED);
-                case FAILED -> List.of(SurveyStatus.FAILED);
-            };
+            List<SurveyStatus> validStatuses = StatusValidator.getNextValidSurveyStatuses(currentStatus);
             validStatusMap.put(surv.getId(),validStatuses);
         }
 

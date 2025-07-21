@@ -6,6 +6,7 @@ import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
+import org.employee.surverythymeleaf.util.StatusValidator;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +55,11 @@ public class SurveyService {
 
     public boolean updateStatus(Long id, SurveyStatus status, User techPerson) {
         Optional<Survey> optionalSurvey = surveyRepository.findById(id);
+        SurveyStatus currentStatus = optionalSurvey.map(Survey::getStatus).orElse(null);
         if (optionalSurvey.isPresent()) {
+            if(!StatusValidator.validateSurveyStatus(currentStatus, status)) {
+                return false;
+            }
             Survey survey = optionalSurvey.get();
             survey.setStatus(status);
             survey.setTechnicalPerson(techPerson);
@@ -107,4 +112,11 @@ public class SurveyService {
         return surveyRepository.findTopSurveyCreator(pageable1).stream().findFirst();
     }
 
+    public List<Survey> filterSurveys(String query, SurveyStatus status, LocalDate fromDate, LocalDate toDate, Sort sort) {
+        if((query != null && !query.isEmpty()) || status != null || (fromDate != null && toDate != null)){
+            return surveyRepository.searchSurvey(query, Pageable.unpaged(), status, fromDate, toDate).getContent();
+        } else {
+            return surveyRepository.findAll(sort);
+        }
+    }
 }
