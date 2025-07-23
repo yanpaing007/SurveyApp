@@ -1,3 +1,5 @@
+
+//Function to Copy GeneratedId text for Application Details
 function copyText(myValue, text) {
     const value = document.getElementById(myValue);
     const tooltip = document.getElementById(text);
@@ -14,69 +16,135 @@ function copyText(myValue, text) {
 }
 
 
+
+// Google Map Api Implementation
 let map,marker;
-function initMap(lat, lng) {
-  if(map){
-      map.setView([lat, lng],13);
-      marker.setLatLng([lat, lng]);
-      return;
-  }
 
-  map = L.map('map').setView([lat, lng],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  }).addTo(map);
+function initMap(lat = 16.8661, lng = 96.1951) {
+    const defaultLocation = { lat, lng };
 
-  marker = L.marker([lat, lng], {draggable: true,clickable:true}).addTo(map);
+    if (!map) {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: defaultLocation,
+            zoom: 14,
+        });
 
-  marker.on('dragend', function() {
-      const position = marker.getLatLng();
-      $('#latitude').val(position.lat.toFixed(6));
-      $('#longitude').val(position.lng.toFixed(6));
-  });
+        marker = new google.maps.Marker({
+            position: defaultLocation,
+            map,
+            draggable: true,
+        });
 
-  map.on('click', function(e) {
-      const {lat, lng} = e.latlng;
-      marker.setLatLng([lat, lng]);
-      $('#latitude').val(lat.toFixed(6));
-      $('#longitude').val(lat.toFixed(6));
-  });
+        marker.addListener('dragend', function () {
+            const position = marker.getPosition();
+            updateLatLngInputs(position.lat(), position.lng());
+        });
 
-}
+        map.addListener('click', function (event) {
+            const lat = event.latLng.lat();
+            const lng = event.latLng.lng();
+            marker.setPosition({ lat, lng });
+            updateLatLngInputs(lat, lng);
+        });
 
-function initMapWithGeolocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                $('#latitude').val(lat.toFixed(6));
-                $('#longitude').val(lng.toFixed(6));
-                initMap(lat, lng);
-            },
-            (error) => {
-                console.warn("Geolocation failed or denied. Using default center.");
-                initMap(21.9162, 95.9560); // Default to Myanmar center
-            }
-        );
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+                    map.setCenter(userLocation);
+                    marker.setPosition(userLocation);
+                    updateLatLngInputs(userLocation.lat, userLocation.lng);
+                },
+                (error) => {
+                    console.warn("Geolocation failed with error: ", error.message);
+                }
+            );
+        }
     } else {
-        console.warn("Geolocation not supported. Using default center.");
-        initMap(21.9162, 95.9560);
+        // reuse map instance, just re-center and move marker
+        const newPosition = { lat, lng };
+        map.setCenter(newPosition);
+        marker.setPosition(newPosition);
+        updateLatLngInputs(lat, lng);
     }
 }
 
+
+function updateLatLngInputs(lat, lng){
+    document.getElementById('latitude').value = lat.toFixed(6);
+    document.getElementById('longitude').value = lng.toFixed(6);
+}
+
+// function initMap(lat, lng) {
+//   if(map){
+//       map.setView([lat, lng],13);
+//       marker.setLatLng([lat, lng]);
+//       return;
+//   }
+//
+//   map = L.map('map').setView([lat, lng],13);
+//   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//   }).addTo(map);
+//
+//   marker = L.marker([lat, lng], {draggable: true,clickable:true}).addTo(map);
+//
+//   marker.on('dragend', function() {
+//       const position = marker.getLatLng();
+//       $('#latitude').val(position.lat.toFixed(6));
+//       $('#longitude').val(position.lng.toFixed(6));
+//   });
+//
+//   map.on('click', function(e) {
+//       const {lat, lng} = e.latlng;
+//       marker.setLatLng([lat, lng]);
+//       $('#latitude').val(lat.toFixed(6));
+//       $('#longitude').val(lat.toFixed(6));
+//   });
+//
+// }
+//
+// function initMapWithGeolocation() {
+//     if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(
+//             (position) => {
+//                 const lat = position.coords.latitude;
+//                 const lng = position.coords.longitude;
+//                 $('#latitude').val(lat.toFixed(6));
+//                 $('#longitude').val(lng.toFixed(6));
+//                 initMap(lat, lng);
+//             },
+//             (error) => {
+//                 console.warn("Geolocation failed or denied. Using default center.");
+//                 initMap(21.9162, 95.9560); // Default to Myanmar center
+//             }
+//         );
+//     } else {
+//         console.warn("Geolocation not supported. Using default center.");
+//         initMap(21.9162, 95.9560);
+//     }
+// }
+
+
+// Select2 implementation for Survey Add Modal Form
 $(document).ready(() => {
+    initMap();
     $('#state').select2({width:'100%'});
     $('#townShip').select2({width:'100%'});
 
+
+
     const newSurveyModal = document.getElementById('newSurvey');
 
-    newSurveyModal.addEventListener('transitionend', () => {
-        if (map) {
-            map.invalidateSize();
-        }
+    newSurveyModal.addEventListener('shown.bs.modal', () => {
+        setTimeout(() =>{
+            google.maps.event.trigger(map, 'resize');
+        },1000);
     });
 
-    initMapWithGeolocation();
+    // initMapWithGeolocation();
     let stateData = [];
     $.getJSON('/data/db.json', (data) => {
         stateData = data.states;
@@ -104,7 +172,6 @@ $(document).ready(() => {
             const lng = state.lng || 90 ;
             $('#longitude').val(lng);
             $('#latitude').val(lat);
-
             initMap(lat,lng);
 
             $('#townShip').trigger('change.select2');
@@ -112,6 +179,8 @@ $(document).ready(() => {
     })
 })
 
+
+// Add Survey Modal Form Validation
 function validateSurvey(form) {
     const customerName = $('#customerName').val().trim();
     const phoneNumber = $('#phoneNumber').val().trim();
@@ -160,6 +229,14 @@ function validateSurvey(form) {
         });
         return false;
     }
-
     return true;
 }
+
+document.body.addEventListener("htmx:afterSwap", function(evt) {
+    if (evt.detail.target.id === "myForm") {
+        const modalEl = document.getElementById("newUser");
+        if (modalEl) {
+            modalEl.classList.remove("hidden"); // Tailwind
+        }
+    }
+});

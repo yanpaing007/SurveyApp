@@ -1,5 +1,5 @@
 <!-- Add New User Modal -->
-<div id="newUser" th:fragment="newUser(user_details,roles)" tabindex="-1" aria-hidden="true"
+<div id="newUser" th:fragment="newUser(new_user_obj,roles)" tabindex="-1" aria-hidden="true"
      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
   <div class="relative p-4 w-full lg:max-w-xl max-h-full">
 
@@ -21,10 +21,18 @@
         </button>
       </div>
 
-      <form th:action="@{/admin/create}" th:object="${user_details}" th:method="post">
+      <form th:action="@{/admin/create}"
+            th:object="${new_user_obj}"
+            th:method="post"
+            hx-post="/admin/create"
+            hx-target="#myForm"
+            hx-swap="outerHTML"
+      id="myForm">
+
         <div class="p-4 md:p-5 space-y-4 grid grid-cols-1 gap-4">
           <div class="w-full mx-auto">
             <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
+            <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="text-red-500 text-xs"></span>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-signature text-gray-900"></i>
@@ -34,12 +42,13 @@
                       id="fullName"
                       name="fullName"
                       placeholder="Enter user's full name"
-                      class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800" required/>
+                      class="w-full focus:outline-hidden text-sm rounded-lg ps-9 p-2 border border-gray-300 bg-white text-gray-800"/>
             </div>
           </div>
 
           <div class="w-full mx-auto">
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs"></span>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-envelope text-gray-900"></i>
@@ -49,13 +58,14 @@
                       id="email"
                       name="email"
                       placeholder="Enter user's email"
-                      class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800" required/>
+                      class="w-full focus:outline-hidden text-sm rounded-lg ps-9 p-2 border border-gray-300 bg-white text-gray-800"/>
             </div>
           </div>
 
 
           <div class="w-full mx-auto">
             <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+            <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red-500 text-xs"></span>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-phone-volume text-gray-900"></i>
@@ -65,13 +75,14 @@
                       id="phoneNumber"
                       name="phoneNumber"
                       placeholder="Enter user's phone number"
-                      class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800" required/>
+                      class="w-full focus:outline-hidden text-sm rounded-lg ps-9 p-2 border border-gray-300 bg-white text-gray-800"/>
             </div>
           </div>
 
 
           <div class="w-full mx-auto">
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-xs"></span>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-lock text-gray-900"></i>
@@ -81,19 +92,20 @@
                       id="password"
                       name="password"
                       placeholder="Enter user's new password"
-                      class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800" required/>
+                      class="w-full focus:outline-hidden text-sm rounded-lg ps-9 p-2 border border-gray-300 bg-white text-gray-800"/>
             </div>
           </div>
 
 
           <div class="w-full mx-auto ">
             <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
+            <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="text-red-500 text-xs"></span>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-tag text-gray-900"></i>
               </div>
-              <select name="role" id="role" class="w-full focus:outline-hidden text-sm rounded-lg ps-10 pe-3 p-2 border border-gray-300 bg-white text-gray-800">
-                <option value="" selected disabled>Select User's role</option>
+              <select name="role" id="role" class="w-full focus:outline-hidden text-sm rounded-lg ps-8 pe-3 p-2 border border-gray-300 bg-white text-gray-800">
+                <option value="" selected disabled>Assign User's role</option>
                 <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.roleName}"></option>
               </select>
             </div>

@@ -1,6 +1,7 @@
 package org.employee.surverythymeleaf.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -9,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.employee.surverythymeleaf.Configuration.GlobalControllerAdvice;
 import org.employee.surverythymeleaf.model.ActivityType;
+import org.employee.surverythymeleaf.model.Role;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.RoleService;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
@@ -48,19 +51,28 @@ public class UserController {
         this.activityHelper = activityHelper;
     }
 
-    @GetMapping("/create")
-    public String getUserForm(Model model){
-        model.addAttribute("user",new User());
-        model.addAttribute("role", roleService.findAll());
-        return "user/allUsers";
-    }
+//    @GetMapping("/create")
+//    public String getUserForm(Model model){
+//        model.addAttribute("new_user_obj",new User());
+//        model.addAttribute("role", roleService.findAll());
+//        return "user/allUsers";
+//    }
     
     @PostMapping("/create")
-    public String createuser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes,Principal principal){
+    public String createuser(@Valid @ModelAttribute("new_user_obj") User user,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes,
+                             Principal principal,
+                             @ModelAttribute("roles") List<Role> roles,
+                             Model model) {
+        if(result.hasErrors()) {
+            model.addAttribute("roles", roles);
+            return "fragments/modal/addUser :: newUser";
+        }
         userService.createuser(user);
         redirectAttributes.addFlashAttribute("message", "User created successfully");
         activityHelper.saveActivity(ActivityType.CREATE_USER, principal);
-        return "redirect:/admin/users";
+        return "user/allUsers";
     }
 
     @GetMapping("/users")
@@ -91,6 +103,7 @@ public class UserController {
         model.addAttribute("selectedStatus",status);
         model.addAttribute("sortField",sortField);
         model.addAttribute("sortDir",sortDir);
+        model.addAttribute("new_user_obj",new User());
         model.addAttribute("reverseSortDir",sortDir.equals("asc") ? "desc" : "asc");
         return "user/allUsers";
     }
