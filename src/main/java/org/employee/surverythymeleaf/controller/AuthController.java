@@ -27,6 +27,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+
+
+
 @Controller
 public class AuthController {
 
@@ -213,4 +216,5 @@ public class AuthController {
         }
         return "redirect:/application/details/{id}";
     }
+
 }
