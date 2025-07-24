@@ -42,7 +42,7 @@
               <li class="me-2" role="presentation">
                 <button class="inline-block py-4 px-4 text-center border-b-2 rounded-t-lg" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fa-solid fa-list-check"></i> Assignment Info</button>
               </li>
-              <li class="me-2" role="presentation">
+              <li id="map-tab" class="me-2" role="presentation">
                 <button class="inline-block py-4 px-4 text-center border-b-2 rounded-t-lg" id="map-styled-tab" data-tabs-target="#styled-settings" type="button" role="tab" aria-controls="settings" aria-selected="false"><i class="fa-solid fa-map"></i> Map</button>
               </li>
             </ul>
@@ -361,7 +361,7 @@
                   <p class="font-semibold">Location Map</p>
                 </div>
                 <hr class="mt-2 text-gray-200 w-full">
-                <div id="map" class="w-full rounded-lg border border-gray-300" style="height: 460px;"></div>
+                <div id="ShowMap" th:data-lat="${applications.latitude}" th:data-lng="${applications.longitude}" class="w-full rounded-lg border border-gray-300" style="height: 460px;"></div>
                 <div class="p-3 border border-gray-200 rounded-md text-sm mt-3">
                   <p class="font-base">Address</p>
                   <p class="font-light" th:text="${applications.address}"></p>

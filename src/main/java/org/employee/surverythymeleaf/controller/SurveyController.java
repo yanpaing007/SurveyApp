@@ -67,6 +67,8 @@ public class SurveyController {
         Survey latestSurvey = surveyService.searchLatestSurvey();
         int newNumber = 2131;
         if(result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("message", "Failed to add new survey, please fill all fields");
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/sale/survey/allSurvey";
         }
         if(latestSurvey != null && latestSurvey.getId() != null) {

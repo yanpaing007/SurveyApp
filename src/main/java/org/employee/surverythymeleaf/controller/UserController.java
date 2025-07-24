@@ -10,14 +10,15 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.employee.surverythymeleaf.Configuration.GlobalControllerAdvice;
 import org.employee.surverythymeleaf.model.ActivityType;
-import org.employee.surverythymeleaf.model.Role;
 import org.employee.surverythymeleaf.model.User;
+import org.employee.surverythymeleaf.repository.UserRepository;
 import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.RoleService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,9 @@ import java.io.PrintWriter;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import static org.employee.surverythymeleaf.util.SortUtils.sortFunction;
 
@@ -42,38 +45,41 @@ public class UserController {
     private final GlobalControllerAdvice globalControllerAdvice;
     private final ActivityLogService activityLogService;
     private final ActivityHelper activityHelper;
+    private final UserRepository userRepository;
 
-    public UserController(UserService userService, RoleService roleService, GlobalControllerAdvice globalControllerAdvice, ActivityLogService activityLogService, ActivityHelper activityHelper) {
+    public UserController(UserService userService, RoleService roleService, GlobalControllerAdvice globalControllerAdvice, ActivityLogService activityLogService, ActivityHelper activityHelper, UserRepository userRepository) {
         this.userService = userService;
         this.roleService = roleService;
         this.globalControllerAdvice = globalControllerAdvice;
         this.activityLogService = activityLogService;
         this.activityHelper = activityHelper;
+        this.userRepository = userRepository;
     }
 
-//    @GetMapping("/create")
-//    public String getUserForm(Model model){
-//        model.addAttribute("new_user_obj",new User());
-//        model.addAttribute("role", roleService.findAll());
-//        return "user/allUsers";
-//    }
     
     @PostMapping("/create")
-    public String createuser(@Valid @ModelAttribute("new_user_obj") User user,
-                             BindingResult result,
-                             RedirectAttributes redirectAttributes,
-                             Principal principal,
-                             @ModelAttribute("roles") List<Role> roles,
-                             Model model) {
+    public String createNewUser(@Valid @ModelAttribute("new_user_obj") User user,
+                                BindingResult result,
+                                RedirectAttributes redirectAttributes,
+                                Principal principal) {
         if(result.hasErrors()) {
-            model.addAttribute("roles", roles);
-            return "fragments/modal/addUser :: newUser";
+            redirectAttributes.addFlashAttribute("message", "Failed to add new user, please fill all fields");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/admin/users";
+
         }
-        userService.createuser(user);
-        redirectAttributes.addFlashAttribute("message", "User created successfully");
-        activityHelper.saveActivity(ActivityType.CREATE_USER, principal);
-        return "user/allUsers";
+        boolean isUserCreationSuccess = userService.createNewUser(user);
+        if(isUserCreationSuccess) {
+            redirectAttributes.addFlashAttribute("message", "User created successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            activityHelper.saveActivity(ActivityType.CREATE_USER, principal);
+            return "redirect:/admin/users";
+        }
+        redirectAttributes.addFlashAttribute("message", "Failed to create new user");
+        redirectAttributes.addFlashAttribute("messageType", "error");
+        return "redirect:/admin/users";
     }
+
 
     @GetMapping("/users")
     public String getAllUsers(Model model,@RequestParam(required = false) String query,

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
+import org.employee.surverythymeleaf.repository.UserRepository;
 import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
@@ -11,6 +12,7 @@ import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
 import org.employee.surverythymeleaf.util.StatusValidator;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,16 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-
-
+import java.util.*;
 
 
 @Controller
@@ -40,8 +36,9 @@ public class AuthController {
     private final ApplicationRepository applicationRepository;
     private final ActivityHelper activityHelper;
     private final ActivityLogService activityLogService;
+    private final UserRepository userRepository;
 
-    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService, SurveyService surveyService, SurveyRepository surveyRepository, ApplicationRepository applicationRepository, ActivityHelper activityHelper, ActivityLogService activityLogService) {
+    public AuthController(UserService userService, DaoAuthenticationProvider authProvider, ApplicationService applicationService, SurveyService surveyService, SurveyRepository surveyRepository, ApplicationRepository applicationRepository, ActivityHelper activityHelper, ActivityLogService activityLogService, UserRepository userRepository) {
         this.userService = userService;
         this.applicationService = applicationService;
         this.surveyService =surveyService;
@@ -49,6 +46,7 @@ public class AuthController {
         this.applicationRepository = applicationRepository;
         this.activityHelper = activityHelper;
         this.activityLogService = activityLogService;
+        this.userRepository = userRepository;
     }
 
     public boolean check_authentication() {
@@ -97,6 +95,7 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("messageType", "success");
         return "redirect:/login";
     }
+
 
     @GetMapping("/")
     public String home(Model model, Principal principal) {

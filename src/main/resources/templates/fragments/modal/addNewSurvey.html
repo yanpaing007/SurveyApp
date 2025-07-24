@@ -21,12 +21,15 @@
                 </button>
             </div>
 
-            <form th:action="@{/sale/survey/add}" th:object="${survey}" th:method="post" onsubmit="return validateSurvey(event)">
+            <form th:action="@{/sale/survey/add}" th:object="${survey}" th:method="post" onsubmit="return validateSurvey()">
                 <div class="p-4 md:p-5 space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.token}">
                     <input type="hidden" name="salePerson" th:value="*{salePerson.id}"/>
                     <div class="w-full mx-auto">
-                        <label for="customerName" class="block mb-2 text-sm font-medium text-gray-900">Customer Name</label>
+                        <div class="flex flex row justify-between">
+                            <label for="customerName" class="block mb-2 text-sm font-medium text-gray-900">Customer Name</label>
+                            <span id="customerNameError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-user text-gray-900"></i>
@@ -41,7 +44,10 @@
                     </div>
 
                     <div class="w-full mx-auto">
-                        <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+                        <div class="flex flex row justify-between">
+                            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+                            <span id="phoneNumberError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-phone text-gray-900"></i>
@@ -57,7 +63,10 @@
 
 
                     <div class="w-full mx-auto">
-                        <label for="state" class="block mb-2 text-sm font-medium text-gray-900">State</label>
+                        <div class="flex flex row justify-between">
+                            <label for="state" class="block mb-2 text-sm font-medium text-gray-900">State</label>
+                            <span id="stateError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center ps-3.5 pointer-events-none z-10">
                                 <i class="fa-solid fa-tower-observation text-gray-900"></i>
@@ -70,7 +79,10 @@
 
 
                     <div class="w-full mx-auto">
-                        <label for="townShip" class="block mb-2 text-sm font-medium text-gray-900">Township</label>
+                        <div class="flex flex row justify-between">
+                            <label for="townShip" class="block mb-2 text-sm font-medium text-gray-900">TownShip</label>
+                            <span id="townShipError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center ps-3.5 pointer-events-none z-10">
                                 <i class="fa-solid fa-city text-gray-900"></i>
@@ -82,7 +94,10 @@
                     </div>
 
                     <div class="w-full mx-auto">
-                        <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
+                        <div class="flex flex row justify-between">
+                            <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
+                            <span id="longitudeError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-location-dot"></i>
@@ -98,7 +113,10 @@
 
 
                     <div class="w-full mx-auto">
-                        <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
+                        <div class="flex flex row justify-between">
+                            <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
+                            <span id="latitudeError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-location-pin"></i>

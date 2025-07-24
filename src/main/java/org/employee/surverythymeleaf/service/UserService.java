@@ -28,9 +28,10 @@ public class UserService {
         this.roleService = roleService;
     }
 
-    public void createuser(User user) {
+    public boolean createNewUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
+        return true;
     }
 
     public Page<User> getAllUserPagniated(int page, int size, Sort sort) {

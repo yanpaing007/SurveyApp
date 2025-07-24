@@ -1,4 +1,36 @@
 
+
+document.addEventListener('DOMContentLoaded', e => {
+    let mapInitialized = false;
+
+    document.getElementById('map-tab').addEventListener('click', () => {
+        if (mapInitialized) return;
+
+        const mapDiv = document.getElementById('ShowMap');
+        const longitude = parseFloat(mapDiv.getAttribute('data-longitude')) || 96.193;
+        const latitude = parseFloat(mapDiv.getAttribute('data-latitude')) || 16.863;
+        const customerLocation = { lat: latitude, lng: longitude };
+
+        map = new google.maps.Map(mapDiv, {
+            center: customerLocation,
+            zoom: 14,
+            gestureHandling: "auto",
+            clickableIcons: false,
+            disableDefaultUI: false,
+            draggable: true,
+        });
+
+        marker = new google.maps.Marker({
+            position: customerLocation,
+            map,
+            draggable: false,
+        });
+
+        mapInitialized = true;
+    });
+})
+
+
 //Function to Copy GeneratedId text for Application Details
 function copyText(myValue, text) {
     const value = document.getElementById(myValue);
@@ -78,62 +110,11 @@ function updateLatLngInputs(lat, lng){
     document.getElementById('longitude').value = lng.toFixed(6);
 }
 
-// function initMap(lat, lng) {
-//   if(map){
-//       map.setView([lat, lng],13);
-//       marker.setLatLng([lat, lng]);
-//       return;
-//   }
-//
-//   map = L.map('map').setView([lat, lng],13);
-//   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//   }).addTo(map);
-//
-//   marker = L.marker([lat, lng], {draggable: true,clickable:true}).addTo(map);
-//
-//   marker.on('dragend', function() {
-//       const position = marker.getLatLng();
-//       $('#latitude').val(position.lat.toFixed(6));
-//       $('#longitude').val(position.lng.toFixed(6));
-//   });
-//
-//   map.on('click', function(e) {
-//       const {lat, lng} = e.latlng;
-//       marker.setLatLng([lat, lng]);
-//       $('#latitude').val(lat.toFixed(6));
-//       $('#longitude').val(lat.toFixed(6));
-//   });
-//
-// }
-//
-// function initMapWithGeolocation() {
-//     if (navigator.geolocation) {
-//         navigator.geolocation.getCurrentPosition(
-//             (position) => {
-//                 const lat = position.coords.latitude;
-//                 const lng = position.coords.longitude;
-//                 $('#latitude').val(lat.toFixed(6));
-//                 $('#longitude').val(lng.toFixed(6));
-//                 initMap(lat, lng);
-//             },
-//             (error) => {
-//                 console.warn("Geolocation failed or denied. Using default center.");
-//                 initMap(21.9162, 95.9560); // Default to Myanmar center
-//             }
-//         );
-//     } else {
-//         console.warn("Geolocation not supported. Using default center.");
-//         initMap(21.9162, 95.9560);
-//     }
-// }
-
-
 // Select2 implementation for Survey Add Modal Form
 $(document).ready(() => {
     initMap();
     $('#state').select2({width:'100%'});
     $('#townShip').select2({width:'100%'});
-
 
 
     const newSurveyModal = document.getElementById('newSurvey');
@@ -179,58 +160,6 @@ $(document).ready(() => {
     })
 })
 
-
-// Add Survey Modal Form Validation
-function validateSurvey(form) {
-    const customerName = $('#customerName').val().trim();
-    const phoneNumber = $('#phoneNumber').val().trim();
-    const state = $('#state').val();
-    const township = $('#townShip').val();
-    const longitude = $('#longitude').val().trim();
-    const latitude = $('#latitude').val().trim();
-
-    let hasError = false;
-
-    $('input, select').removeClass('border-red-500');
-
-    if (!customerName) {
-        $('#customerName').addClass('border-red-500');
-        hasError = true;
-    }
-    if (!phoneNumber) {
-        $('#phoneNumber').addClass('border-red-500');
-        hasError = true;
-    }
-    if (!state) {
-        $('#state').next('.select2').find('.select2-selection').addClass('border-red-500');
-        hasError = true;
-    }
-    if (!township) {
-        $('#townShip').next('.select2').find('.select2-selection').addClass('border-red-500');
-        hasError = true;
-    }
-    if (!longitude || isNaN(longitude)) {
-        $('#longitude').addClass('border-red-500');
-        hasError = true;
-    }
-    if (!latitude || isNaN(latitude)) {
-        $('#latitude').addClass('border-red-500');
-        hasError = true;
-    }
-
-    if (hasError) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Please fill in all required fields correctly.',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-        return false;
-    }
-    return true;
-}
 
 document.body.addEventListener("htmx:afterSwap", function(evt) {
     if (evt.detail.target.id === "myForm") {

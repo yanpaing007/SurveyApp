@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/sale/survey/add").hasAnyAuthority("Sale","Admin")
                         .requestMatchers(HttpMethod.DELETE,"/admin/user/delete").hasAuthority("Admin")
-                        .requestMatchers("/login","/register","/css/**","/js/**").permitAll()
+                        .requestMatchers("/login","/register","/css/**","/js/**","/admin/api/check-email").permitAll()
                         .requestMatchers("/admin","/","/admin/**").hasAuthority("Admin")
                         .requestMatchers("/sale","/sale/**").hasAnyAuthority("Sale","Admin")
                         .requestMatchers("/technical","/technical/**").hasAnyAuthority("Technical","Admin")

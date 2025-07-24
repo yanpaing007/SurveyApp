@@ -24,15 +24,14 @@
       <form th:action="@{/admin/create}"
             th:object="${new_user_obj}"
             th:method="post"
-            hx-post="/admin/create"
-            hx-target="#myForm"
-            hx-swap="outerHTML"
-      id="myForm">
+            id="userForm">
 
         <div class="p-4 md:p-5 space-y-4 grid grid-cols-1 gap-4">
           <div class="w-full mx-auto">
-            <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
-            <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="text-red-500 text-xs"></span>
+            <div class="flex flex row justify-between">
+              <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900">Full Name</label>
+              <span id="fullNameError" class="error-message text-red-500 text-sm"></span>
+            </div>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-signature text-gray-900"></i>
@@ -47,8 +46,10 @@
           </div>
 
           <div class="w-full mx-auto">
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs"></span>
+            <div class="flex flex row justify-between">
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+              <span id="emailError" class="error-message text-red-500 text-sm"></span>
+            </div>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-envelope text-gray-900"></i>
@@ -64,8 +65,10 @@
 
 
           <div class="w-full mx-auto">
-            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
-            <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red-500 text-xs"></span>
+            <div class="flex flex row justify-between">
+              <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+              <span id="phoneNumberError" class="error-message text-red-500 text-sm"></span>
+            </div>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-phone-volume text-gray-900"></i>
@@ -81,8 +84,10 @@
 
 
           <div class="w-full mx-auto">
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-xs"></span>
+            <div class="flex flex row justify-between">
+              <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+              <span id="passwordError" class="error-message text-red-500 text-sm"></span>
+            </div>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-lock text-gray-900"></i>
@@ -98,8 +103,10 @@
 
 
           <div class="w-full mx-auto ">
-            <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
-            <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="text-red-500 text-xs"></span>
+            <div class="flex flex row justify-between">
+              <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
+              <span id="roleError" class="error-message text-red-500 text-sm"></span>
+            </div>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-tag text-gray-900"></i>
@@ -126,3 +133,8 @@
 
   </div>
 </div>
+<script th:if="${#fields.hasErrors()}">
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('newUser').classList.remove('hidden');
+  });
+</script>
