@@ -14,6 +14,7 @@ import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.SortUtils;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -152,14 +153,25 @@ public class SurveyController {
     }
 
     @PostMapping("/application/add")
-    public String addApplication(@ModelAttribute("application") Application application, @ModelAttribute("surveyId") String surveyId, Principal principal) {
+    public String addApplication(@Valid @ModelAttribute("application") Application application, BindingResult bindingResult, @ModelAttribute("surveyId") String surveyId, Principal principal, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("messageType", "error");
+
+            List<String> errorMessages = bindingResult.getAllErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+
+            redirectAttributes.addFlashAttribute("message", errorMessages);
+            return "redirect:/sale/survey/allSurvey";
+        }
         application.setApplicationDate(LocalDate.now());
 
         Application latestApplication = applicationService.searchLatestApplication();
         int newNumber = 4321;
-        if(latestApplication != null && latestApplication.getId() != null) {
+        if (latestApplication != null && latestApplication.getId() != null) {
             String latestApplicationId = latestApplication.getGeneratedApplicationId();
-            String numberString = latestApplicationId.replace("APP-","");
+            String numberString = latestApplicationId.replace("APP-", "");
             newNumber = Integer.parseInt(numberString) + 1;
         }
 
@@ -168,8 +180,12 @@ public class SurveyController {
         application.setGeneratedApplicationId(newApplicationId);
         application.setApplicationDate(LocalDate.now());
         application.setSurvey(findSurveyId);
-        applicationService.addNewApplication(application);
-        activityHelper.saveActivity(ActivityType.CREATE_APPLICATION,principal);
+        Application isApplicationAdded = applicationService.addNewApplication(application);
+        if (isApplicationAdded != null) {
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            redirectAttributes.addFlashAttribute("message", "Application added successfully");
+            activityHelper.saveActivity(ActivityType.CREATE_APPLICATION, principal);
+        }
         return "redirect:/sale/survey/allSurvey";
     }
 

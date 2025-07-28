@@ -30,8 +30,8 @@ public class ApplicationService {
         this.surveyRepository = surveyRepository;
     }
 
-    public void addNewApplication(Application application) {
-        applicationRepository.save(application);
+    public Application addNewApplication(Application application) {
+        return applicationRepository.save(application);
     }
 
     public Page<Application> getAllApplicationPaginated(int page, int size, Sort sort) {

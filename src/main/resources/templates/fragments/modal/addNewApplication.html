@@ -21,13 +21,16 @@
                 </button>
             </div>
 
-            <form th:action="@{/sale/application/add}" th:object="${app}" th:method="post">
+            <form onsubmit="return validateApplication()" th:action="@{/sale/application/add}" th:object="${app}" th:method="post" id="applicationForm">
                 <div class="p-4 md:p-5 space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.token}">
                     <input type="hidden" name="surveyId" id="surveyId"/>
                     <input type="hidden" name="submittedBy" th:value="${currentUser.id}">
                     <div class="w-full mx-auto">
-                        <label for="customerName" class="block mb-2 text-sm font-medium text-gray-900">Customer Name</label>
+                        <div class="flex flex row justify-between">
+                            <label for="customerName" class="block mb-2 text-sm font-medium text-gray-900">Customer Name</label>
+                            <span id="customerNameError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-signature text-gray-900"></i>
@@ -37,12 +40,13 @@
                                     id="customerName"
                                     name="customerName"
                                     placeholder="Enter customer's full name"
-                                    class="w-full focus:outline-hidden bg-gray-200 text-sm rounded-lg ps-10 p-2 border border-gray-300 text-gray-800" disabled readonly/>
+                                    class="w-full focus:outline-hidden bg-gray-200 text-sm rounded-lg ps-10 p-2 border border-gray-300 text-gray-800" readonly>
                         </div>
                     </div>
 
                     <div class="w-full mx-auto">
-                        <label for="companyName" class="block mb-2 text-sm font-medium text-gray-900">Company Name</label>
+
+                        <label for="companyName" class="block mb-2 text-sm font-medium text-gray-900">Company Name<span class="text-gray-700 text-xs"> (Optional)</span></label>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-building"></i>
@@ -52,12 +56,15 @@
                                     id="companyName"
                                     name="companyName"
                                     placeholder="Enter company's full name"
-                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800" required/>
+                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800"/>
                         </div>
                     </div>
 
                     <div class="w-full mx-auto">
-                        <label for="address" class="block mb-2 text-sm font-medium text-gray-900">Address</label>
+                        <div class="flex flex row justify-between">
+                            <label for="address" class="block mb-2 text-sm font-medium text-gray-900">Address</label>
+                            <span id="addressError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-address-card"></i>
@@ -67,12 +74,15 @@
                                     id="address"
                                     name="address"
                                     placeholder="Enter enter customer address"
-                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly disabled/>
+                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly/>
                         </div>
                     </div>
 
                     <div class="w-full mx-auto">
-                        <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+                        <div class="flex flex row justify-between">
+                            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+                            <span id="phoneNumberError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-phone-volume"></i>
@@ -82,12 +92,15 @@
                                     id="phoneNumber"
                                     name="phoneNumber"
                                     placeholder="Enter user's phone number"
-                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly disabled/>
+                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly/>
                         </div>
                     </div>
 
                     <div class="w-full mx-auto col-span-2">
-                        <label for="contactEmail" class="block mb-2 text-sm font-medium text-gray-900">Contact Email</label>
+                        <div class="flex flex row justify-between">
+                            <label for="contactEmail" class="block mb-2 text-sm font-medium text-gray-900">Contact Email</label>
+                            <span id="contactEmailError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-envelope"></i>
@@ -97,13 +110,16 @@
                                     id="contactEmail"
                                     name="contactEmail"
                                     placeholder="Enter customer's contact email"
-                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800" required/>
+                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800"/>
                         </div>
                     </div>
 
 
                     <div class="w-full mx-auto">
-                        <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
+                        <div class="flex flex row justify-between">
+                            <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
+                            <span id="longitudeError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-location-dot"></i>
@@ -113,13 +129,16 @@
                                     id="longitude"
                                     name="longitude"
                                     placeholder="Enter user's longitude"
-                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly disabled/>
+                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly/>
                         </div>
                     </div>
 
 
                     <div class="w-full mx-auto">
-                        <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
+                        <div class="flex flex row justify-between">
+                            <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
+                            <span id="latitudeError" class="error-message text-red-500 text-sm"></span>
+                        </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                 <i class="fa-solid fa-location-pin"></i>
@@ -129,15 +148,15 @@
                                     id="latitude"
                                     name="latitude"
                                     placeholder="Enter user's latitude"
-                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly disabled/>
+                                    class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-gray-200 text-gray-800" readonly/>
                         </div>
                     </div>
 
                     <div class="w-full mx-auto col-span-2">
-                        <label for="comment" class="block mb-2 text-sm font-medium text-gray-900"><i class="fa-solid fa-comments"></i> Comment</label>
+                        <label for="comment" class="block mb-2 text-sm font-medium text-gray-900"><i class="fa-solid fa-comments"></i> Comment<span class="text-gray-700 text-xs"> (Optional)</span></label>
                         <div class="relative">
 
-                            <textarea id="comment" th:field="*{comment}" placeholder="What is on your mind?...." autocomplete="comment" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" required></textarea>
+                            <textarea id="comment" th:field="*{comment}" placeholder="What is on your mind?...." autocomplete="comment" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></textarea>
                         </div>
                     </div>
 

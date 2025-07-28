@@ -4,7 +4,7 @@
             <div class="flex justify-between flex-col xl:flex-row space-y-4 md:space-y-0 bg-white pb-2">
 
              <div class="flex flex-row space-x-2">
-                   <div>
+                   <div th:if="${#authorization.expression('hasAnyAuthority(''Sale'',''Admin'')')}">
                        <button data-modal-target="newSurvey" data-modal-toggle="newSurvey"
                                class="px-3 py-2 bg-gray-900 text-white rounded-md text-xs cursor-pointer">
                            <i class="fa-solid fa-user-plus pr-1"></i> Add New Survey

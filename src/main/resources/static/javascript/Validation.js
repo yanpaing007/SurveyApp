@@ -1,4 +1,3 @@
-
 function resetErrors() {
     $('input, select').removeClass('border-red-500');
     $('#stateDiv,#townShipDiv').removeClass('border border-red-500');
@@ -28,115 +27,6 @@ async function checkEmailUniqueness(email) {
     }
 }
 
-
-
-function validateSurvey() {
-    const fields = {
-        customerName: $('#customerName').val().trim(),
-        phoneNumber: $('#phoneNumber').val().trim(),
-        state: $('#state').val(),
-        township: $('#townShip').val().trim(),
-        longitude: $('#longitude').val().trim(),
-        latitude: $('#latitude').val().trim()
-    };
-
-    let hasError = false;
-    resetErrors();
-
-    if (!fields.customerName) {
-        showError('customerName', "*Please enter customer name");
-        hasError = true;
-    }
-    if (!fields.phoneNumber) {
-        showError('phoneNumber', "*Please enter phone number");
-        hasError = true;
-    }
-    if (!fields.state) {
-        showError('stateDiv', "*Please select a state");
-        hasError = true;
-    }
-    if (!fields.township) {
-        showError('townShipDiv', "*Please enter township");
-        hasError = true;
-    }
-    if (!fields.longitude || isNaN(fields.longitude)) {
-        showError('longitude', "*Please enter valid longitude (numeric value)");
-        hasError = true;
-    }
-    if (!fields.latitude || isNaN(fields.latitude)) {
-        showError('latitude', "*Please enter valid latitude (numeric value)");
-        hasError = true;
-    }
-
-    if (hasError) {
-        showValidationToast();
-        return false;
-    }
-    return true;
-}
-
-
-async function validateUser() {
-    const fields = {
-        fullName: $('#fullName').val().trim(),
-        email: $('#email').val().trim(),
-        phoneNumber: $('#phoneNumber').val().trim(),
-        password: $('#password').val().trim(),
-        role: $('#role').val()
-    };
-
-    let hasError = false;
-    resetErrors();
-
-    if (!fields.fullName) {
-        showError('fullName', "*Please enter user's full name");
-        hasError = true;
-    } else if (fields.fullName.length < 6) {
-        showError('fullName', "*Full Name must have at least 6 characters");
-        hasError = true;
-    }
-    if (!fields.phoneNumber) {
-        showError('phoneNumber', "*Please enter phone number");
-        hasError = true;
-    }
-    if (!fields.email) {
-        showError('email', "*Please enter email address");
-        hasError = true;
-    } else if (!isValidEmail(fields.email)) {
-        showError('email', "*Please enter a valid email address");
-        hasError = true;
-    }else {
-        try {
-            const isUnique = await checkEmailUniqueness(fields.email);
-            if (!isUnique) {
-                showError('email', "*This email is already registered");
-                hasError = true;
-            }
-        } catch (error) {
-            console.error("Email check error:", error);
-            showError('email', "*Error checking email availability");
-            hasError = true;
-        }
-    }
-    if (!fields.password) {
-        showError('password', "*Please enter password");
-        hasError = true;
-    } else if (fields.password.length < 8) {
-        showError('password', "*Password must be at least 8 characters");
-        hasError = true;
-    }
-    if (!fields.role) {
-        showError('role', "*Please select a role");
-        hasError = true;
-    }
-
-    if (hasError) {
-        showValidationToast();
-        return false;
-    }
-    return true;
-}
-
 function showError(fieldId, message) {
     $(`#${fieldId}`).addClass('border border-red-500 rounded-md');
     $(`#${fieldId}Error`).text(message).removeClass('hidden');
@@ -157,15 +47,3 @@ function showValidationToast() {
         timer: 3000
     });
 }
-
-
-
-$(document).ready(function() {
-    $('#userForm').on('submit', async function(e) {
-        e.preventDefault();
-        const isValid = await validateUser();
-        if (isValid) {
-            this.submit();
-        }
-    });
-});

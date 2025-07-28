@@ -22,7 +22,7 @@
             </div>
 
             <form th:action="@{/sale/survey/add}" th:object="${survey}" th:method="post" onsubmit="return validateSurvey()">
-                <div class="p-4 md:p-5 space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="p-4 md:p-5 space-y-4 grid grid-cols-2 gap-4">
                     <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.token}">
                     <input type="hidden" name="salePerson" th:value="*{salePerson.id}"/>
                     <div class="w-full mx-auto">
@@ -110,6 +110,7 @@
                                     class="w-full focus:outline-hidden text-sm rounded-lg ps-10 p-2 border border-gray-300 bg-white text-gray-800"/>
                         </div>
                     </div>
+
 
 
                     <div class="w-full mx-auto">
