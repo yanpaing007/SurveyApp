@@ -1,6 +1,7 @@
 
 function resetErrors() {
     $('input, select').removeClass('border-red-500');
+    $('#stateDiv,#townShipDiv').removeClass('border border-red-500');
     $('.error-message').addClass('hidden').text('');
 }
 
@@ -51,11 +52,11 @@ function validateSurvey() {
         hasError = true;
     }
     if (!fields.state) {
-        showError('state', "*Please select a state");
+        showError('stateDiv', "*Please select a state");
         hasError = true;
     }
     if (!fields.township) {
-        showError('townShip', "*Please enter township");
+        showError('townShipDiv', "*Please enter township");
         hasError = true;
     }
     if (!fields.longitude || isNaN(fields.longitude)) {
@@ -137,7 +138,7 @@ async function validateUser() {
 }
 
 function showError(fieldId, message) {
-    $(`#${fieldId}`).addClass('border-red-500');
+    $(`#${fieldId}`).addClass('border border-red-500 rounded-md');
     $(`#${fieldId}Error`).text(message).removeClass('hidden');
 }
 
