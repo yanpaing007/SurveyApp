@@ -327,19 +327,20 @@
                                                 <i class="fa-solid fa-multiply text-2xl hover:text-gray-600"></i>
                                             </div>
                                             <div class="text-center mb-6">
-                                                <p class="text-lg text-gray-800 font-medium">
-                                                    Are you sure you want to change the status to
+                                                <i class="fa-solid fa-triangle-exclamation fa-beat-fade fa-10x text-7xl" style="color: #e93a80;"></i>
+                                                <p class="pt-6 text-gray-800 font-medium text-xl uppercase font-bold">
+                                                    Are you sure you want to change the status to<br>
                                                     "<span x-text="newStatus"></span>"?
                                                 </p>
                                             </div>
                                             <div class="flex justify-center gap-x-4">
-                                                <button @click="cancelChange"
-                                                        class="w-[200px] py-2 bg-gray-600 rounded-md text-white text-sm cursor-pointer">
-                                                    Cancel
-                                                </button>
                                                 <button @click="submitChange"
-                                                        class="w-[200px] py-2 bg-indigo-600 rounded-md text-white text-sm cursor-pointer">
-                                                    Sure
+                                                        class="w-[200px] py-4 bg-indigo-500 rounded-md text-white text-md cursor-pointer">
+                                                    Yes,sure
+                                                </button>
+                                                <button @click="cancelChange"
+                                                        class="w-[200px] py-4 bg-gray-500 rounded-md text-white text-md cursor-pointer">
+                                                    No,cancel
                                                 </button>
                                             </div>
                                         </div>
