@@ -283,7 +283,7 @@
                         <td class="text-center py-4" colspan="9">No surveys found!</td>
                     </tr>
 
-                    <tr class="bg-white border-b border-gray-200" th:each="survey,iterStat : ${surveys}">
+                    <tr class="bg-white border-b border-gray-200" th:each="survey,iterStat : ${surveys}" x-data="statusChangeHandler('[[${survey.status.name()}]]')" x-cloak>
 
                         <td class="px-6 py-4" th:text="${(currentPage*size)+iterStat.index+1}">
                         </td>
@@ -311,7 +311,11 @@
                                     <form th:action="@{/technical/survey/updateStatus}" method="post">
                                         <input type="hidden" name="id" th:value="${survey.id}"/>
                                         <input type="hidden" name="TechPerson" th:value="${currentUser.id}"/>
-                                        <select name="status" class="form-select" onchange="this.form.submit()">
+                                        <select name="status"
+                                                class="form-select"
+                                                @change="confirmStatusChange($event)"
+                                                x-model="newStatus"
+                                                x-ref="statusSelect">
                                                 <option th:each="status : ${validStatusMap[survey.id]}"
                                                         th:value="${status}"
                                                         th:text="${status.status}"
@@ -319,7 +323,9 @@
                                                 </option>
 
                                         </select>
+                                        <button type="submit" class="hidden" x-ref="realSubmit"></button>
                                     </form>
+                                    <div th:replace="~{fragments/modal/confirmStatusChange::confirmStatusChange}"></div>
                                 </div>
                             </div>
 
