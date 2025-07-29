@@ -127,6 +127,8 @@ public class ApplicationService {
         }
     }
 
-
+    public boolean findApplicationBySurveyId(Long surveyIdLong) {
+        return surveyRepository.existsBySurveyId(surveyIdLong);
+    }
 
 }

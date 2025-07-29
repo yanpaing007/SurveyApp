@@ -1,5 +1,6 @@
 package org.employee.surverythymeleaf.repository;
 
+import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.springframework.data.domain.Page;
@@ -53,4 +54,6 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
 """)
     List<Object[]> findTopSurveyCreator(Pageable pageable);
 
+    @Query("SELECT COUNT(a) > 0 FROM Application a WHERE a.survey.id = :surveyId")
+    boolean existsBySurveyId(@Param("surveyId") Long surveyId);
 }

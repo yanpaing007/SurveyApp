@@ -2,6 +2,7 @@ package org.employee.surverythymeleaf.repository;
 
 import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.ApplicationStatus;
+import org.employee.surverythymeleaf.model.Survey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -61,4 +62,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 """)
     List<Object[]> findTopApplicationCreator(Pageable pageable);
 
+    List<Application> survey(Survey survey);
+
+//    Application findApplicationByGeneratedSurveyId(String surveyId);
 }

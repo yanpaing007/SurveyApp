@@ -154,6 +154,7 @@ public class SurveyController {
 
     @PostMapping("/application/add")
     public String addApplication(@Valid @ModelAttribute("application") Application application, BindingResult bindingResult, @ModelAttribute("surveyId") String surveyId, Principal principal, RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("messageType", "error");
 
@@ -164,6 +165,22 @@ public class SurveyController {
 
             redirectAttributes.addFlashAttribute("message", errorMessages);
             return "redirect:/sale/survey/allSurvey";
+        }
+        Survey isSurveyExists = surveyService.findSurveyByGeneratedSurveyId(surveyId);
+        if(isSurveyExists != null){
+            if(!isSurveyExists.getStatus().equals(SurveyStatus.SUCCEEDED)){
+                redirectAttributes.addFlashAttribute("messageType", "error");
+                redirectAttributes.addFlashAttribute("message", "You can only add surveys that have been succeeded.");
+                return "redirect:/sale/survey/allSurvey";
+            }
+            Long surveyIdLong = isSurveyExists.getId();
+            boolean isApplicationAlreadyExists = applicationService.findApplicationBySurveyId(surveyIdLong);
+            if(isApplicationAlreadyExists){
+                redirectAttributes.addFlashAttribute("messageType", "error");
+                redirectAttributes.addFlashAttribute("message", "Application already exists for this survey, you can't create another application");
+
+                return "redirect:/sale/survey/allSurvey";
+            }
         }
         application.setApplicationDate(LocalDate.now());
 

@@ -262,7 +262,7 @@
                         <td class="text-center py-4" colspan="13">No applications found!</td>
                     </tr>
 
-                    <tr class="bg-white border-b border-gray-200" th:each="app,iterStat : ${applications}">
+                    <tr class="bg-white border-b border-gray-200" th:each="app,iterStat : ${applications}" x-data="statusChangeHandler('[[${app.applicationStatus.name()}]]')" x-cloak>
 
                         <td class="px-6 py-4" th:text="${(currentPage*size)+iterStat.index+1}">
                         </td>
@@ -278,7 +278,7 @@
                         </td>
                         <td class="px-6 py-4">
 
-                            <span th:text="${app.companyName}"></span>
+                            <span th:text="${#strings.isEmpty(app.companyName) ? 'No Company' : app.companyName}"></span>
                         </td>
 
                         <td class="px-6 py-4">
@@ -298,18 +298,52 @@
                             </div>
 
                             <div>
-                                <span th:if="${#authorization.expression('hasAnyAuthority(''Sale'')')}" th:text="${app.applicationStatus.status}"></span>
+            <span th:if="${#authorization.expression('hasAnyAuthority(''Sale'')')}"
+                  th:text="${app.applicationStatus.status}"></span>
+
                                 <div th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}">
                                     <form th:action="@{/technical/application/updateStatus}" method="post">
                                         <input type="hidden" name="id" th:value="${app.id}" />
-                                        <select name="status" class="form-select" onchange="this.form.submit()">
-                                                <option th:each="status,iterStat : ${validStatusMap[app.id]}"
-                                                        th:value="${status}"
-                                                        th:text="${status.status}"
-                                                        th:selected="${status == currentStatus}">
-                                                </option>
+                                        <select name="status"
+                                                class="form-select"
+                                                @change="confirmStatusChange($event)"
+                                                x-model="newStatus"
+                                                x-ref="statusSelect">
+                                            <option th:each="status : ${validStatusMap[app.id]}"
+                                                    th:value="${status.name()}"
+                                                    th:text="${status.status}"
+                                                    th:selected="${status.name() == app.applicationStatus.name()}">
+                                            </option>
                                         </select>
+                                        <button type="submit" class="hidden" x-ref="realSubmit"></button>
                                     </form>
+
+                                    <!-- Modal -->
+                                    <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-40"
+                                         x-show="showModal"
+                                         style="display: none;">
+                                        <div class="bg-white py-11 px-20 rounded-md shadow-md relative">
+                                            <div class="absolute top-3 right-4 cursor-pointer" @click="cancelChange">
+                                                <i class="fa-solid fa-multiply text-2xl hover:text-gray-600"></i>
+                                            </div>
+                                            <div class="text-center mb-6">
+                                                <p class="text-lg text-gray-800 font-medium">
+                                                    Are you sure you want to change the status to
+                                                    "<span x-text="newStatus"></span>"?
+                                                </p>
+                                            </div>
+                                            <div class="flex justify-center gap-x-4">
+                                                <button @click="cancelChange"
+                                                        class="w-[200px] py-2 bg-gray-600 rounded-md text-white text-sm cursor-pointer">
+                                                    Cancel
+                                                </button>
+                                                <button @click="submitChange"
+                                                        class="w-[200px] py-2 bg-indigo-600 rounded-md text-white text-sm cursor-pointer">
+                                                    Sure
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -328,8 +362,10 @@
                     </tbody>
                 </table>
             </div>
+
             <div th:replace="~{fragments/pagination::AppPagination(${applications},${currentPage},${totalPages},${size},${query})}"></div>
         </div>
 
     </section>
+
 </div>

@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', e => {
     let mapInitialized = false;
 
@@ -160,12 +158,30 @@ $(document).ready(() => {
     })
 })
 
+    document.addEventListener('alpine:init', () => {
+    Alpine.data('statusChangeHandler', (initialStatus) => ({
+        newStatus: initialStatus,
+        prevStatus: initialStatus,
+        showModal: false,
 
-document.body.addEventListener("htmx:afterSwap", function(evt) {
-    if (evt.detail.target.id === "myForm") {
-        const modalEl = document.getElementById("newUser");
-        if (modalEl) {
-            modalEl.classList.remove("hidden"); // Tailwind
+        confirmStatusChange(event) {
+            this.prevStatus = this.newStatus;
+            this.newStatus = event.target.value;
+            this.showModal = true;
+            console.log('New status:', this.newStatus);
+            console.log('Previous status:', this.prevStatus);
+        },
+
+        cancelChange() {
+            this.newStatus = this.prevStatus;
+            this.$refs.statusSelect.value = this.prevStatus;
+            this.showModal = false;
+        },
+
+        submitChange() {
+            this.$refs.realSubmit.click();
+            this.showModal = false;
         }
-    }
-});
+    }))
+})
+
