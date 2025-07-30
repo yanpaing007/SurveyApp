@@ -262,7 +262,7 @@
                         <td class="text-center py-4" colspan="13">No applications found!</td>
                     </tr>
 
-                    <tr class="bg-white border-b border-gray-200" th:each="app,iterStat : ${applications}" x-data="statusChangeHandler('[[${app.applicationStatus.name()}]]')" x-cloak>
+                    <tr class="bg-white border-b border-gray-200" th:each="app,iterStat : ${applications}" th:attr="x-data=|statusChangeHandler('${app.applicationStatus.name()}')|" x-cloak>
 
                         <td class="px-6 py-4" th:text="${(currentPage*size)+iterStat.index+1}">
                         </td>

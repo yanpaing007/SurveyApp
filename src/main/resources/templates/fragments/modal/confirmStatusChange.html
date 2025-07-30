@@ -3,25 +3,25 @@
      x-show="showModal"
      th:fragment="confirmStatusChange"
      style="display: none;">
-  <div class="bg-white py-11 px-20 rounded-md shadow-md relative">
+  <div class="bg-white py-7 px-14 rounded-md shadow-md relative">
     <div class="absolute top-3 right-4 cursor-pointer" @click="cancelChange">
-      <i class="fa-solid fa-multiply text-2xl hover:text-gray-600"></i>
+      <i class="fa-solid fa-multiply text-lg hover:text-gray-600"></i>
     </div>
     <div class="text-center mb-6">
-      <i class="fa-solid fa-triangle-exclamation fa-beat-fade fa-10x text-7xl" style="color: #e93a80;"></i>
-      <p class="pt-6 text-gray-800 font-medium text-xl uppercase font-bold">
+      <i class="fa-solid fa-triangle-exclamation fa-beat-fade fa-5x text-7xl" style="color: #e93a80;"></i>
+      <p class="pt-6 text-gray-800 text-lg font-light">
         Are you sure you want to change the status to<br>
         "<span x-text="newStatus"></span>"?
       </p>
     </div>
     <div class="flex justify-center gap-x-4">
-      <button @click="submitChange"
-              class="w-[200px] py-4 bg-indigo-500 rounded-md text-white text-md cursor-pointer">
-        Yes,sure
-      </button>
       <button @click="cancelChange"
-              class="w-[200px] py-4 bg-gray-500 rounded-md text-white text-md cursor-pointer">
+              class="w-[200px] py-3 bg-gray-500 rounded-md text-white text-md cursor-pointer">
         No,cancel
+      </button>
+      <button @click="submitChange"
+              class="w-[200px] py-3 bg-indigo-500 rounded-md text-white text-md cursor-pointer">
+        Yes,sure
       </button>
     </div>
   </div>

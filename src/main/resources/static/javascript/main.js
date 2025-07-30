@@ -163,14 +163,15 @@ $(document).ready(() => {
         newStatus: initialStatus,
         prevStatus: initialStatus,
         showModal: false,
+        
 
         confirmStatusChange(event) {
-            this.prevStatus = this.newStatus;
-            this.newStatus = event.target.value;
+        this.newStatus = event.target.value;
+
+        if (this.newStatus !== this.prevStatus) {
             this.showModal = true;
-            console.log('New status:', this.newStatus);
-            console.log('Previous status:', this.prevStatus);
-        },
+        }
+    },
 
         cancelChange() {
             this.newStatus = this.prevStatus;
