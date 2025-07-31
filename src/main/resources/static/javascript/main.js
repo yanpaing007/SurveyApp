@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', e => {
     let mapInitialized = false;
 
-    document.getElementById('map-tab').addEventListener('click', () => {
+
         if (mapInitialized) return;
 
         const mapDiv = document.getElementById('ShowMap');
@@ -24,9 +24,8 @@ document.addEventListener('DOMContentLoaded', e => {
             draggable: false,
         });
 
-        mapInitialized = true;
-    });
-})
+});
+
 
 
 //Function to Copy GeneratedId text for Application Details

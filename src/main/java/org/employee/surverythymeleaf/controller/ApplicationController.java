@@ -132,7 +132,7 @@ public class ApplicationController {
     public String getDetailSurveyForm(Model model, @PathVariable String id) {
         Survey survey=surveyService.findSurveyByGeneratedSurveyId(id);
         model.addAttribute("survey", survey);
-        return "survey/surveyDetails";
+        return "survey/surveyDetailsCopy";
     }
 
     @PostMapping("application/updateStatus")
