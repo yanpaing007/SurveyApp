@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
         else{
-            displayEmptyChart(ctxSurveyStatus,"No Survey data Available","Create your new survey to view data");
+            displayEmptyChart(ctxSurveyStatus,"No Survey data Available","Create new survey to view data");
         }
     }
 
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
         else{
-            displayEmptyChart(ctxApplicationStatus,"No Application Data Available","Create your new application to view data");
+            displayEmptyChart(ctxApplicationStatus,"No Application Data Available","Create new application to view data");
         }
     }
 

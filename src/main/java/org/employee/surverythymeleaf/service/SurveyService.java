@@ -1,5 +1,7 @@
 package org.employee.surverythymeleaf.service;
 
+import org.employee.surverythymeleaf.DTO.ChartDatasetDTO;
+import org.employee.surverythymeleaf.DTO.ChartResponseDTO;
 import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.model.SurveyStatus;
 import org.employee.surverythymeleaf.model.User;
@@ -16,9 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.employee.surverythymeleaf.util.DateCalculator.
         getCurrentMonthAndYearCounts;
@@ -119,4 +120,64 @@ public class SurveyService {
             return surveyRepository.findAll(sort);
         }
     }
+
+    public ChartResponseDTO getRealSurveyData(String range,List<String> labels){
+        List<Object[]> result;
+        Map<String,List<Integer>> dataMap = new LinkedHashMap<>();
+
+        List<String> statuses = Arrays.stream(SurveyStatus.values()).map(SurveyStatus::name).toList();
+        for(String status : statuses){
+            dataMap.put(status,new ArrayList<>(Collections.nCopies(labels.size(),0)));
+        }
+
+        if("monthly".equals(range)){
+            LocalDateTime start = LocalDate.now().minusMonths(12).atStartOfDay();
+            result = surveyRepository.countSurveysByMonth(start);
+
+            Map<Integer,Integer> monthIndexMap = new HashMap<>();
+            for(int i = 0 ; i < labels.size() ; i++){
+                monthIndexMap.put(i+1,i);
+            }
+
+            for(Object[] row : result){
+                int month = ((Number) row[0]).intValue();
+                String status = ((SurveyStatus) row[1]).name();
+                int count = ((Number) row[2]).intValue();
+
+                Integer index = monthIndexMap.get(month);
+                if(index != null){
+                    dataMap.get(status).set(index, count);
+                }
+            }
+        }else{
+            int days = Integer.parseInt(range);
+            LocalDateTime start = LocalDate.now().minusDays(days - 1).atStartOfDay();
+            result = surveyRepository.countSurveysByDay(start);
+
+            Map<LocalDateTime, Integer> dateIndexMap = new HashMap<>();
+            for (int i = 0; i < labels.size(); i++) {
+                dateIndexMap.put(start.plusDays(i), i);
+            }
+            for (Object[] row : result) {
+                LocalDate date = ((java.sql.Date) row[0]).toLocalDate();
+                LocalDateTime dateTimeKey = date.atStartOfDay();
+
+                String status = ((SurveyStatus) row[1]).name();
+                int count = ((Number) row[2]).intValue();
+
+                Integer idx = dateIndexMap.get(dateTimeKey);
+                if (idx != null && dataMap.containsKey(status)) {
+                    dataMap.get(status).set(idx, count);
+                }
+            }
+        }
+
+        List<ChartDatasetDTO> datasets = new ArrayList<>();
+        for(String status : statuses){
+            datasets.add(new ChartDatasetDTO(status, dataMap.get(status)));
+        }
+        return new ChartResponseDTO(labels,datasets);
+    }
+
+
 }

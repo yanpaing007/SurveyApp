@@ -5,23 +5,27 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.employee.surverythymeleaf.DTO.ChartResponseDTO;
 import org.employee.surverythymeleaf.repository.UserRepository;
+import org.employee.surverythymeleaf.service.SurveyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/api")
 public class EmailController {
     private final UserRepository userRepository;
+    private final SurveyService surveyService;
 
-    public EmailController(UserRepository userRepository) {
+    public EmailController(UserRepository userRepository, SurveyService surveyService) {
         this.userRepository = userRepository;
+        this.surveyService = surveyService;
     }
 
     @PostMapping("/check-email")
@@ -39,5 +43,23 @@ public class EmailController {
         @Email
         private String email;
 
+    }
+
+    @GetMapping("/chart-data")
+    public ChartResponseDTO getChartData(@RequestParam String type, @RequestParam String range) {
+        List<String> labels;
+
+        if ("monthly".equals(range)) {
+            labels = List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul");
+        } else {
+            int days = Integer.parseInt(range);
+            LocalDate start = LocalDate.now().minusDays(days - 1);
+            labels = new ArrayList<>();
+            for (int i = 0; i < days; i++) {
+                labels.add(start.plusDays(i).getDayOfWeek().toString().substring(0, 3)); // Mon, Tue...
+            }
+        }
+
+        return surveyService.getRealSurveyData(range, labels);
     }
 }
