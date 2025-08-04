@@ -1,0 +1,10 @@
+<!-- fragments/nav.html -->
+<th:block th:fragment="navLink(label, href, iconClass,show)">
+  <a th:href="@{__${href}__}"
+     th:if="${show}"
+     th:classappend="${servletPath == href} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'"
+     class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black flex items-center gap-x-2">
+    <i th:class="${iconClass}"></i>
+    <span th:text="${label}">Label</span>
+  </a>
+</th:block>

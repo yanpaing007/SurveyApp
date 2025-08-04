@@ -1,6 +1,6 @@
 
 <nav class="bg-white border-b border-gray-100 shadow-sm" th:fragment="navbar">
-  <div class="mx-auto max-w-9/10">
+  <div class="mx-auto max-w-[90%]">
 
     <div class="relative flex h-16 items-center justify-between">
 
@@ -21,42 +21,39 @@
 
       <div class="flex flex-1 items-center justify-between">
 
-        <div class="flex items-center space-x-8">
+        <div class="flex flex-row items-center space-x-8">
 
           <div class="shrink-0 flex flex-row justify-center items-center gap-x-3">
             <img class="h-8 w-auto" src="https://flowbite.com/docs/images/logo.svg" alt="Survey">
             <div class="text-indigo-700 font-bold text-lg">SurveyApp</div>
           </div>
 
+          <div class="hidden lg:flex flex-row space-x-2">
 
+            <!-- For Admin -->
+            <th:block
+                      th:replace="~{fragments/nav-link :: navLink('Dashboard', '/', 'fa-solid fa-house',${#authorization.expression('hasAuthority(''Admin'')')})}">
+            </th:block>
+            <th:block
+                      th:replace="~{fragments/nav-link :: navLink('All Users', '/admin/users', 'fa-solid fa-user',${#authorization.expression('hasAuthority(''Admin'')')})}">
+            </th:block>
 
+            <!-- For Sale -->
+            <div
+                 th:replace="~{fragments/nav-link :: navLink('All Surveys', '/sale/survey/allSurvey', 'fa-solid fa-newspaper',${#authorization.expression('hasAuthority(''Sale'')')})}">
+            </div>
+            <div
+                 th:replace="~{fragments/nav-link :: navLink('All Application', '/sale/application/allApplications', 'fa-solid fa-apple-whole',${#authorization.expression('hasAuthority(''Sale'')')})}">
+            </div>
 
-          <div class="hidden lg:block flex space-x-2">
+            <!-- For Technical or Admin -->
+            <div
+                 th:replace="~{fragments/nav-link :: navLink('All Surveys', '/technical/survey/allSurvey', 'fa-solid fa-newspaper',${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')})}">
+            </div>
+            <div
+                 th:replace="~{fragments/nav-link :: navLink('All Application', '/technical/application/allApplications', 'fa-solid fa-apple-whole',${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')})}">
+            </div>
 
-            <a th:if="${#authorization.expression('hasAuthority(''Admin'')')}" th:classappend="${servletPath == '/'} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
-              <i class="fa-solid fa-cube"></i>
-              Dashboard
-            </a>
-            <a th:if="${#authorization.expression('hasAuthority(''Admin'')')}" th:classappend="${servletPath.startsWith('/admin/users')} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/admin/users}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
-              <i class="fa-solid fa-user"></i>
-              All Users
-            </a>
-            <a th:if="${#authorization.expression('hasAuthority(''Sale'')')}" th:classappend="${servletPath == '/sale/survey/allSurvey' or servletPath.startsWith('/sale/application/create')} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/sale/survey/allSurvey}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
-              <i class="fa-solid fa-newspaper"></i>
-             All Surveys
-            </a>
-            <a th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}" th:classappend="${servletPath == '/technical/survey/allSurvey'} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/technical/survey/allSurvey}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
-              <i class="fa-solid fa-newspaper"></i>
-              All Surveys
-            </a>
-            <a th:if="${#authorization.expression('hasAuthority(''Sale'')')}" th:classappend="${servletPath == '/sale/application/allApplications'} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/sale/application/allApplications}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
-              <i class="fa-solid fa-apple-whole"></i>
-              All Applications
-            </a>
-            <a th:if="${#authorization.expression('hasAnyAuthority(''Technical'',''Admin'')')}" th:classappend="${servletPath == '/technical/application/allApplications'} ? 'text-black border-b-2 border-indigo-800' : 'text-gray-500'" th:href="@{/technical/application/allApplications}" class="text-sm hover:border-b-2 hover:border-gray-400 py-6 px-4 hover:text-black">
-              <i class="fa-solid fa-apple-whole"></i>
-              All Applications
-            </a>
           </div>
         </div>
 
@@ -71,7 +68,7 @@
               Register
             </a>
             <form th:if="${#authorization.expression('isAuthenticated()')}" method="post" th:action="@{/logout}" class="ml-3 lg:block hidden">
-                <button type="submit" class="cursor-pointer btn-animated inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-600/20 hover:bg-red-100">
+                <button type="submit" onclick="return confirm('Are you sure you want to logout?')" class="cursor-pointer btn-animated inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-600/20 hover:bg-red-100">
                   <i class="fa-solid fa-right-from-bracket mr-1.5"></i>
                   Logout
                 </button>
