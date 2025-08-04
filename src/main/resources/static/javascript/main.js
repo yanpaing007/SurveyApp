@@ -49,9 +49,14 @@ function copyText(myValue, text) {
 // Google Map Api Implementation
 let map,marker;
 
-function initMap(lat = 16.8661, lng = 96.1951) {
-    const defaultLocation = { lat, lng };
 
+function initMap(lat, lng) {
+    lat = lat ?? parseFloat($('#latitude').val());
+    lng = lng ?? parseFloat($('#longitude').val());
+
+    lat = lat || 16.8661;
+    lng = lng || 96.1951;
+    const defaultLocation = { lat, lng };
     if (!map) {
         map = new google.maps.Map(document.getElementById('map'), {
             center: defaultLocation,
@@ -76,22 +81,22 @@ function initMap(lat = 16.8661, lng = 96.1951) {
             updateLatLngInputs(lat, lng);
         });
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-                    map.setCenter(userLocation);
-                    marker.setPosition(userLocation);
-                    updateLatLngInputs(userLocation.lat, userLocation.lng);
-                },
-                (error) => {
-                    console.warn("Geolocation failed with error: ", error.message);
-                }
-            );
-        }
+        // if (navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(
+        //         (position) => {
+        //             const userLocation = {
+        //                 lat: position.coords.latitude,
+        //                 lng: position.coords.longitude,
+        //             };
+        //             map.setCenter(userLocation);
+        //             marker.setPosition(userLocation);
+        //             updateLatLngInputs(userLocation.lat, userLocation.lng);
+        //         },
+        //         (error) => {
+        //             console.warn("Geolocation failed with error: ", error.message);
+        //         }
+        //     );
+        // }
     } else {
         // reuse map instance, just re-center and move marker
         const newPosition = { lat, lng };

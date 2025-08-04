@@ -1,19 +1,17 @@
 package org.employee.surverythymeleaf.repository;
 
 import org.employee.surverythymeleaf.model.Application;
-import org.employee.surverythymeleaf.model.ApplicationStatus;
+import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
 import org.employee.surverythymeleaf.model.Survey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,4 +63,17 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> survey(Survey survey);
 
 //    Application findApplicationByGeneratedSurveyId(String surveyId);
+
+    @Query("SELECT DATE(a.createdAt), a.applicationStatus, COUNT(a) " +
+            "FROM Application a WHERE a.createdAt >= :startDate " +
+            "GROUP BY DATE(a.createdAt), a.applicationStatus " +
+            "ORDER BY DATE(a.createdAt)")
+    List<Object[]> countApplicationsByDay(@Param("startDate") LocalDateTime startDate);
+
+    @Query("SELECT FUNCTION('MONTH', a.createdAt), a.applicationStatus, COUNT(a) " +
+            "FROM Application a WHERE a.createdAt >= :startDate " +
+            "GROUP BY FUNCTION('MONTH', a.createdAt), a.applicationStatus " +
+            "ORDER BY FUNCTION('MONTH', a.createdAt)")
+    List<Object[]> countApplicationsByMonth(@Param("startDate") LocalDateTime startDate);
+
 }

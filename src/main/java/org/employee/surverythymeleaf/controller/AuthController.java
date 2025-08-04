@@ -2,6 +2,9 @@ package org.employee.surverythymeleaf.controller;
 
 import jakarta.validation.Valid;
 import org.employee.surverythymeleaf.model.*;
+import org.employee.surverythymeleaf.model.Enum.ActivityType;
+import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
+import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.repository.UserRepository;
@@ -12,7 +15,6 @@ import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
 import org.employee.surverythymeleaf.util.StatusValidator;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

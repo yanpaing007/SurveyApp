@@ -1,6 +1,7 @@
 <!-- Add New User Modal -->
 <div id="newUser" th:fragment="newUser(new_user_obj,roles)" tabindex="-1" aria-hidden="true"
-     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+     xmlns:x-bind="http://www.w3.org/1999/xhtml">
   <div class="relative p-4 w-full lg:max-w-xl max-h-full">
 
     <div class="relative bg-white rounded-lg shadow-sm">
@@ -88,16 +89,23 @@
               <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
               <span id="passwordError" class="error-message text-red-500 text-sm"></span>
             </div>
-            <div class="relative">
+            <div class="relative" x-data="{ IsShow:false }">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                 <i class="fa-solid fa-lock text-gray-900"></i>
               </div>
               <input
-                      type="password"
+                      :type="IsShow?'text':'password'"
                       id="password"
                       name="password"
                       placeholder="Enter user's new password"
                       class="w-full focus:outline-hidden text-sm rounded-lg ps-9 p-2 border border-gray-300 bg-white text-gray-800"/>
+
+              <button type="button"
+                      @click="IsShow = !IsShow"
+                      class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 cursor-pointer">
+                <i x-bind:class="IsShow ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+
+              </button>
             </div>
           </div>
 

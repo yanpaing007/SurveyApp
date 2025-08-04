@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const completeApplication = parseInt(applicationData.dataset.completed);
     const cancelledApplication = parseInt(applicationData.dataset.cancelled);
 
+
     const hasSurveyData = (pendingSurvey + successSurvey + failSurvey) > 0;
     const hasApplicationData = (pendingApplication+processingApplication+completeApplication+cancelledApplication) > 0;
 
@@ -88,141 +89,215 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+    // let chart;
+    //
+    // function getChartConfig(type, range) {
+    //     const isSurvey = type === 'survey';
+    //
+    //     let labels = [];
+    //     let datasets = [];
+    //
+    //     if (range === '7') {
+    //         labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    //     } else if (range === '14') {
+    //         labels = Array.from({ length: 14 }, (_, i) => `Day ${i + 1}`);
+    //     } else if (range === '30') {
+    //         labels = Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
+    //     } else if (range === 'monthly') {
+    //         labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+    //     }
+    //
+    //     if (isSurvey) {
+    //
+    //         datasets = [
+    //             {
+    //                 label: 'Total Surveys',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'rgba(75,192,192,1)',
+    //                 backgroundColor: 'rgba(75,192,192,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Pending',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'orange',
+    //                 backgroundColor: 'rgba(255,165,0,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Succeeded',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'green',
+    //                 backgroundColor: 'rgba(0,128,0,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Failed',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'red',
+    //                 backgroundColor: 'rgba(255,0,0,0.1)',
+    //                 borderWidth: 1
+    //             }
+    //         ];
+    //     } else {
+    //
+    //         datasets = [
+    //             {
+    //                 label: 'Total Applications',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'rgba(54,162,235,1)',
+    //                 backgroundColor: 'rgba(54,162,235,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Pending',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'orange',
+    //                 backgroundColor: 'rgba(255,165,0,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Processing',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'purple',
+    //                 backgroundColor: 'rgba(128,0,128,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Completed',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'green',
+    //                 backgroundColor: 'rgba(0,128,0,0.1)',
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: 'Cancelled',
+    //                 data: getRandomData(labels.length),
+    //                 borderColor: 'red',
+    //                 backgroundColor: 'rgba(255,0,0,0.1)',
+    //                 borderWidth: 1
+    //             }
+    //         ];
+    //     }
+    //
+    //     return {
+    //         type: 'bar',
+    //         data: {
+    //             labels: labels,
+    //             datasets: datasets
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             interaction: {
+    //                 mode: 'index',
+    //                 intersect: false
+    //             },
+    //             stacked: false,
+    //             plugins: {
+    //                 title: {
+    //                     display: true,
+    //                     text: `${isSurvey ? 'Survey' : 'Application'} Chart (${range})`
+    //                 }
+    //             },
+    //             scales: {
+    //                 y: {
+    //                     beginAtZero: true
+    //                 }
+    //             }
+    //         }
+    //     };
+    // }
     let chart;
-
-    function getChartConfig(type, range) {
-        const isSurvey = type === 'survey';
-
-        let labels = [];
-        let datasets = [];
-
-        if (range === '7') {
-            labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        } else if (range === '14') {
-            labels = Array.from({ length: 14 }, (_, i) => `Day ${i + 1}`);
-        } else if (range === '30') {
-            labels = Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
-        } else if (range === 'monthly') {
-            labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-        }
-
-        if (isSurvey) {
-
-            datasets = [
-                {
-                    label: 'Total Surveys',
-                    data: getRandomData(labels.length),
-                    borderColor: 'rgba(75,192,192,1)',
-                    backgroundColor: 'rgba(75,192,192,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Pending',
-                    data: getRandomData(labels.length),
-                    borderColor: 'orange',
-                    backgroundColor: 'rgba(255,165,0,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Succeeded',
-                    data: getRandomData(labels.length),
-                    borderColor: 'green',
-                    backgroundColor: 'rgba(0,128,0,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Failed',
-                    data: getRandomData(labels.length),
-                    borderColor: 'red',
-                    backgroundColor: 'rgba(255,0,0,0.1)',
-                    borderWidth: 1
-                }
-            ];
-        } else {
-
-            datasets = [
-                {
-                    label: 'Total Applications',
-                    data: getRandomData(labels.length),
-                    borderColor: 'rgba(54,162,235,1)',
-                    backgroundColor: 'rgba(54,162,235,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Pending',
-                    data: getRandomData(labels.length),
-                    borderColor: 'orange',
-                    backgroundColor: 'rgba(255,165,0,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Processing',
-                    data: getRandomData(labels.length),
-                    borderColor: 'purple',
-                    backgroundColor: 'rgba(128,0,128,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Completed',
-                    data: getRandomData(labels.length),
-                    borderColor: 'green',
-                    backgroundColor: 'rgba(0,128,0,0.1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Cancelled',
-                    data: getRandomData(labels.length),
-                    borderColor: 'red',
-                    backgroundColor: 'rgba(255,0,0,0.1)',
-                    borderWidth: 1
-                }
-            ];
-        }
-
-        return {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                stacked: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: `${isSurvey ? 'Survey' : 'Application'} Chart (${range})`
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        };
-    }
-
     function renderChart() {
         const type = $('#chartTypeSelect').val();
         const range = $('#rangeSelect').val();
+
         const ctx = document.getElementById('monthlySurveyChart').getContext('2d');
 
         if (chart) {
             chart.destroy();
         }
 
-        chart = new Chart(ctx, getChartConfig(type, range));
+        $.get(`/admin/api/chart-data?type=${type}&range=${range}`, function (response) {
+
+            const allValues = response.datasets.flatMap(ds => ds.data);
+            const allZero = allValues.every(val => val === 0);
+
+            if (allZero) {
+                $('#monthlySurveyChart').hide();
+                $('#chartMessage').text("No data available for the selected range.").show();
+                return;
+            } else {
+                $('#chartMessage').hide();
+                $('#monthlySurveyChart').show();
+            }
+            const config = {
+                type: 'bar',
+                data: {
+                    labels: response.labels,
+                    datasets: response.datasets.map(ds => ({
+                        label: ds.label,
+                        data: ds.data,
+                        borderColor: getBorderColor(ds.label),
+                        backgroundColor: getBackgroundColor(ds.label),
+                        borderWidth: 1
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    stacked: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${type === 'survey' ? 'Survey' : 'Application'} Chart (${range})`
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            };
+
+            chart = new Chart(ctx, config);
+        }).fail(() => {
+            console.error("Failed to load chart data.");
+        });
     }
 
-    function getRandomData(length) {
-        return Array.from({ length }, () => Math.floor(Math.random() * 100));
+    function getBorderColor(label) {
+        const map = {
+            'Total Surveys': 'rgba(75,192,192,1)',
+            'PENDING': 'orange',
+            'SUCCEEDED': 'green',
+            'FAILED': 'red',
+            'Total Applications': 'rgba(54,162,235,1)',
+            'PROCESSING': 'purple',
+            'COMPLETED': 'green',
+            'CANCELLED': 'red'
+        };
+        return map[label] || 'black';
     }
+
+    function getBackgroundColor(label) {
+        const map = {
+            'Total Surveys': 'rgba(75,192,192,0.1)',
+            'PENDING': 'rgba(255,165,0,0.1)',
+            'SUCCEEDED': 'rgba(0,128,0,0.1)',
+            'FAILED': 'rgba(255,0,0,0.1)',
+            'Total Applications': 'rgba(54,162,235,0.1)',
+            'PROCESSING': 'rgba(128,0,128,0.1)',
+            'COMPLETED': 'rgba(0,128,0,0.1)',
+            'CANCELLED': 'rgba(255,0,0,0.1)'
+        };
+        return map[label] || 'rgba(0,0,0,0.1)';
+    }
+
 
     $(document).ready(function () {
         renderChart();

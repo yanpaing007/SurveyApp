@@ -2,7 +2,7 @@ package org.employee.surverythymeleaf.util;
 
 import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.Survey;
-import org.employee.surverythymeleaf.model.SurveyStatus;
+import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;

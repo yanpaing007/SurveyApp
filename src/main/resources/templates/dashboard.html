@@ -10,7 +10,7 @@
       <div th:replace="~{fragments/dashboard/dashboard-head-card::dashbaord-head-card('Total Applications',${totalApplication},'fa-brands fa-apple text-pink-700',${applicationPercentage})}"></div>
       <div th:replace="~{fragments/dashboard/dashboard-head-card::dashbaord-head-card('Success Rate',${successRate},'fa-circle-check text-green-700',${successRatePercentage})}"></div>
 
-      <div class="order-1 surveyStatus col-span-1 h-100 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl">
+      <div class="order-1 surveyStatus h-100 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl">
         <div class="py-4 px-5 relative">
           <div class="flex flex-row justify-between items-center">
             <p class="text-lg font-semibold">Survey Status</p>
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="order-3 lg:order-3 surveyChart col-span-1 md:col-span-2 lg:col-span-4 h-[400px] shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl">
+      <div class="order-3 lg:order-2 surveyChart col-span-1 md:col-span-2 lg:col-span-2 h-[400px] shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl">
         <div class="flex flex-row justify-between py-3 px-5">
           <div class="flex flex-row items-center">
             <p class="text-lg font-semibold">Trend Analysis</p>
@@ -59,10 +59,11 @@
 
         <div class="h-[330px] w-full p-4">
           <canvas id="monthlySurveyChart" class="w-full h-full"></canvas>
+          <div id="chartMessage" class="text-sm text-gray-500 text-center mt-4 hidden"></div>
         </div>
       </div>
 
-      <div class="order-2 lg:order-2 col-span-1 surveyStatus h-100 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl">
+      <div class="order-2 lg:order-3 surveyStatus h-100 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl">
         <div class="py-4 px-5 relative">
           <div class="flex flex-row justify-between items-center">
             <p class="text-lg font-semibold">Application Status</p>
@@ -138,7 +139,7 @@
         </div>
 
       </div>
-      <div class="SurveyStatus hidden col-span-4 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl h-[400px] p-5">
+      <div class="hidden SurveyStatus col-span-4 shadow-[0px_12px_31px_-2px_rgba(0,_0,_0,_0.1)] rounded-xl h-[400px] p-5">
         <div class="flex flex-row justify-between">
           <p class="font-semibold text-gray-700 text-md">Recent Team Activity</p>
           <p class="font-semibold text-blue-500 text-xs"><a href="#">View More</a></p>

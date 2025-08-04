@@ -3,7 +3,7 @@ package org.employee.surverythymeleaf.service;
 import org.employee.surverythymeleaf.DTO.ChartDatasetDTO;
 import org.employee.surverythymeleaf.DTO.ChartResponseDTO;
 import org.employee.surverythymeleaf.model.Survey;
-import org.employee.surverythymeleaf.model.SurveyStatus;
+import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.employee.surverythymeleaf.util.DateCalculator.
         getCurrentMonthAndYearCounts;
@@ -96,9 +95,8 @@ public class SurveyService {
     }
 
     public List<Survey> getRecentSurvey() {
-        Pageable pageable = PageRequest.of(0,5);
-        List<Survey> latestSurvey = surveyRepository.findAllByOrderByIdDesc(pageable);
-        return latestSurvey;
+        Pageable pageable = PageRequest.of(0,7);
+        return surveyRepository.findAllByOrderByIdDesc(pageable);
     }
 
 

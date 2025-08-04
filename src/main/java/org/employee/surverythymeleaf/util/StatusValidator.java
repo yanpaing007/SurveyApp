@@ -1,7 +1,7 @@
 package org.employee.surverythymeleaf.util;
 
-import org.employee.surverythymeleaf.model.ApplicationStatus;
-import org.employee.surverythymeleaf.model.SurveyStatus;
+import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
+import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 
 import java.util.List;
 

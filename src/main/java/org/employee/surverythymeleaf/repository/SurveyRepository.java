@@ -1,8 +1,7 @@
 package org.employee.surverythymeleaf.repository;
 
-import org.employee.surverythymeleaf.model.Application;
 import org.employee.surverythymeleaf.model.Survey;
-import org.employee.surverythymeleaf.model.SurveyStatus;
+import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

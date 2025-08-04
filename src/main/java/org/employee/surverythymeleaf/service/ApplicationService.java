@@ -1,6 +1,8 @@
 package org.employee.surverythymeleaf.service;
+import org.employee.surverythymeleaf.DTO.ChartDatasetDTO;
+import org.employee.surverythymeleaf.DTO.ChartResponseDTO;
 import org.employee.surverythymeleaf.model.Application;
-import org.employee.surverythymeleaf.model.ApplicationStatus;
+import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.util.CalculateDashboard;
@@ -14,9 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.*;
 
 
 @Service
@@ -129,6 +131,66 @@ public class ApplicationService {
 
     public boolean findApplicationBySurveyId(Long surveyIdLong) {
         return surveyRepository.existsBySurveyId(surveyIdLong);
+    }
+
+    public ChartResponseDTO getRealApplicationData(String range, List<String> labels) {
+        List<Object[]> result;
+        Map<String, List<Integer>> dataMap = new LinkedHashMap<>();
+
+        List<String> statuses = List.of("PENDING", "PROCESSING", "COMPLETED", "CANCELLED");
+        for (String status : statuses) {
+            dataMap.put(status, new ArrayList<>(Collections.nCopies(labels.size(), 0)));
+        }
+
+        if ("monthly".equals(range)) {
+            LocalDateTime start = YearMonth.now().minusMonths(6).atDay(1).atStartOfDay();
+            result = applicationRepository.countApplicationsByMonth(start);
+
+            Map<Integer, Integer> monthIndexMap = new HashMap<>();
+            for (int i = 0; i < labels.size(); i++) {
+                monthIndexMap.put(i + 1, i);
+            }
+
+            for (Object[] row : result) {
+                int month = ((Number) row[0]).intValue();
+                String status = ((ApplicationStatus) row[1]).name();
+                int count = ((Number) row[2]).intValue();
+
+                Integer idx = monthIndexMap.get(month);
+                if (idx != null && dataMap.containsKey(status)) {
+                    dataMap.get(status).set(idx, count);
+                }
+            }
+
+        } else {
+            int days = Integer.parseInt(range);
+            LocalDateTime start = LocalDate.now().minusDays(days - 1).atStartOfDay();
+            result = applicationRepository.countApplicationsByDay(start);
+
+            Map<LocalDateTime, Integer> dateIndexMap = new HashMap<>();
+            for (int i = 0; i < labels.size(); i++) {
+                dateIndexMap.put(start.plusDays(i), i);
+            }
+
+            for (Object[] row : result) {
+                LocalDate date = ((java.sql.Date) row[0]).toLocalDate();
+                LocalDateTime key = date.atStartOfDay();
+                String status = ((ApplicationStatus) row[1]).name();
+                int count = ((Number) row[2]).intValue();
+
+                Integer idx = dateIndexMap.get(key);
+                if (idx != null && dataMap.containsKey(status)) {
+                    dataMap.get(status).set(idx, count);
+                }
+            }
+        }
+
+        List<ChartDatasetDTO> datasets = new ArrayList<>();
+        for (String status : statuses) {
+            datasets.add(new ChartDatasetDTO(status, dataMap.get(status)));
+        }
+
+        return new ChartResponseDTO(labels, datasets);
     }
 
 }

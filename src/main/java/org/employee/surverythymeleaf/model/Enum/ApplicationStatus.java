@@ -1,4 +1,4 @@
-package org.employee.surverythymeleaf.model;
+package org.employee.surverythymeleaf.model.Enum;
 
 import lombok.Getter;
 import java.util.Arrays;

@@ -4,7 +4,7 @@ package org.employee.surverythymeleaf.util;
 import lombok.RequiredArgsConstructor;
 import org.employee.surverythymeleaf.Configuration.GlobalControllerAdvice;
 import org.employee.surverythymeleaf.DTO.UserDTO;
-import org.employee.surverythymeleaf.model.ActivityType;
+import org.employee.surverythymeleaf.model.Enum.ActivityType;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.UserService;

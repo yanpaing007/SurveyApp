@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;

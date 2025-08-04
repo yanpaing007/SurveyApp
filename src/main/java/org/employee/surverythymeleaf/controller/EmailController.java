@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.employee.surverythymeleaf.DTO.ChartResponseDTO;
 import org.employee.surverythymeleaf.repository.UserRepository;
+import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,12 @@ import java.util.Map;
 public class EmailController {
     private final UserRepository userRepository;
     private final SurveyService surveyService;
+    private final ApplicationService applicationService;
 
-    public EmailController(UserRepository userRepository, SurveyService surveyService) {
+    public EmailController(UserRepository userRepository, SurveyService surveyService, ApplicationService applicationService) {
         this.userRepository = userRepository;
         this.surveyService = surveyService;
+        this.applicationService = applicationService;
     }
 
     @PostMapping("/check-email")
@@ -60,6 +63,6 @@ public class EmailController {
             }
         }
 
-        return surveyService.getRealSurveyData(range, labels);
+        return "survey".equalsIgnoreCase(type) ? surveyService.getRealSurveyData(range, labels) : applicationService.getRealApplicationData(range,labels);
     }
 }

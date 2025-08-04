@@ -1,8 +1,7 @@
-package org.employee.surverythymeleaf.model;
+package org.employee.surverythymeleaf.model.Enum;
 
 import lombok.Getter;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

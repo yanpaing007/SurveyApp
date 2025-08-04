@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.employee.surverythymeleaf.model.Enum.ActivityType;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
