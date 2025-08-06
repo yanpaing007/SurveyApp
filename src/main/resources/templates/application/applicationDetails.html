@@ -161,40 +161,40 @@
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <div th:replace="fragments/input-field::input-field(
-                'customerName',
-                'Customer Name',
-                'text',
-                ${applications.customerName},
-                'customerName',
-                'customerName',
-                '',
-                'fa-user text-indigo-800'
-                ,${!isEditable},
-                ${!isEditable})">
+                                        'customerName',
+                                        'Customer Name',
+                                        'text',
+                                        ${applications.customerName},
+                                        'customerName',
+                                        'customerName',
+                                        '',
+                                        'fa-user text-indigo-800'
+                                        ,${!isEditable},
+                                        ${!isEditable})">
                                     </div>
                                     <div th:replace="fragments/input-field::input-field(
-                'contactEmail',
-                'Contact Email',
-                'text',
-                ${applications.contactEmail},
-                'contactEmail',
-                'contactEmail',
-                '',
-                'fa-envelope text-indigo-800',
-                ${!isEditable},
-                ${!isEditable})">
+                                        'contactEmail',
+                                        'Contact Email',
+                                        'text',
+                                        ${applications.contactEmail},
+                                        'contactEmail',
+                                        'contactEmail',
+                                        '',
+                                        'fa-envelope text-indigo-800',
+                                        ${!isEditable},
+                                        ${!isEditable})">
                                     </div>
                                     <div th:replace="fragments/input-field::input-field(
-                'phoneNumber',
-                'Phone Number',
-                'text',
-                ${applications.phoneNumber},
-                'phoneNumber',
-                'phoneNumber',
-                '',
-                'fa-phone text-indigo-800',
-                ${!isEditable},
-                ${!isEditable})">
+                                        'phoneNumber',
+                                        'Phone Number',
+                                        'text',
+                                        ${applications.phoneNumber},
+                                        'phoneNumber',
+                                        'phoneNumber',
+                                        '',
+                                        'fa-phone text-indigo-800',
+                                        ${!isEditable},
+                                        ${!isEditable})">
                                     </div>
                                 </div>
 
@@ -208,42 +208,42 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
                                     <div th:replace="fragments/input-field::input-field(
-                'address',
-                'Address',
-                'text',
-                ${applications.address},
-                'address',
-                'address',
-                '',
-                'fa-location-dot text-indigo-800',
-                ${!isEditable},
-                ${!isEditable})">
+                                        'address',
+                                        'Address',
+                                        'text',
+                                        ${applications.address},
+                                        'address',
+                                        'address',
+                                        '',
+                                        'fa-location-dot text-indigo-800',
+                                        ${!isEditable},
+                                        ${!isEditable})">
                                     </div>
 
                                     <div th:replace="fragments/input-field::input-field(
-                'longitude',
-                'Longitude',
-                'text',
-                ${applications.longitude},
-                'longitude',
-                'longitude',
-                '',
-                'fa-location-crosshairs text-indigo-800',
-                ${!isEditable},
-                ${!isEditable})">
+                                        'longitude',
+                                        'Longitude',
+                                        'text',
+                                        ${applications.longitude},
+                                        'longitude',
+                                        'longitude',
+                                        '',
+                                        'fa-location-crosshairs text-indigo-800',
+                                        ${!isEditable},
+                                        ${!isEditable})">
                                     </div>
 
                                     <div th:replace="fragments/input-field::input-field(
-                'latitude',
-                'Latitude',
-                'text',
-                ${applications.latitude},
-                'latitude',
-                'latitude',
-                '',
-                'fa-location-crosshairs text-indigo-800',
-                ${!isEditable},
-                ${!isEditable})">
+                                        'latitude',
+                                        'Latitude',
+                                        'text',
+                                        ${applications.latitude},
+                                        'latitude',
+                                        'latitude',
+                                        '',
+                                        'fa-location-crosshairs text-indigo-800',
+                                        ${!isEditable},
+                                        ${!isEditable})">
                                     </div>
 
                                 </div>
@@ -263,10 +263,10 @@
                                         <div class="relative">
                                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5">
                                                 <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
-                    applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
-                    applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
-                    applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
-                    'fa-solid fa-question-circle'}">
+                                                applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
+                                                applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
+                                                applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
+                                                'fa-solid fa-question-circle'}">
                                                 </i>
                                             </div>
 
@@ -279,9 +279,9 @@
                                                     readonly disabled
                                                     class="w-full focus:outline-hidden text-xs rounded-lg ps-10 p-2 border"
                                                     th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
-                           applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
-                           applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
-                           applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}"/>
+                                                       applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
+                                                       applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
+                                                       applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}"/>
                                         </div>
                                     </div>
 
@@ -338,16 +338,16 @@
                                     </div>
 
                                     <div th:replace="fragments/input-field::input-field(
-                'applicationDate',
-                'Application Date',
-                'date',
-                ${applications.applicationDate},
-                'applicationDate',
-                'applicationDate',
-                '',
-                'fa-calendar text-indigo-800',
-                ${!isEditable},
-                ${!isEditable})">
+                                        'applicationDate',
+                                        'Application Date',
+                                        'date',
+                                        ${applications.applicationDate},
+                                        'applicationDate',
+                                        'applicationDate',
+                                        '',
+                                        'fa-calendar text-indigo-800',
+                                        ${!isEditable},
+                                        ${!isEditable})">
                                     </div>
                                 </div>
 
@@ -357,13 +357,12 @@
                                         <label for="comment" class="block mb-2 text-xs font-medium text-gray-900"><i
                                                 class="fa-solid fa-comment text-indigo-800"></i> Comment</label>
                                         <div class="relative">
-                  <textarea rows="3" id="comment" name="comment"
-                            th:text="${applications.comment}"
-                            th:readonly="${!isEditable}"
-                            th:disabled="${!isEditable}"
-                            class="bg-gray-50 focus:outline-hidden border border-gray-300 text-gray-900 text-xs rounded-lg w-full ps-4 p-2.5 max-h-20 min-h-10">
-
-                  </textarea>
+                                              <textarea rows="3" id="comment" name="comment"
+                                                        th:text="${applications.comment}"
+                                                        th:readonly="${!isEditable}"
+                                                        th:disabled="${!isEditable}"
+                                                        class="bg-gray-50 focus:outline-hidden border border-gray-300 text-gray-900 text-xs rounded-lg w-full ps-4 p-2.5 max-h-20 min-h-10">
+                                              </textarea>
                                         </div>
                                     </div>
 
@@ -448,8 +447,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 items-center">
                     <div class="flex relative flex-row person-card w-[90%] mx-auto my-4 shadow-md hover:shadow-lg hover:transition hover:ease-in-out hover:duration-3s rounded-xl cursor-pointer border border-1 border-green-400 bg-green-50">
                         <div class="image-section w-[30%] flex pt-4 justify-center py-3">
-                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-green-600">
-                                <img src="/images/img.png" alt="" class="rounded-xl">
+                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-green-600 text-white">
+                                <i class="fa-solid fa-user text-5xl" style="color: #ffffff;"></i>
                             </div>
                         </div>
                         <div class="text-section py-4 w-[70%]">
@@ -475,8 +474,11 @@
 
                     <div class="flex relative flex-row person-card w-[90%] mx-auto my-4 shadow-md hover:shadow-lg hover:transition hover:ease-in-out hover:duration-3s rounded-xl cursor-pointer border border-1 border-yellow-400 bg-yellow-50">
                         <div class="image-section w-[30%] flex pt-4 justify-center py-3">
-                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-yellow-600">
-                                <img src="/images/img_1.png" alt="" class="rounded-xl">
+<!--                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-yellow-600">-->
+<!--                                <img src="/images/img_1.png" alt="" class="rounded-xl">-->
+<!--                            </div>-->
+                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-yellow-600 text-white">
+                                <i class="fa-solid fa-user text-5xl" style="color: #ffffff;"></i>
                             </div>
                         </div>
                         <div class="text-section py-4 w-[70%]">
@@ -512,16 +514,16 @@
                                 <p class="font-base flex flex-row items-center gap-x-2 text-sm">
 
                                     <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-white p-1.5 bg-indigo-500 rounded-md text-sm' :
-                    applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-white p-1.5 bg-indigo-500 rounded-full text-sm' :
-                    applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-white p-1.5 bg-indigo-500 rounded-md text-sm' :
-                    applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-white p-1.5 bg-indigo-500 rounded-md text-sm' :
-                    'fa-solid fa-question-circle'}"></i>
+                                        applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-white p-1.5 bg-indigo-500 rounded-full text-sm' :
+                                        applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-white p-1.5 bg-indigo-500 rounded-md text-sm' :
+                                        applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-white p-1.5 bg-indigo-500 rounded-md text-sm' :
+                                        'fa-solid fa-question-circle'}"></i>
 
                                     <span th:class="${applications.applicationStatus.name() == 'PENDING' ? 'text-indigo-600' :
-                 applications.applicationStatus.name() == 'PROCESSING' ? 'text-indigo-600' :
-                  applications.applicationStatus.name() == 'COMPLETED' ? 'text-indigo-600' :
-                   applications.applicationStatus.name() == 'CANCELLED' ? 'text-indigo-600' : ''}"
-                                          th:text="${applications.applicationStatus.getStatus()}"></span>
+                                         applications.applicationStatus.name() == 'PROCESSING' ? 'text-indigo-600' :
+                                         applications.applicationStatus.name() == 'COMPLETED' ? 'text-indigo-600' :
+                                         applications.applicationStatus.name() == 'CANCELLED' ? 'text-indigo-600' : ''}"
+                                                                  th:text="${applications.applicationStatus.getStatus()}"></span>
                                 </p>
                                 <p class="font-light flex flex-row items-center text-sm gap-x-2">
                                     <i class="fa-solid fa-clock text-white p-1.5 bg-indigo-500 rounded-md text-sm"></i>

@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         data: ds.data,
                         borderColor: getBorderColor(ds.label),
                         backgroundColor: getBackgroundColor(ds.label),
-                        borderWidth: 1
+                        borderWidth: 2
                     }))
                 },
                 options: {
@@ -165,9 +165,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function getBackgroundColor(label) {
         const map = {
             'Total Surveys': 'rgba(75,192,192,0.1)',
-            'PENDING': 'rgba(255,165,0,0.1)',
-            'SUCCEEDED': 'rgba(0,128,0,0.1)',
-            'FAILED': 'rgba(255,0,0,0.1)',
+            'PENDING': '#facc15',
+            'SUCCEEDED': '#22c55e',
+            'FAILED': '#ef4444',
             'Total Applications': 'rgba(54,162,235,0.1)',
             'PROCESSING': 'rgba(128,0,128,0.1)',
             'COMPLETED': 'rgba(0,128,0,0.1)',

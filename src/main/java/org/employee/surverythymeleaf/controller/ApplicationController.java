@@ -10,6 +10,7 @@ import org.employee.surverythymeleaf.model.*;
 import org.employee.surverythymeleaf.model.Enum.ActivityType;
 import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
 import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
+import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
@@ -45,12 +46,14 @@ public class ApplicationController {
     private final SurveyService surveyService;
     private final UserService userService;
     private final ActivityHelper activityHelper;
+    private final SurveyRepository surveyRepository;
 
-    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService, ActivityHelper activityHelper) {
+    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService, ActivityHelper activityHelper, SurveyRepository surveyRepository) {
         this.applicationService = applicationService;
         this.surveyService = surveyService;
         this.userService = userService;
         this.activityHelper = activityHelper;
+        this.surveyRepository = surveyRepository;
     }
 
     @GetMapping("/application/allApplications")
@@ -132,10 +135,49 @@ public class ApplicationController {
 
 
     @GetMapping("/survey/details/{id}")
-    public String getDetailSurveyForm(Model model, @PathVariable String id) {
-        Survey survey=surveyService.findSurveyByGeneratedSurveyId(id);
-        model.addAttribute("survey", survey);
-        return "survey/surveyDetailsCopy";
+    public String getDetailSurveyForm(Model model, @PathVariable String id,RedirectAttributes redirectAttributes) {
+        try {
+            Survey survey=surveyService.findSurveyByGeneratedSurveyId(id);
+            List<SurveyStatus> statuses = StatusValidator.getNextValidSurveyStatuses(survey.getStatus());
+            model.addAttribute("survey", survey);
+            model.addAttribute("statuses", statuses);
+            return "survey/surveyDetailsCopy";
+        }catch (RuntimeException e){
+            redirectAttributes.addFlashAttribute("message",e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType","warning");
+            return "redirect:/technical/survey/allSurvey";
+        }
+    }
+
+    @PostMapping("/survey/edit/{generatedSurveyId}")
+    public String editSurveyForm(Model model, @PathVariable String generatedSurveyId,RedirectAttributes redirectAttributes,@ModelAttribute Survey survey) {
+        try {
+            Survey findSurvey=surveyService.findSurveyByGeneratedSurveyId(generatedSurveyId);
+            if(findSurvey!=null){
+                findSurvey.setGeneratedSurveyId(survey.getGeneratedSurveyId());
+                findSurvey.setCustomerName(survey.getCustomerName());
+                findSurvey.setState(survey.getState());
+                findSurvey.setTownShip(survey.getTownShip());
+                findSurvey.setLongitude(survey.getLongitude());
+                findSurvey.setLatitude(survey.getLatitude());
+                findSurvey.setPhoneNumber(survey.getPhoneNumber());
+                findSurvey.setStatus(survey.getStatus());
+
+                surveyRepository.save(findSurvey);
+
+                redirectAttributes.addFlashAttribute("messageType","success");
+                redirectAttributes.addFlashAttribute("message","Survey updated successfully");
+            }
+            else{
+                redirectAttributes.addFlashAttribute("message","Survey not found");
+                redirectAttributes.addFlashAttribute("messageType","warning");
+            }
+            return "redirect:/technical/survey/allSurvey";
+        }catch (RuntimeException e){
+            redirectAttributes.addFlashAttribute("message",e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType","warning");
+            return "redirect:/technical/survey/allSurvey";
+        }
     }
 
     @PostMapping("application/updateStatus")

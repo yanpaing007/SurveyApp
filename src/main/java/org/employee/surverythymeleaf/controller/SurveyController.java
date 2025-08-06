@@ -17,10 +17,14 @@ import org.employee.surverythymeleaf.service.SurveyService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.SortUtils;
+import org.employee.surverythymeleaf.util.StatusValidator;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -122,10 +126,28 @@ public class SurveyController {
 
 
     @GetMapping("/survey/details/{id}")
-    public String getDetailSurveyForm(Model model, @PathVariable String id) {
-        Survey survey=surveyService.findSurveyByGeneratedSurveyId(id);
-        model.addAttribute("survey", survey);
-        return "survey/surveyDetailsCopy";
+    public String getDetailSurveyForm(Model model, @PathVariable String id, RedirectAttributes redirectAttributes) {
+        IsUserHaveEditPermission(model);
+        try{
+            Survey survey=surveyService.findSurveyByGeneratedSurveyId(id);
+            List<SurveyStatus> statuses = StatusValidator.getNextValidSurveyStatuses(survey.getStatus());
+            model.addAttribute("survey", survey);
+            model.addAttribute("statuses", statuses);
+            System.out.println("Survey statuses"+statuses);
+            return "survey/surveyDetailsCopy";
+        }catch(RuntimeException e){
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            return "redirect:/survey/allSurvey";
+        }
+    }
+
+    static void IsUserHaveEditPermission(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("Admin"));
+        boolean isTechnical = authentication.getAuthorities().contains(new SimpleGrantedAuthority("Technical"));
+
+        boolean isEditable = isAdmin || isTechnical;
+        model.addAttribute("isEditable", isEditable);
     }
 
     @GetMapping("/application/allApplications")

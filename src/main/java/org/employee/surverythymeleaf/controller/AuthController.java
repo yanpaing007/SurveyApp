@@ -190,12 +190,7 @@ public class AuthController {
 
     @GetMapping("/application/details/{id}")
     public String getApplicationDetails(Model model, @PathVariable String id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("Admin"));
-        boolean isTechnical = authentication.getAuthorities().contains(new SimpleGrantedAuthority("Technical"));
-
-        boolean isEditable = isAdmin || isTechnical;
-        model.addAttribute("isEditable", isEditable);
+        SurveyController.IsUserHaveEditPermission(model);
         Application application = applicationService.findApplicationByGeneratedApplicationId(id);
         List<ApplicationStatus> status = StatusValidator.getNextValidApplicationStatuses(application.getApplicationStatus());
         model.addAttribute("applications", application);
