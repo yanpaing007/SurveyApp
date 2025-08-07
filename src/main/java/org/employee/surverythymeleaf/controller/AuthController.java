@@ -213,4 +213,9 @@ public class AuthController {
         return "redirect:/application/details/{id}";
     }
 
+    @GetMapping("/user/profile")
+    public String userProfile(Model model, Principal principal) {
+        return "user/profile";
+    }
+
 }

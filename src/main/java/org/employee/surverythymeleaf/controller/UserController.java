@@ -124,13 +124,14 @@ public class UserController {
     public String updateUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes, Principal principal){
 
         String rawPassword = user.getPassword();
-        if(rawPassword != null && !rawPassword.isEmpty()){
+        User exitingUser = userService.getUserById(user.getId());
+        if(rawPassword != null && !rawPassword.isEmpty() && !rawPassword.equals(exitingUser.getPassword())){
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String encodedPassword = encoder.encode(rawPassword);
             user.setPassword(encodedPassword);
             user.setUpdatedAt(LocalDateTime.now());
         }else {
-            User exitingUser = userService.getUserById(user.getId());
+
             user.setPassword(exitingUser.getPassword());
             user.setUpdatedAt(LocalDateTime.now());
         }

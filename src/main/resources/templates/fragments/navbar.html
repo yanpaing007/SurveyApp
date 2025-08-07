@@ -73,8 +73,15 @@
               <div class="flex items-center space-x-3 md:space-x-0 rtl:space-x-reverse mr-3">
                 <button type="button" class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                   <span class="sr-only">Open user menu</span>
-                  <img class="w-13 h-13 rounded-full shadow-md border-2 border-amber-400" src="/images/img.png" alt="user photo">
-                  <i class="fa-solid fa-crown fa-rotate-by absolute -right-1 text-amber-600 text-lg" style="--fa-rotate-angle: 25deg;"></i>
+                  <img class="w-13 h-13 rounded-full shadow-md border-3"
+                       th:classappend="${currentUser.role.roleName == 'Admin'} ? 'border-yellow-400' :
+                                     (${currentUser.role.roleName == 'Sale'} ? 'border-cyan-400' :
+                                     (${currentUser.role.roleName == 'Technical'} ? 'border-indigo-400' : 'fa-user'))"
+                       src="/images/img.png" alt="user photo">
+                  <i class="fa-solid fa-rotate-by absolute -right-1 text-lg" style="--fa-rotate-angle: 20deg;"
+                     th:classappend="${currentUser.role.roleName == 'Admin'} ? 'fa-crown text-yellow-600' :
+                                     (${currentUser.role.roleName == 'Sale'} ? 'fa-briefcase text-cyan-600' :
+                                     (${currentUser.role.roleName == 'Technical'} ? 'fa-wrench text-indigo-600' : 'fa-user'))"></i>
                 </button>
                 <!-- Dropdown menu -->
                 <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm" id="user-dropdown">
@@ -93,16 +100,16 @@
                   </div>
                   <ul class="py-2" aria-labelledby="user-menu-button">
                     <li>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <a th:href="@{/user/profile}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <div class="flex flex-row gap-x-2 items-center">
                           <i class="fa-solid fa-gear"></i>
                           Settings
                         </div>
                       </a>
                     </li>
-                    <li>
-                      <form method="post" th:action="@{/logout}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <button type="submit" onclick="return confirm('Are you sure you want to logout?')" class="flex flex-row gap-x-2 items-center">
+                    <li onclick="return confirm('Are you sure you want to logout?')" class="flex flex-row gap-x-2 items-center cursor-pointer">
+                      <form method="post" th:action="@{/logout}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                        <button type="submit">
                           <i class="fa-solid fa-right-from-bracket"></i>
                           Logout
                         </button>
