@@ -116,7 +116,7 @@
                 </div>
 
 
-                <div class="min-w-[400px] flex flex-col justify-center flex-wrap lg:px-5 lg:py-5 border-b border-gray-200 lg:border-none">
+                <div class="min-w-[400px] max-w-[800px] flex flex-col justify-center flex-wrap lg:px-5 lg:py-5 border-b border-gray-200 lg:border-none">
                     <div class="flex flex-col items-center justify-center pb-10">
                         <div>
                             <img class="rounded-full shadow-md border border-gray-200"
@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="flex items-center gap-2 mt-2">
-                            <p class="text-xl font-bold" th:text="${user.fullName}">User Name</p>
+                            <p class="w-80 text-xl font-bold truncate overflow-hidden" th:text="${user.fullName}">User Name</p>
                             <div th:text="${user.role.roleName}"
                                  th:classappend="${user.role.roleName == 'Admin'} ? ' bg-yellow-600' :
                      (${user.role.roleName == 'Technical'} ? ' bg-indigo-600' :

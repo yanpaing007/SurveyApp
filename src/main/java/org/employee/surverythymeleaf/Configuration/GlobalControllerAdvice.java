@@ -28,7 +28,7 @@ public class GlobalControllerAdvice {
     public UserDTO getCurrentUser(Principal principal) {
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
-            return new UserDTO(user.getId(), user.getFullName(), user.getEmail());
+            return new UserDTO(user.getId(), user.getFullName(), user.getEmail(),user.getRole());
         }
         return null;
     }

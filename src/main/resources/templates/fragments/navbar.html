@@ -1,5 +1,5 @@
 
-<nav class="bg-white border-b border-gray-100 shadow-sm" th:fragment="navbar">
+<nav class="bg-white border-b border-gray-100 shadow-sm fixed top-0 start-0 w-full z-1000" th:fragment="navbar">
   <div class="mx-auto max-w-[90%]">
 
     <div class="relative flex h-16 items-center justify-between">
@@ -67,12 +67,57 @@
               <i class="fa-solid fa-user-plus"></i>
               Register
             </a>
-            <form th:if="${#authorization.expression('isAuthenticated()')}" method="post" th:action="@{/logout}" class="ml-3 lg:block hidden">
-                <button type="submit" onclick="return confirm('Are you sure you want to logout?')" class="cursor-pointer btn-animated inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-600/20 hover:bg-red-100">
-                  <i class="fa-solid fa-right-from-bracket mr-1.5"></i>
-                  Logout
+
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+
+              <div class="flex items-center space-x-3 md:space-x-0 rtl:space-x-reverse mr-3">
+                <button type="button" class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+                  <span class="sr-only">Open user menu</span>
+                  <img class="w-13 h-13 rounded-full shadow-md border-2 border-amber-400" src="/images/img.png" alt="user photo">
+                  <i class="fa-solid fa-crown fa-rotate-by absolute -right-1 text-amber-600 text-lg" style="--fa-rotate-angle: 25deg;"></i>
                 </button>
-            </form>
+                <!-- Dropdown menu -->
+                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm" id="user-dropdown">
+                  <div class="px-4 py-3">
+                    <div class="flex items-center gap-x-1">
+                      <p class="block text-sm text-gray-900 truncate overflow-hidden w-40" th:text="${currentUser?.fullName}"></p>
+                      <span
+                              th:classappend="${currentUser.role.roleName == 'Admin'} ? ' bg-yellow-600' :
+                     (${currentUser.role.roleName == 'Technical'} ? ' bg-indigo-600' :
+                     (${currentUser.role.roleName == 'Sale'} ? ' bg-cyan-600' :
+                     (${currentUser.role.roleName == 'Member'} ? ' bg-black' : ''))) "
+                              th:text="${currentUser.role.roleName}"
+                      class="px-2 py-1 text-white rounded-sm text-xs"></span>
+                    </div>
+                    <span class="block text-sm  text-gray-500 truncate" th:text="${currentUser?.email}"></span>
+                  </div>
+                  <ul class="py-2" aria-labelledby="user-menu-button">
+                    <li>
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <div class="flex flex-row gap-x-2 items-center">
+                          <i class="fa-solid fa-gear"></i>
+                          Settings
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <form method="post" th:action="@{/logout}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <button type="submit" onclick="return confirm('Are you sure you want to logout?')" class="flex flex-row gap-x-2 items-center">
+                          <i class="fa-solid fa-right-from-bracket"></i>
+                          Logout
+                        </button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+                <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-user" aria-expanded="false">
+                  <span class="sr-only">Open main menu</span>
+                  <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

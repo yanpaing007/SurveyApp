@@ -150,9 +150,10 @@ public class ApplicationController {
     }
 
     @PostMapping("/survey/edit/{generatedSurveyId}")
-    public String editSurveyForm(Model model, @PathVariable String generatedSurveyId,RedirectAttributes redirectAttributes,@ModelAttribute Survey survey) {
+    public String editSurveyForm(Model model, @PathVariable String generatedSurveyId,RedirectAttributes redirectAttributes,@ModelAttribute Survey survey,Principal principal) {
         try {
             Survey findSurvey=surveyService.findSurveyByGeneratedSurveyId(generatedSurveyId);
+            User currentUser = userService.findByEmail(principal.getName());
             if(findSurvey!=null){
                 findSurvey.setGeneratedSurveyId(survey.getGeneratedSurveyId());
                 findSurvey.setCustomerName(survey.getCustomerName());
@@ -162,6 +163,8 @@ public class ApplicationController {
                 findSurvey.setLatitude(survey.getLatitude());
                 findSurvey.setPhoneNumber(survey.getPhoneNumber());
                 findSurvey.setStatus(survey.getStatus());
+                findSurvey.setTechnicalPerson(currentUser);
+                findSurvey.setUpdatedAt(LocalDateTime.now());
 
                 surveyRepository.save(findSurvey);
 
