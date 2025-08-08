@@ -1,5 +1,152 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-  <section>
-    Hello World
+  <section class="w-7xl mx-auto mt-10">
+    <div class="userProfile w-[80%] mx-auto bg-indigo-500 shadow-md rounded-md p-6 relative">
+      <div class="profileHeader flex flex-row gap-x-5">
+        <div class="profileImage">
+          <img src="/images/img.png" alt="Profile Image" class="rounded-md w-30 h-30">
+        </div>
+        <div class="profileInfo">
+          <p class="text-4xl text-white font-semibold">Yan Paing Win</p>
+          <p class="text-gray-100 font-thin text-lg">yanpaingwin@ucsy.edu.mm</p>
+          <div class="px-4 py-2 rounded-full text-white bg-indigo-800 mt-2 text-xs inline-block font-base">
+            Administrator
+          </div>
+          <div class="absolute top-0 right-0 mt-3 me-4 active-status">
+            <div class="flex items-center gap-x-1 bg-white px-3 py-1 rounded-full">
+              <i class="fa-solid fa-circle fa-fade text-green-500" style="--fa-animation-duration: 2s;"></i>
+              <span class="text-black text-sm font-semibold">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="profileBody w-[80%] mx-auto mt-3">
+      <div class="tabHeader flex flex-row gap-x-4 justify-evenly bg-white shadow-md rounded-md">
+        <div class="rounded-t-lg tab-class w-full flex items-center gap-x-2 justify-center px-4 py-2 hover:bg-indigo-600 hover:text-white cursor-pointer" id="overviewTab">
+          <i class="fa-solid fa-folder"></i>
+          <span>Overview</span>
+        </div>
+        <div class="rounded-t-lg tab-class w-full flex items-center gap-x-2 justify-center px-4 py-2 hover:bg-indigo-600 hover:text-white cursor-pointer" id="settingsTab">
+          <i class="fa-solid fa-gear"></i>
+          <span>Settings</span>
+        </div>
+        <div class="rounded-t-lg tab-class w-full flex items-center gap-x-2 justify-center px-4 py-2 hover:bg-indigo-600 hover:text-white cursor-pointer" id="activityTab">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Activity</span>
+        </div>
+      </div>
+
+      <div class="tabBody">
+        <div class="tabBodyContent overviewTabContent">
+          <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-2">
+            <i class="fa-solid fa-folder text-indigo-600"></i>
+            Overview
+          </h2>
+          <hr class="h-1 mt-1 text-gray-200">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Survey','56','fa-clipboard-list')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Application','36','fa-square-poll-horizontal')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Activity','136','fa-chart-line')}"></div>
+
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Account Age','165 days','fa-hourglass-half')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Last Login','2024-05-21','fa-user-clock')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Joined Date','2024-02-08','fa-calendar-days')}"></div>
+
+          </div>
+
+        </div>
+        <div class="tabBodyContent settingsTabContent hidden">
+          <h2 class="text-2xl font-semibold text-gray-800 mt-6">
+            <i class="fa-solid fa-gear text-indigo-600"></i>
+            Settings
+          </h2>
+          <hr class="h-1 mt-1 text-gray-200">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+            <div>
+              <label class="block mb-1 text-sm font-medium text-gray-900" for="name">Name</label>
+              <input type="text" name="name" id="name" placeholder="Enter your name" value="Yan Paing Win"
+                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+            </div>
+            <div>
+              <label class="block mb-1 text-sm font-medium text-gray-900" for="email">Email<span class="text-xs text-gray-600"> (you can't change your email)</span></label>
+              <input type="text" name="email" id="email" placeholder="Enter your email" value="yanpaingwin@ucsy.edu.mm"
+                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5"
+              disabled readonly>
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm font-medium text-gray-900" for="phoneNumber">Phone Number</label>
+              <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter your phone" value="09784863657"
+                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+            </div>
+
+            <div>
+
+              <label class="block mb-1 text-sm font-medium text-gray-900" for="file_input">Upload Image</label>
+              <input class="block ps-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer py-2.5 bg-gray-50 focus:outline-none" aria-describedby="file_input_help" id="file_input" type="file">
+              <p class="mt-1 text-sm text-gray-500" id="file_input_help">PNG, JPG (MAX. 800x400px).</p>
+
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm font-medium text-gray-900" for="old_password">Old Password</label>
+              <input type="text" name="name" id="old_password" placeholder="Enter your old password" value=""
+                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+            </div>
+            <div>
+              <label class="block mb-1 text-sm font-medium text-gray-900" for="new_password">New Password</label>
+              <input type="text" name="name" id="new_password" placeholder="Enter your new password" value=""
+                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+            </div>
+
+          </div>
+
+          <div class="flex justify-end">
+            <button type="submit" class="cursor-pointer btn-animated mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <i class="fa-solid fa-save"></i> Save Changes
+            </button>
+          </div>
+
+
+
+
+
+        </div>
+        <div class="tabBodyContent activityTabContent hidden">
+          <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-2">
+            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i>
+            Activity
+          </h2>
+          <hr class="h-1 mt-1 text-gray-200">
+
+        </div>
+      </div>
+    </div>
+    <script th:inline="javascript">
+      document.addEventListener('DOMContentLoaded',function (){
+        const tabs = document.querySelectorAll('.tab-class');
+        const tabContents = document.querySelectorAll('.tabBodyContent');
+
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('text-white', 'bg-indigo-500'));
+            tabContents.forEach(tc => tc.classList.add('hidden'));
+
+            tab.classList.add('text-white', 'bg-indigo-500');
+            const activeTabContent = document.querySelector(`.${tab.id}Content`);
+            if (activeTabContent) {
+              activeTabContent.classList.remove('hidden');
+            }
+          });
+        });
+
+        // Set the first tab as active by default
+        if (tabs.length > 0) {
+          tabs[0].click();
+        }
+      })
+    </script>
   </section>
+
 </div>
