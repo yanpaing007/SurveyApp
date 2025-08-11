@@ -1,9 +1,12 @@
 <div th:replace="~{fragments/layout :: layout(~{::section})}">
-  <section class="w-7xl mx-auto mt-10">
+  <section class="w-[100%] mx-auto mt-10">
     <div class="userProfile w-[80%] mx-auto bg-indigo-500 shadow-md rounded-md p-6 relative">
       <div class="profileHeader flex flex-row gap-x-5">
         <div class="profileImage">
-          <img src="/images/img.png" alt="Profile Image" class="rounded-md w-30 h-30">
+          <img th:if="${user.profilePictureUrl != null and !user.profilePictureUrl.isEmpty()}" th:src="${user.profilePictureUrl}"
+               alt="Profile Image" class="rounded-md w-30 h-30">
+          <img th:if="${user.profilePictureUrl == null or user.profilePictureUrl.isEmpty()}" th:src="@{/images/user-avatar.jpg}"
+               alt="Profile Image" class="rounded-md w-30 h-30">
         </div>
         <div class="profileInfo">
           <p class="text-4xl text-white font-semibold" th:text="${user != null ? user.fullName : 'Name Not Found'}">Yan Paing Win</p>

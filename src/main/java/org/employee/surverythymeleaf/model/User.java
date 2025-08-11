@@ -63,4 +63,6 @@ public class User{
     private List<ActivityLog> activities = new ArrayList<>();
 
     private LocalDateTime lastLogin;
+
+    private String profilePictureUrl;
 }

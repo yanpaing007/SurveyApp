@@ -1,5 +1,6 @@
 package org.employee.surverythymeleaf.controller;
 
+import org.employee.surverythymeleaf.DTO.UpdateProfileDTO;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.UserRepository;
 import org.employee.surverythymeleaf.service.ProfileService;
@@ -12,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Controller
@@ -41,7 +41,16 @@ public class ProfileController {
         Long DaysSinceRegistration = userService.calculateDaysSinceRegistration(user.getCreatedAt());
         String lastLoginTime = user.getLastLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String accountCreatedAt = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        model.addAttribute("user", user);
+
+        UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO();
+        updateProfileDTO.setFullName(user.getFullName());
+        updateProfileDTO.setEmail(user.getEmail());
+        updateProfileDTO.setPhoneNumber(user.getPhoneNumber());
+        updateProfileDTO.setRole(user.getRole());
+        updateProfileDTO.setStatus(user.isStatus());
+        updateProfileDTO.setProfilePictureUrl(user.getProfilePictureUrl());
+
+        model.addAttribute("user", updateProfileDTO);
         model.addAttribute("userSurveyCount", UserSurveyCount);
         model.addAttribute("userApplicationCount", UserApplicationCount);
         model.addAttribute("userTotalActivityCount", UserTotalActivityCount);

@@ -4,6 +4,7 @@
 
     <div class="relative flex h-16 items-center justify-between">
 
+
       <div class="absolute inset-y-0 right-0 flex items-center lg:hidden">
         <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
           <span class="absolute -inset-0.5"></span>
@@ -72,11 +73,23 @@
               <div class="flex items-center space-x-3 md:space-x-0 rtl:space-x-reverse mr-3">
                 <button type="button" class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                   <span class="sr-only">Open user menu</span>
-                  <img class="w-13 h-13 rounded-full shadow-md border-3"
+                  <!-- Image displayed if profile picture URL exists -->
+                  <img th:if="${currentUser.profilePictureUrl != null and !#strings.isEmpty(currentUser.profilePictureUrl)}"
+                       class="w-13 h-13 rounded-full shadow-md border-3"
                        th:classappend="${currentUser.role.roleName == 'Admin'} ? 'border-yellow-400' :
-                                     (${currentUser.role.roleName == 'Sale'} ? 'border-cyan-400' :
-                                     (${currentUser.role.roleName == 'Technical'} ? 'border-indigo-400' : 'fa-user'))"
-                       src="/images/img.png" alt="user photo">
+                   (${currentUser.role.roleName == 'Sale'} ? 'border-cyan-400' :
+                   (${currentUser.role.roleName == 'Technical'} ? 'border-indigo-400' : 'fa-user'))"
+                       th:src="${currentUser.profilePictureUrl}"
+                       alt="user photo">
+
+                  <!-- Image displayed if profile picture URL is null or empty -->
+                  <img th:if="${currentUser.profilePictureUrl == null or #strings.isEmpty(currentUser.profilePictureUrl)}"
+                       class="w-13 h-13 rounded-full shadow-md border-3"
+                       th:classappend="${currentUser.role.roleName == 'Admin'} ? 'border-yellow-400' :
+                   (${currentUser.role.roleName == 'Sale'} ? 'border-cyan-400' :
+                   (${currentUser.role.roleName == 'Technical'} ? 'border-indigo-400' : 'fa-user'))"
+                       th:src="@{/images/user-avatar.jpg}"
+                       alt="user photo">
                   <i class="fa-solid fa-rotate-by absolute -right-1 text-lg" style="--fa-rotate-angle: 20deg;"
                      th:classappend="${currentUser.role.roleName == 'Admin'} ? 'fa-crown text-yellow-600' :
                                      (${currentUser.role.roleName == 'Sale'} ? 'fa-briefcase text-cyan-600' :
