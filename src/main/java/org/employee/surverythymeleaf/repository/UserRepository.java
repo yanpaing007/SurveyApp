@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.lang.ScopedValue;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,4 +37,18 @@ AND (:status IS NULL OR u.status = :status)
                           Pageable pageable);
 
     boolean existsByEmail(String email);
+
+    @Query("""
+        SELECT count(s)
+        FROM Survey s
+        where s.salePerson.id = :userId
+""")
+    Long UserSurveyCount(@Param("userId") Long name );
+
+    @Query("""
+        SELECT count(a)
+        FROM Application a
+        where a.submittedBy.id = :userId
+""")
+    Long UserApplicationCount(Long userId);
 }

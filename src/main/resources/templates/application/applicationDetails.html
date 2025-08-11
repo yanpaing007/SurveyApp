@@ -1,10 +1,10 @@
 <div th:replace="~{fragments/layout::layout(~{::section})}">
 
-    <section class="mx-auto w-[95%] md:w-[90%] py-6">
-        <div class="flex flex-col-reverse xl:flex-row gap-5">
+    <section class="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-6">
+        <div class="flex flex-col-reverse xl:flex-row gap-5 w-[90%] mx-auto">
             <div class="w-full xl:w-[60%]">
                 <div class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 h-2 rounded-t-md"></div>
-                <div class="px-3 md:px-7 py-3 md:py-1 shadow-md">
+                <div class="px-3 md:px-7 py-3 md:py-1 shadow-md rounded-lg bg-white">
 
                     <div class="header-section flex flex-row justify-between items-start md:items-center gap-y-4 py-4">
 
@@ -12,20 +12,20 @@
                             <p class="text-lg md:text-xl font-semibold text-indigo-700">Application Details</p>
                             <span th:text="${applications.generatedApplicationId}"
                                   class="text-indigo-800 bg-indigo-100 px-3 py-1 text-xs rounded-xl">
-              </span>
+                            </span>
                         </div>
 
                         <div class="flex items-center gap-x-2 text-xs rounded-xl border px-4 py-1 text-center"
-                             th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
-             applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
-             applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
-             applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}">
+                                                 th:classappend="${applications.applicationStatus.name() == 'PENDING' ? 'text-yellow-600 bg-yellow-50 border-yellow-400' :
+                                 applications.applicationStatus.name() == 'PROCESSING' ? 'text-blue-600 bg-blue-50 border-blue-400' :
+                                 applications.applicationStatus.name() == 'COMPLETED' ? 'text-green-600 bg-green-50 border-green-400' :
+                                 applications.applicationStatus.name() == 'CANCELLED' ? 'text-red-600 bg-red-50 border-red-400' : ''}">
                             <div class="w-2 h-2 rounded-full"></div>
-                            <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
-              applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
-              applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
-              applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
-              'fa-solid fa-question-circle'}"></i>
+                                                <i th:class="${applications.applicationStatus.name() == 'PENDING'    ? 'fa-solid fa-hourglass-half text-yellow-500' :
+                                  applications.applicationStatus.name() == 'PROCESSING' ? 'fa-solid fa-spinner fa-spin text-blue-500' :
+                                  applications.applicationStatus.name() == 'COMPLETED'  ? 'fa-solid fa-circle-check text-green-500' :
+                                  applications.applicationStatus.name() == 'CANCELLED'  ? 'fa-solid fa-circle-xmark text-red-500' :
+                                  'fa-solid fa-question-circle'}"></i>
                             <p th:text="${applications.applicationStatus.status}"></p>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                     </div>
 
                     <div id="default-styled-tab-content text-xs">
-                        <div class="hidden px-8 py-7 rounded-lg shadow-lg mb-4" id="styled-profile" role="tabpanel"
+                        <div class="hidden px-8 py-7 rounded-xl shadow-md mb-4" id="styled-profile" role="tabpanel"
                              aria-labelledby="profile-tab">
                             <form th:action="@{{id}(id=${applications.generatedApplicationId})}" method="post"
                                   th:object="${applications}">
@@ -436,7 +436,7 @@
 
                 </div>
             </div>
-            <div class="w-full xl:w-[40%] shadow-md">
+            <div class="w-full xl:w-[40%] shadow-md rounded-lg bg-white">
 
                 <div class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 h-2 rounded-t-md"></div>
                 <div class="header w-[90%] mx-auto my-5 text-xl">
@@ -474,9 +474,9 @@
 
                     <div class="flex relative flex-row person-card w-[90%] mx-auto my-4 shadow-md hover:shadow-lg hover:transition hover:ease-in-out hover:duration-3s rounded-xl cursor-pointer border border-1 border-yellow-400 bg-yellow-50">
                         <div class="image-section w-[30%] flex pt-4 justify-center py-3">
-<!--                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-yellow-600">-->
-<!--                                <img src="/images/img_1.png" alt="" class="rounded-xl">-->
-<!--                            </div>-->
+                            <!--                            <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-yellow-600">-->
+                            <!--                                <img src="/images/img_1.png" alt="" class="rounded-xl">-->
+                            <!--                            </div>-->
                             <div class="flex justify-center items-center w-25 h-25 rounded-xl bg-yellow-600 text-white">
                                 <i class="fa-solid fa-user text-5xl" style="color: #ffffff;"></i>
                             </div>
@@ -523,7 +523,7 @@
                                          applications.applicationStatus.name() == 'PROCESSING' ? 'text-indigo-600' :
                                          applications.applicationStatus.name() == 'COMPLETED' ? 'text-indigo-600' :
                                          applications.applicationStatus.name() == 'CANCELLED' ? 'text-indigo-600' : ''}"
-                                                                  th:text="${applications.applicationStatus.getStatus()}"></span>
+                                          th:text="${applications.applicationStatus.getStatus()}"></span>
                                 </p>
                                 <p class="font-light flex flex-row items-center text-sm gap-x-2">
                                     <i class="fa-solid fa-clock text-white p-1.5 bg-indigo-500 rounded-md text-sm"></i>

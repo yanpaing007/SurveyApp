@@ -61,4 +61,6 @@ public class User{
 
     @OneToMany(mappedBy = "actor",cascade = CascadeType.ALL)
     private List<ActivityLog> activities = new ArrayList<>();
+
+    private LocalDateTime lastLogin;
 }

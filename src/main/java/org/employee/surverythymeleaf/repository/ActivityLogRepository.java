@@ -4,12 +4,20 @@ import org.employee.surverythymeleaf.model.ActivityLog;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> {
+
+    @Query("""
+select count(a)
+from ActivityLog a
+where a.actor.id=:userId
+""")
+    Long UserTotalActivityCount(@Param("userId") Long userId);
 
     List<ActivityLog> findAllByOrderByIdDesc(Pageable pageable);
 

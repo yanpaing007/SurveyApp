@@ -6,15 +6,15 @@
           <img src="/images/img.png" alt="Profile Image" class="rounded-md w-30 h-30">
         </div>
         <div class="profileInfo">
-          <p class="text-4xl text-white font-semibold">Yan Paing Win</p>
-          <p class="text-gray-100 font-thin text-lg">yanpaingwin@ucsy.edu.mm</p>
-          <div class="px-4 py-2 rounded-full text-white bg-indigo-800 mt-2 text-xs inline-block font-base">
+          <p class="text-4xl text-white font-semibold" th:text="${user != null ? user.fullName : 'Name Not Found'}">Yan Paing Win</p>
+          <p class="text-gray-100 font-thin text-lg" th:text="${user?.email}">yanpaingwin@ucsy.edu.mm</p>
+          <div class="px-4 py-2 rounded-full text-white bg-indigo-800 mt-2 text-xs inline-block font-base" th:text="${user?.role.roleName}">
             Administrator
           </div>
           <div class="absolute top-0 right-0 mt-3 me-4 active-status">
             <div class="flex items-center gap-x-1 bg-white px-3 py-1 rounded-full">
               <i class="fa-solid fa-circle fa-fade text-green-500" style="--fa-animation-duration: 2s;"></i>
-              <span class="text-black text-sm font-semibold">Active</span>
+              <span class="text-black text-sm font-semibold" th:text="${user?.status == true ? 'Active'  : 'Inactive'}">Active</span>
             </div>
           </div>
         </div>
@@ -44,13 +44,13 @@
           </h2>
           <hr class="h-1 mt-1 text-gray-200">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Survey','56','fa-clipboard-list')}"></div>
-            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Application','36','fa-square-poll-horizontal')}"></div>
-            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Activity','136','fa-chart-line')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Survey',${userSurveyCount!=null or 0 ? userSurveyCount : 0},'fa-clipboard-list')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Application',${userApplicationCount!=null or 0 ? userApplicationCount : 0},'fa-square-poll-horizontal')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Total Activity',${userTotalActivityCount!=null or 0 ? userTotalActivityCount : 0},'fa-chart-line')}"></div>
 
-            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Account Age','165 days','fa-hourglass-half')}"></div>
-            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Last Login','2024-05-21','fa-user-clock')}"></div>
-            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Joined Date','2024-02-08','fa-calendar-days')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Account Age',${daysSinceRegistration}+' days','fa-hourglass-half')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Last Login',${lastLoginTime!=null ? lastLoginTime : 'Unknown'},'fa-user-clock')}"></div>
+            <div th:replace="~{fragments/user/profileWildCard::profileWildCard('Joined Date',${accountCreatedAt},'fa-calendar-days')}"></div>
 
           </div>
 
@@ -62,45 +62,46 @@
           </h2>
           <hr class="h-1 mt-1 text-gray-200">
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
-            <div>
-              <label class="block mb-1 text-sm font-medium text-gray-900" for="name">Name</label>
-              <input type="text" name="name" id="name" placeholder="Enter your name" value="Yan Paing Win"
-                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
-            </div>
-            <div>
-              <label class="block mb-1 text-sm font-medium text-gray-900" for="email">Email<span class="text-xs text-gray-600"> (you can't change your email)</span></label>
-              <input type="text" name="email" id="email" placeholder="Enter your email" value="yanpaingwin@ucsy.edu.mm"
-                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5"
-              disabled readonly>
-            </div>
+          <form action="">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+              <div>
+                <label class="block mb-1 text-sm font-medium text-gray-900" for="name">Name</label>
+                <input type="text" name="name" id="name" placeholder="Enter your name" value="Yan Paing Win"
+                       class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+              </div>
+              <div>
+                <label class="block mb-1 text-sm font-medium text-gray-900" for="email">Email<span class="text-xs text-gray-600"> (you can't change your email)</span></label>
+                <input type="text" name="email" id="email" placeholder="Enter your email" value="yanpaingwin@ucsy.edu.mm"
+                       class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5"
+                       disabled readonly>
+              </div>
 
-            <div>
-              <label class="block mb-1 text-sm font-medium text-gray-900" for="phoneNumber">Phone Number</label>
-              <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter your phone" value="09784863657"
-                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+              <div>
+                <label class="block mb-1 text-sm font-medium text-gray-900" for="phoneNumber">Phone Number</label>
+                <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter your phone" value="09784863657"
+                       class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+              </div>
+
+              <div>
+
+                <label class="block mb-1 text-sm font-medium text-gray-900" for="file_input">Upload Image</label>
+                <input class="block ps-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer py-2.5 bg-gray-50 focus:outline-none" aria-describedby="file_input_help" id="file_input" type="file">
+                <p class="mt-1 text-sm text-gray-500" id="file_input_help">PNG, JPG (MAX. 800x400px).</p>
+
+              </div>
+
+              <div>
+                <label class="block mb-1 text-sm font-medium text-gray-900" for="old_password">Old Password</label>
+                <input type="text" name="name" id="old_password" placeholder="Enter your old password" value=""
+                       class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+              </div>
+              <div>
+                <label class="block mb-1 text-sm font-medium text-gray-900" for="new_password">New Password</label>
+                <input type="text" name="name" id="new_password" placeholder="Enter your new password" value=""
+                       class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+              </div>
             </div>
-
-            <div>
-
-              <label class="block mb-1 text-sm font-medium text-gray-900" for="file_input">Upload Image</label>
-              <input class="block ps-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer py-2.5 bg-gray-50 focus:outline-none" aria-describedby="file_input_help" id="file_input" type="file">
-              <p class="mt-1 text-sm text-gray-500" id="file_input_help">PNG, JPG (MAX. 800x400px).</p>
-
-            </div>
-
-            <div>
-              <label class="block mb-1 text-sm font-medium text-gray-900" for="old_password">Old Password</label>
-              <input type="text" name="name" id="old_password" placeholder="Enter your old password" value=""
-                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
-            </div>
-            <div>
-              <label class="block mb-1 text-sm font-medium text-gray-900" for="new_password">New Password</label>
-              <input type="text" name="name" id="new_password" placeholder="Enter your new password" value=""
-                     class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
-            </div>
-
-          </div>
+          </form>
 
           <div class="flex justify-end">
             <button type="submit" class="cursor-pointer btn-animated mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -119,7 +120,61 @@
             Activity
           </h2>
           <hr class="h-1 mt-1 text-gray-200">
-
+            <div class="my-3">
+                <ul class="space-y-2">
+                <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
+                  <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
+                    <div>
+                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
+                        <div class="flex flex-row gap-x-1 items-center">
+                          <i class="fa-solid fa-clock"></i>
+                          2024-05-21 10:30 AM
+                        </div>
+                      </div>
+                      <p class="text-blue-500 font-bold text-lg">Logged in from IP address</p>
+                      <span class="text-gray-600 font-light">Yangon, Myanmar</span>
+                    </div>
+                </li>
+                  <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
+                    <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
+                    <div>
+                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
+                        <div class="flex flex-row gap-x-1 items-center">
+                          <i class="fa-solid fa-clock"></i>
+                          2024-05-20 3:15 PM
+                        </div>
+                      </div>
+                      <p class="text-blue-500 font-bold text-lg">Updated profile information</p>
+                      <span class="text-gray-600 font-light">Changed phone number</span>
+                    </div>
+                  </li>
+                  <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
+                    <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
+                    <div>
+                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
+                        <div class="flex flex-row gap-x-1 items-center">
+                          <i class="fa-solid fa-clock"></i>
+                          2024-05-19 11:45 AM
+                        </div>
+                      </div>
+                      <p class="text-blue-500 font-bold text-lg">Created a new survey</p>
+                      <span class="text-gray-600 font-light">"Customer Satisfaction"</span>
+                    </div>
+                  </li>
+                  <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
+                    <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
+                    <div>
+                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
+                        <div class="flex flex-row gap-x-1 items-center">
+                          <i class="fa-solid fa-clock"></i>
+                          2024-05-18 2:00 PM</div>
+                        </div>
+                      <p class="text-blue-500 font-bold text-lg">Submitted a application</p>
+                      <span class="text-gray-600 font-light">APP-373</span>
+                    </div>
+                  </li>
+                </ul>
+            </div>
         </div>
       </div>
     </div>

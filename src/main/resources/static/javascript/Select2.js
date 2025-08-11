@@ -12,7 +12,6 @@ $(document).ready(() => {
 
         stateData.forEach((state) => {
             $('#state').append(new Option(`${state.mm}(${state.eng})`,state.eng));
-            console.log(state);
         });
     });
 

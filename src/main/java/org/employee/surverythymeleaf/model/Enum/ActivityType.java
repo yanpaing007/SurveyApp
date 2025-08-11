@@ -18,7 +18,11 @@ public enum ActivityType {
     UPDATE_APPLICATION("updated an application"),
     PROCESS_APPLICATION("updated the application status to processing"),
     COMPLETE_APPLICATION("updated the application status to completed"),
-    CANCEL_APPLICATION("updated the application status to cancelled");
+    CANCEL_APPLICATION("updated the application status to cancelled"),
+    UPDATE_PROFILE("updated profile information"),
+    CHANGE_PASSWORD("changed account password"),
+    LOGIN("logged into the system"),
+    LOGOUT("logged out of the system");
 
     private final String description;
     ActivityType(String description) {

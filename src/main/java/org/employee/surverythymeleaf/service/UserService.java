@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -113,4 +115,11 @@ public class UserService {
         return userRepo.findUserByEmail(email);
     }
 
+    public Long calculateDaysSinceRegistration(LocalDateTime createdAt) {
+        if (createdAt == null) {
+            return null;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        return ChronoUnit.DAYS.between(createdAt, now);
+    }
 }
