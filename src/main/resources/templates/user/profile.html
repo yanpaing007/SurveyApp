@@ -1,12 +1,15 @@
-<div th:replace="~{fragments/layout :: layout(~{::section})}">
-  <section class="w-[100%] mx-auto mt-10">
+<div th:replace="~{fragments/layout :: layout(~{::section})}" xmlns:x-bind="http://www.w3.org/1999/xhtml">
+  <section class="w-[80%] mx-auto mt-10">
     <div class="userProfile w-[80%] mx-auto bg-indigo-500 shadow-md rounded-md p-6 relative">
       <div class="profileHeader flex flex-row gap-x-5">
-        <div class="profileImage">
-          <img th:if="${user.profilePictureUrl != null and !user.profilePictureUrl.isEmpty()}" th:src="${user.profilePictureUrl}"
-               alt="Profile Image" class="rounded-md w-30 h-30">
-          <img th:if="${user.profilePictureUrl == null or user.profilePictureUrl.isEmpty()}" th:src="@{/images/user-avatar.jpg}"
-               alt="Profile Image" class="rounded-md w-30 h-30">
+        <div class="profilePicture">
+          <img
+                  id="profilePicture"
+                  th:src="${(user != null && user.profilePicturePath != null && !user.profilePicturePath.isEmpty())
+            ? user.profilePicturePath
+            : '/images/user-avatar.jpg'}"
+                  alt="Profile Image"
+                  class="rounded-md w-30 h-30">
         </div>
         <div class="profileInfo">
           <p class="text-4xl text-white font-semibold" th:text="${user != null ? user.fullName : 'Name Not Found'}">Yan Paing Win</p>
@@ -16,7 +19,7 @@
           </div>
           <div class="absolute top-0 right-0 mt-3 me-4 active-status">
             <div class="flex items-center gap-x-1 bg-white px-3 py-1 rounded-full">
-              <i class="fa-solid fa-circle fa-fade text-green-500" style="--fa-animation-duration: 2s;"></i>
+              <i th:class="${user != null && user.status ? 'fa-solid fa-circle fa-fade text-green-500' : 'fa-solid fa-circle text-red-500'}" style="--fa-animation-duration: 2s;"></i>
               <span class="text-black text-sm font-semibold" th:text="${user?.status == true ? 'Active'  : 'Inactive'}">Active</span>
             </div>
           </div>
@@ -35,13 +38,13 @@
         </div>
         <div class="rounded-t-lg tab-class w-full flex items-center gap-x-2 justify-center px-4 py-2 hover:bg-indigo-600 hover:text-white cursor-pointer" id="activityTab">
           <i class="fa-solid fa-clock-rotate-left"></i>
-          <span>Activity</span>
+          <span>Recent Activity</span>
         </div>
       </div>
 
       <div class="tabBody">
-        <div class="tabBodyContent overviewTabContent">
-          <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-2">
+        <div class="tabBodyContent overviewTabContent shadow-md rounded-md p-7">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-2">
             <i class="fa-solid fa-folder text-indigo-600"></i>
             Overview
           </h2>
@@ -58,124 +61,124 @@
           </div>
 
         </div>
-        <div class="tabBodyContent settingsTabContent hidden">
-          <h2 class="text-2xl font-semibold text-gray-800 mt-6">
+        <div class="tabBodyContent settingsTabContent hidden shadow-md rounded-md p-7">
+          <h2 class="text-2xl font-semibold text-gray-800">
             <i class="fa-solid fa-gear text-indigo-600"></i>
             Settings
           </h2>
           <hr class="h-1 mt-1 text-gray-200">
 
-          <form action="">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+          <form th:action="@{/user/profile}" method="post" enctype="multipart/form-data" class="mt-4" th:object="${user}">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-5 mt-3">
               <div>
-                <label class="block mb-1 text-sm font-medium text-gray-900" for="name">Name</label>
-                <input type="text" name="name" id="name" placeholder="Enter your name" value="Yan Paing Win"
+                <label class="flex items-center gap-x-2 mb-1 text-sm font-medium text-gray-900" for="name">
+                  <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="text-red-500 text-xs"></span>
+                  <i class="fa-solid fa-user"></i> Name
+                </label>
+                <input type="text" name="name" id="name" placeholder="Enter your name"
+                       th:field="*{fullName}"
                        class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
               </div>
               <div>
-                <label class="block mb-1 text-sm font-medium text-gray-900" for="email">Email<span class="text-xs text-gray-600"> (you can't change your email)</span></label>
-                <input type="text" name="email" id="email" placeholder="Enter your email" value="yanpaingwin@ucsy.edu.mm"
+                <label class="flex items-center gap-x-2 mb-1 text-sm font-medium text-gray-900" for="email">
+                  <i class="fa-solid fa-envelope"></i>Email
+                  <span class="text-xs text-gray-600"> (you can't change your email)</span></label>
+                <input type="text" name="email" id="email" placeholder="Enter your email"
+                       th:field="*{email}"
                        class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5"
                        disabled readonly>
               </div>
 
               <div>
-                <label class="block mb-1 text-sm font-medium text-gray-900" for="phoneNumber">Phone Number</label>
-                <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter your phone" value="09784863657"
+                <label class="flex items-center gap-x-2 mb-1 text-sm font-medium text-gray-900" for="phoneNumber">
+                  <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red-500 text-xs"></span>
+                  <i class="fa-solid fa-phone"></i>
+                  Phone Number</label>
+                <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter your phone"
+                       th:field="*{phoneNumber}"
                        class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
               </div>
 
               <div>
+                  <div class="flex flex-row items-center gap-x-2 mb-1 text-sm font-medium text-gray-900">
+                    <i class="fa-solid fa-image"></i>
+                     <div class="flex flex-row items-center gap-x-1">
+                       Upload Profile Picture                                                                           
+                       <p class="mt-1 text-xs text-gray-500" id="file_input_help"> [ PNG, JPG (MAX. 800x400px) ].</p>
+                     </div>
 
-                <label class="block mb-1 text-sm font-medium text-gray-900" for="file_input">Upload Image</label>
-                <input class="block ps-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer py-2.5 bg-gray-50 focus:outline-none" aria-describedby="file_input_help" id="file_input" type="file">
-                <p class="mt-1 text-sm text-gray-500" id="file_input_help">PNG, JPG (MAX. 800x400px).</p>
+                  </div>
+                <div class="flex items-center">
+                  <img th:src="${user != null && user.profilePicturePath != null ? user.profilePicturePath : '/images/user-avatar.jpg'}" alt="Current profile"
+                       class="w-10 h-10 object-cover rounded-l-lg" id="profilePreview">
+                  <input th:field="*{profilePictureUrl}" class="block ps-2 w-full text-sm text-gray-900 border border-gray-300 rounded-r-lg cursor-pointer py-2 bg-gray-50 focus:outline-none"
+                         aria-describedby="file_input_help" id="profileImage" name="profileImage" type="file" accept="image/*">
+                </div>
 
               </div>
 
-              <div>
-                <label class="block mb-1 text-sm font-medium text-gray-900" for="old_password">Old Password</label>
-                <input type="text" name="name" id="old_password" placeholder="Enter your old password" value=""
+              <div x-data="{IsShow: false}" class="relative">
+                <label class="flex flex-row items-center gap-x-2 mb-1 text-sm font-medium text-gray-900" for="old_password">
+                  <span th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}" class="text-red-500 text-xs"></span>
+                  <i class="fa-solid fa-unlock"></i>
+                  Old Password
+                </label>
+                <input :type="IsShow ? 'text' : 'password'" name="name" id="old_password" placeholder="Enter your old password"
+                       th:field="*{oldPassword}"
                        class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+
+                <button type="button"
+                        @click="IsShow = !IsShow"
+                        class="absolute inset-y-0 right-0 flex items-center mt-6 px-3 text-gray-600 cursor-pointer">
+                  <i x-bind:class="IsShow ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                </button>
               </div>
-              <div>
-                <label class="block mb-1 text-sm font-medium text-gray-900" for="new_password">New Password</label>
-                <input type="text" name="name" id="new_password" placeholder="Enter your new password" value=""
+              <div class="relative" x-data="{IsShow: false}">
+                <label class="flex flex-row items-center gap-x-2 mb-1 text-sm font-medium text-gray-900" for="new_password">
+                  <span th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}" class="text-red-500 text-xs"></span>
+                  <i class="fa-solid fa-lock"></i>
+                  New Password
+                </label>
+                <input :type="IsShow ?'text':'password" name="name" id="new_password" placeholder="Enter your new password"
+                       th:field="*{newPassword}"
                        class="focus:outline-none border border-gray-200 rounded-lg text-sm w-full ps-2 py-2.5">
+
+                <button type="button"
+                        @click="IsShow = !IsShow"
+                        class="absolute inset-y-0 right-0 flex items-center mt-6 px-3 text-gray-600 cursor-pointer">
+                  <i x-bind:class="IsShow ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                </button>
               </div>
             </div>
+            <div class="flex justify-end">
+              <button type="submit" class="cursor-pointer btn-animated mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <i class="fa-solid fa-save"></i> Save Changes
+              </button>
+            </div>
           </form>
-
-          <div class="flex justify-end">
-            <button type="submit" class="cursor-pointer btn-animated mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <i class="fa-solid fa-save"></i> Save Changes
-            </button>
-          </div>
-
-
-
-
-
         </div>
-        <div class="tabBodyContent activityTabContent hidden">
-          <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-2">
+        <div class="tabBodyContent activityTabContent hidden shadow-md rounded-md p-7 mb-3">
+          <h2 class="text-2xl font-semibold text-gray-800">
             <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i>
-            Activity
+            Recent Activity
           </h2>
           <hr class="h-1 mt-1 text-gray-200">
             <div class="my-3">
                 <ul class="space-y-2">
-                <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
-                  <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
+                <li th:each="activityLogs : ${activityLog}" class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
+                  <i class="fa-solid fa-check-circle text-green-600 text-lg"></i>
                     <div>
                       <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
                         <div class="flex flex-row gap-x-1 items-center">
                           <i class="fa-solid fa-clock"></i>
-                          2024-05-21 10:30 AM
+                          <span th:text="${#temporals.format(activityLogs.timestamp,'yyyy-MM-dd HH:mm')}">2024-05-21 10:30 AM</span>
                         </div>
                       </div>
-                      <p class="text-blue-500 font-bold text-lg">Logged in from IP address</p>
-                      <span class="text-gray-600 font-light">Yangon, Myanmar</span>
+                      <p class="text-black font-semibold text-md" th:text="${activityLogs.activityType}">Logged in from IP address</p>
+                      <span class="text-gray-600 font-light text-sm" th:text="${activityLogs.actor.fullName}+' '+${activityLogs.activityType.getDescription()}">Yangon, Myanmar</span>
                     </div>
                 </li>
-                  <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
-                    <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
-                    <div>
-                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
-                        <div class="flex flex-row gap-x-1 items-center">
-                          <i class="fa-solid fa-clock"></i>
-                          2024-05-20 3:15 PM
-                        </div>
-                      </div>
-                      <p class="text-blue-500 font-bold text-lg">Updated profile information</p>
-                      <span class="text-gray-600 font-light">Changed phone number</span>
-                    </div>
-                  </li>
-                  <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
-                    <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
-                    <div>
-                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
-                        <div class="flex flex-row gap-x-1 items-center">
-                          <i class="fa-solid fa-clock"></i>
-                          2024-05-19 11:45 AM
-                        </div>
-                      </div>
-                      <p class="text-blue-500 font-bold text-lg">Created a new survey</p>
-                      <span class="text-gray-600 font-light">"Customer Satisfaction"</span>
-                    </div>
-                  </li>
-                  <li class="p-4 bg-gray-50 rounded-md shadow-sm relative flex flex-row gap-x-3 items-center">
-                    <i class="fa-solid fa-check-circle text-green-500 text-lg"></i>
-                    <div>
-                      <div class="text-white py-2 px-3 rounded-xl text-xs font-light bg-gray-500 absolute top-1 right-1">
-                        <div class="flex flex-row gap-x-1 items-center">
-                          <i class="fa-solid fa-clock"></i>
-                          2024-05-18 2:00 PM</div>
-                        </div>
-                      <p class="text-blue-500 font-bold text-lg">Submitted a application</p>
-                      <span class="text-gray-600 font-light">APP-373</span>
-                    </div>
-                  </li>
+
                 </ul>
             </div>
         </div>
@@ -201,9 +204,43 @@
 
         // Set the first tab as active by default
         if (tabs.length > 0) {
-          tabs[0].click();
+          tabs[2].click();
         }
-      })
+
+      });
+
+      $(document).ready(function(){
+        $('#profileImage').on('change',function (){
+          const file = this.files[0];
+          const $preview = $('#profilePreview');
+          if (!file) return;
+
+          const validTypes = ['image/jpeg', 'image/png'];
+          if (!validTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPEG or PNG).');
+            $(this).val('');
+            return;
+          }
+
+          const img =new Image();
+          img.onload = function () {
+            if (this.width > 800 || this.height > 400) {
+              alert('Image dimensions should not exceed 800x400 pixels.');
+              $preview.attr('src', '/images/user-avatar.jpg');
+              $('#profileImage').val('');
+            } else {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                $preview.attr('src', e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }
+
+
+          };
+          img.src = URL.createObjectURL(file);
+        });
+      });
     </script>
   </section>
 

@@ -37,4 +37,9 @@ public class ActivityLogService {
         Pageable pageable = PageRequest.of(0, 1);
         return activityLogRepository.findTopActivityUser(pageable).stream().findFirst();
     }
+
+    public List<ActivityLog> getRelatedUserActivityLog(Long userId) {
+        Pageable pageable = PageRequest.of(0, 5);
+        return activityLogRepository.findByActorIdOrderByTimestampDesc(userId, pageable);
+    }
 }

@@ -81,7 +81,7 @@ public class UserController {
     @GetMapping("/users")
     public String getAllUsers(Model model,@RequestParam(required = false) String query,
                               @RequestParam(required = false,defaultValue = "0") int page,
-                              @RequestParam(required = false,defaultValue = "9") int size,
+                              @RequestParam(required = false,defaultValue = "8") int size,
                               @RequestParam(required = false) String role,
                               @RequestParam(required = false, defaultValue = "id") String sortField,
                               @RequestParam(required = false, defaultValue = "desc") String sortDir,

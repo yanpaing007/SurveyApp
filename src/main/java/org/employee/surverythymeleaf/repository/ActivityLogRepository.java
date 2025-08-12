@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -27,5 +28,5 @@ where a.actor.id=:userId
 """)
     List<Object[]> findTopActivityUser(Pageable pageable);
 
-
+    List<ActivityLog> findByActorIdOrderByTimestampDesc(Long userId, Pageable pageable);
 }
