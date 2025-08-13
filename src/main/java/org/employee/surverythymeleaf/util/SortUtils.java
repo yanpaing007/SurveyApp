@@ -1,14 +1,17 @@
 package org.employee.surverythymeleaf.util;
 
 import org.employee.surverythymeleaf.model.Application;
+import org.employee.surverythymeleaf.model.Enum.Priority;
 import org.employee.surverythymeleaf.model.Survey;
 import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
+import org.employee.surverythymeleaf.model.Team;
 import org.employee.surverythymeleaf.service.SurveyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,8 @@ import java.util.Map;
 
 public class SortUtils {
     public static Sort sortFunction(String sortField, String sortDir){
+
+
 
         if(sortDir.isEmpty()){
             sortField="id";
@@ -36,7 +41,7 @@ public class SortUtils {
                                              Application app,
                                              Sort sort,
                                              String sortField,
-                                             String sortDir, SurveyStatus[] allSurveyStatus) {
+                                             String sortDir, SurveyStatus[] allSurveyStatus, List<Team> availableTeams) {
         Page<Survey> surveyPage;
         SurveyStatus surveyStatus = null;
 
@@ -57,6 +62,9 @@ public class SortUtils {
             validStatusMap.put(surv.getId(),validStatuses);
         }
 
+        List<Priority> priorities = Arrays.asList(Priority.values());
+
+
         model.addAttribute("surveys",surveyPage);
         model.addAttribute("query",query);
         model.addAttribute("totalItems",surveyPage.getTotalElements());
@@ -72,6 +80,8 @@ public class SortUtils {
         model.addAttribute("sortField",sortField);
         model.addAttribute("sortDir",sortDir);
         model.addAttribute("allSurveyStatus",allSurveyStatus);
+        model.addAttribute("availableTeams",availableTeams);
+        model.addAttribute("priorities",priorities);
         return "survey/allSurveys";
     }
 

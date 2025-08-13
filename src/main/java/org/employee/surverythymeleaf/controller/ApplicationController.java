@@ -13,6 +13,7 @@ import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 import org.employee.surverythymeleaf.repository.SurveyRepository;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
+import org.employee.surverythymeleaf.service.TeamService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.SortUtils;
@@ -47,13 +48,15 @@ public class ApplicationController {
     private final UserService userService;
     private final ActivityHelper activityHelper;
     private final SurveyRepository surveyRepository;
+    private final TeamService teamService;
 
-    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService, ActivityHelper activityHelper, SurveyRepository surveyRepository) {
+    public ApplicationController(ApplicationService applicationService, SurveyService surveyService , UserService userService, ActivityHelper activityHelper, SurveyRepository surveyRepository, TeamService teamService) {
         this.applicationService = applicationService;
         this.surveyService = surveyService;
         this.userService = userService;
         this.activityHelper = activityHelper;
         this.surveyRepository = surveyRepository;
+        this.teamService = teamService;
     }
 
     @GetMapping("/application/allApplications")
@@ -129,8 +132,9 @@ public class ApplicationController {
         survey.setSalePerson(currentUser);
         Sort sort = sortFunction(sortField, sortDir);
         SurveyStatus[] allSurveyStatus = SurveyStatus.values();
+        List<Team> availableTeams = teamService.getAllAvailableTeams();
 
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app,sort,sortField,sortDir,allSurveyStatus);
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey,app,sort,sortField,sortDir,allSurveyStatus,availableTeams);
     }
 
 

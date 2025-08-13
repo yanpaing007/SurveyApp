@@ -34,6 +34,7 @@ public class ProfileService {
     public User updateProfile(User user, UpdateProfileDTO updateProfileDTO) {
         user.setFullName(updateProfileDTO.getFullName());
 
+
         if(!updateProfileDTO.getNewPassword().isEmpty()) {
             String encodedPassword = bCryptPasswordEncoder.encode(updateProfileDTO.getNewPassword());
             user.setPassword(encodedPassword);

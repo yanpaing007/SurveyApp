@@ -14,6 +14,7 @@ import org.employee.surverythymeleaf.model.Enum.SurveyStatus;
 import org.employee.surverythymeleaf.repository.ApplicationRepository;
 import org.employee.surverythymeleaf.service.ApplicationService;
 import org.employee.surverythymeleaf.service.SurveyService;
+import org.employee.surverythymeleaf.service.TeamService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.ActivityHelper;
 import org.employee.surverythymeleaf.util.SortUtils;
@@ -51,12 +52,14 @@ public class SurveyController {
     private final UserService userService;
     private final ApplicationService applicationService;
     private final ActivityHelper activityHelper;
+    private final TeamService teamService;
 
-    public SurveyController(SurveyService surveyService, UserService userService, ApplicationRepository applicationRepository, ApplicationService applicationService, ActivityHelper activityHelper) {
+    public SurveyController(SurveyService surveyService, UserService userService, ApplicationRepository applicationRepository, ApplicationService applicationService, ActivityHelper activityHelper, TeamService teamService) {
         this.surveyService = surveyService;
         this.userService = userService;
         this.applicationService = applicationService;
         this.activityHelper = activityHelper;
+        this.teamService = teamService;
     }
 
     @GetMapping("/survey/form")
@@ -120,7 +123,8 @@ public class SurveyController {
         survey.setSalePerson(currentUser);
         Sort sort = SortUtils.sortFunction(sortField, sortDir);
         SurveyStatus[] allSurveyStatus = SurveyStatus.values();
-        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey, app,sort,sortField,sortDir, allSurveyStatus);
+        List<Team> availableTeams = teamService.getAllAvailableTeams();
+        return getAllSurveysDouble(model, query, page, size, status, fromDate, toDate, surveyService,survey, app,sort,sortField,sortDir, allSurveyStatus, availableTeams);
     }
 
 

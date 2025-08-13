@@ -65,4 +65,7 @@ public class User{
     private LocalDateTime lastLogin;
 
     private String profilePictureUrl;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
+    private List<Team> teams = new ArrayList<>();
 }

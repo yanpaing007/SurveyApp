@@ -3,10 +3,12 @@ package org.employee.surverythymeleaf.controller;
 import jakarta.validation.Valid;
 import org.employee.surverythymeleaf.DTO.UpdateProfileDTO;
 import org.employee.surverythymeleaf.model.ActivityLog;
+import org.employee.surverythymeleaf.model.Team;
 import org.employee.surverythymeleaf.model.User;
 import org.employee.surverythymeleaf.repository.UserRepository;
 import org.employee.surverythymeleaf.service.ActivityLogService;
 import org.employee.surverythymeleaf.service.ProfileService;
+import org.employee.surverythymeleaf.service.TeamService;
 import org.employee.surverythymeleaf.service.UserService;
 import org.employee.surverythymeleaf.util.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,25 +36,33 @@ import java.util.Objects;
 @Controller
 public class ProfileController {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ProfileService profileService;
+    private final UserRepository userRepository;
 
-    @Value("${app.upload.dir:${user.home}/uploads}")
+    private final UserService userService;
+
+    private final ProfileService profileService;
+
+    private final TeamService teamService;
+
+    @Value("${app.upload.dir:${user.home}/uploads/images/profile}")
     private String uploadDir;
+
     @Autowired
     private ActivityLogService activityLogService;
 
+    public ProfileController(UserRepository userRepository, UserService userService, TeamService teamService, ProfileService profileService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.teamService = teamService;
+        this.profileService = profileService;
+    }
+
     @GetMapping("/user/profile")
     public String getUserProfile(Principal principal, Model model) {
-
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = userDetails.getUser().getId();
         if (principal == null) {
-            return "redirect:/login"; // Redirect to login if not authenticated
+            return "redirect:/login";
         }
         User user = userRepository.findUserByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -63,6 +73,9 @@ public class ProfileController {
         String lastLoginTime = user.getLastLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String accountCreatedAt = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         List<ActivityLog> activityLog = activityLogService.getRelatedUserActivityLog(userId);
+
+
+
 
         UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO();
         updateProfileDTO.setFullName(user.getFullName());
@@ -105,37 +118,22 @@ public class ProfileController {
 
         MultipartFile profileImage = updateProfileDTO.getProfilePictureUrl();
         if (profileImage != null && !profileImage.isEmpty()) {
-            try {
+            try{
                 String fileName = StringUtils.cleanPath(Objects.requireNonNull(profileImage.getOriginalFilename()));
-                String uploadPath = uploadDir + "/profile-images/";
-
-
-                java.nio.file.Path uploadDirPath = Paths.get(uploadPath);
-                if (!Files.exists(uploadDirPath)) {
-                    Files.createDirectories(uploadDirPath);
-                }
-
-
-                String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
-                String finalPath = uploadPath + uniqueFileName;
-
-
-                Files.copy(profileImage.getInputStream(), Paths.get(finalPath));
-
-
-                Path staticPath = Paths.get("src/main/resources/static/images/profile");
-                if (!Files.exists(staticPath)) {
+                Path staticPath = Paths.get(uploadDir);
+                if(!Files.exists(staticPath)) {
                     Files.createDirectories(staticPath);
                 }
-                Files.copy(profileImage.getInputStream(),
-                        Paths.get("src/main/resources/static/images/profile/" + uniqueFileName));
 
+                String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
+                Path targetPath = staticPath.resolve(uniqueFileName);
 
-                user.setProfilePictureUrl("/images/profile/" + uniqueFileName);
-
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("message", "Failed to upload image: " + e.getMessage());
+                Files.copy(profileImage.getInputStream(), targetPath);
+                updateProfileDTO.setProfilePicturePath("/images/profile/" + uniqueFileName);
+            }
+            catch (IOException e) {
                 redirectAttributes.addFlashAttribute("messageType", "error");
+                redirectAttributes.addFlashAttribute("message", "Failed to upload profile image: " + e.getMessage());
                 return "redirect:/user/profile";
             }
         }

@@ -157,13 +157,13 @@
                         <th class="flex items-center px-6 py-4 text-gray-900 min-w-100">
                             <div>
                                 <!-- Image displayed if profile picture URL exists -->
-                                <img th:if="${currentUser.profilePictureUrl != null and !#strings.isEmpty(currentUser.profilePictureUrl)}"
+                                <img th:if="${user.profilePictureUrl != null and !#strings.isEmpty(user.profilePictureUrl)}"
                                      class="w-13 h-13 rounded-full shadow-md"
-                                     th:src="${currentUser.profilePictureUrl}"
+                                     th:src="${user.profilePictureUrl}"
                                      alt="user photo">
 
                                 <!-- Image displayed if profile picture URL is null or empty -->
-                                <img th:if="${currentUser.profilePictureUrl == null or #strings.isEmpty(currentUser.profilePictureUrl)}"
+                                <img th:if="${user.profilePictureUrl == null or #strings.isEmpty(user.profilePictureUrl)}"
                                      class="w-13 h-13 rounded-full shadow-md"
                                      th:src="@{/images/user-avatar.jpg}"
                                      alt="user photo">

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.employee.surverythymeleaf.model.Enum.ApplicationStatus;
+import org.employee.surverythymeleaf.model.Enum.Priority;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ public class Application {
     @JoinColumn(name = "survey_id",unique = true)
     private Survey survey;
 
+    @NotNull(message = "Application date can't be empty")
     private LocalDate applicationDate;
 
     @ManyToOne
@@ -67,6 +69,13 @@ public class Application {
     @Column(columnDefinition = "TEXT")
     @Nullable
     private String comment;
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_team_id")
+    private Team assignedTeam;
 
     @CreationTimestamp
     @Column(updatable = false)
